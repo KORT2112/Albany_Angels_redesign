@@ -137,11 +137,19 @@ function buildDetailList(girl) {
 }
 
 function buildProfileLead(girl) {
+  // Format bust: strip " Cup" suffix for brevity — e.g. "Natural D Cup" → "D", "DD Cup" → "DD"
+  function formatBust(bust) {
+    if (!bust) return '';
+    // Extract just the cup letter(s): Natural DD Cup → DD, D Cup → D, Natural J Cup → J
+    const m = bust.match(/([A-Z]+)\s*Cup/i);
+    return m ? m[1].toUpperCase() : bust;
+  }
   const parts = [];
   if (girl.ethnicity) parts.push(girl.ethnicity);
-  if (girl.age) parts.push(`Age: ${girl.age}`);
-  if (girl.height) parts.push(girl.height);
-  return parts.join(' &middot; ');
+  if (girl.height)    parts.push(girl.height);
+  if (girl.bust)      parts.push(formatBust(girl.bust));
+  if (girl.age)       parts.push(girl.age);
+  return parts.join(' &bull; ');
 }
 
 function buildDetailStrip(girl) {
@@ -207,6 +215,7 @@ function generateProfile(girl) {
         <!-- Left: name + detail tags only (no lead text, no eyebrow) -->
         <div class="profile-hero-text">
           <h1 class="profile-hero-name">${girl.name}</h1>
+          <p class="profile-hero-meta">${buildProfileLead(girl)}</p>
           <div class="detail-strip">
 ${buildDetailStrip(girl)}
           </div>
