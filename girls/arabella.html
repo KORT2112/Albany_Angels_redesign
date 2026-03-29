@@ -195,12 +195,14 @@
     const toggle = document.getElementById('menuToggle');
     const nav = document.getElementById('mainNav');
     toggle.addEventListener('click', () => {
-      toggle.classList.toggle('active');
-      nav.classList.toggle('open');
+      const isOpen = nav.classList.toggle('open');
+      toggle.classList.toggle('active', isOpen);
+      document.body.classList.toggle('nav-open', isOpen);
     });
     nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
       toggle.classList.remove('active');
       nav.classList.remove('open');
+      document.body.classList.remove('nav-open');
     }));
 
     // Detect mobile

@@ -1919,28 +1919,29 @@ img {
     padding: 0 4px;
   }
 
-  /* ── Mobile nav overlay: full-screen, no scroll trap ── */
-  /* Override the original block completely with definitive rules */
+  /* ── Mobile nav overlay: definitive full-screen fix ── */
+  /* Root cause of clipping: overflow:hidden clips items on short viewports.
+     Fix: overflow-y:auto + overscroll-behavior:contain prevents body scroll trap
+     while allowing the nav itself to scroll only if content exceeds viewport. */
   .site-nav {
-    /* Full-screen overlay */
     position: fixed !important;
     inset: 0 !important;
     z-index: 25 !important;
-    /* Dark premium background */
     background: rgba(14, 14, 14, 0.98) !important;
     backdrop-filter: blur(24px) !important;
     -webkit-backdrop-filter: blur(24px) !important;
-    /* Layout: vertical stack, items start below header */
     display: flex !important;
     flex-direction: column !important;
     align-items: flex-start !important;
     justify-content: flex-start !important;
-    /* Padding: top clears the fixed header (~64px) + breathing room */
-    padding: 88px 40px 56px !important;
+    /* Top padding clears the header bar; use clamp so it scales on short screens */
+    padding: clamp(72px, 14vh, 100px) 40px clamp(32px, 6vh, 56px) !important;
     gap: 0 !important;
-    /* NO overflow-y: auto — this was the scroll trap */
-    overflow: hidden !important;
-    /* Visibility toggle */
+    /* Allow nav to scroll internally only if needed — prevents clipping */
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    /* Prevent the body from scrolling behind the nav overlay */
+    overscroll-behavior: contain !important;
     opacity: 0 !important;
     visibility: hidden !important;
     pointer-events: none !important;
@@ -1953,43 +1954,49 @@ img {
     pointer-events: auto !important;
   }
 
-  /* Nav links — large, elegant, full-width */
+  /* Nav links — elegant, full-width, compact enough to fit 8 items */
   .site-nav a {
     display: block !important;
     width: 100% !important;
-    padding: 16px 0 !important;
+    /* clamp padding so all 8 items fit even on 320px/568px screens */
+    padding: clamp(10px, 2vh, 16px) 0 !important;
     font-family: 'Cormorant Garamond', serif !important;
-    font-size: 1.45rem !important;
+    /* clamp font-size: smaller on short screens, larger on tall ones */
+    font-size: clamp(1.2rem, 3.5vh, 1.5rem) !important;
     font-weight: 600 !important;
     letter-spacing: 0.02em !important;
     color: rgba(245, 241, 234, 0.9) !important;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
     text-decoration: none !important;
+    white-space: nowrap !important;
     transition: color 0.18s ease !important;
+    flex-shrink: 0 !important;
   }
 
-  .site-nav a:hover {
+  .site-nav a:hover,
+  .site-nav a:active {
     color: var(--accent) !important;
   }
 
-  /* Book Now inside nav — gold button at the bottom */
+  /* Book Now inside nav — gold button, no separator line */
   .site-nav .nav-book-now {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     width: 100% !important;
-    margin-top: 28px !important;
+    margin-top: clamp(16px, 3vh, 28px) !important;
     padding: 0 24px !important;
-    min-height: 52px !important;
+    min-height: 48px !important;
     border-radius: 999px !important;
     border-bottom: none !important;
     background: var(--accent) !important;
     color: #111 !important;
     font-family: 'Inter', sans-serif !important;
-    font-size: 0.95rem !important;
-    font-weight: 600 !important;
-    letter-spacing: 0.06em !important;
+    font-size: 0.9rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.08em !important;
     text-transform: uppercase !important;
+    flex-shrink: 0 !important;
   }
 
   /* Hamburger — larger tap target, always above overlay */
@@ -3054,3 +3061,19 @@ img {
 }
 
 /* ── END MOBILE IMPROVEMENTS ──────────────────────────────── */
+
+/* ── Pass 4 fixes ─────────────────────────────────────────── */
+
+/* Ensure anchor links account for the fixed header height.
+   scroll-margin-top offsets the scroll position so the section
+   starts below the header bar, not behind it. */
+#contact-details,
+[id="contact-details"] {
+  scroll-margin-top: 80px;
+}
+
+/* On mobile, lock body scroll when nav overlay is open.
+   This is applied via JS (body.nav-open class). */
+body.nav-open {
+  overflow: hidden;
+}
