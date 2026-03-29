@@ -1841,3 +1841,1087 @@ body.profile-body .site-header {
   .profile-content-grid { grid-template-columns: 1fr; }
 }
 
+
+
+/* ============================================================
+   MOBILE RESPONSIVE IMPROVEMENTS
+   Surgical additions — desktop styles untouched above
+   Target widths: 320 / 360 / 375 / 390 / 414px
+   ============================================================ */
+
+/* ── 1. Global base fixes ─────────────────────────────────── */
+html {
+  /* Prevent horizontal overflow globally */
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
+  /* Prevent iOS text-size adjustment on rotation */
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Ensure images never break layout */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ── 2. Header & Nav ──────────────────────────────────────── */
+@media (max-width: 820px) {
+  /* Brand — slightly smaller so it doesn't crowd the hamburger */
+  .brand {
+    font-size: 1.55rem;
+    letter-spacing: 0.01em;
+  }
+
+  /* Ensure header inner never overflows */
+  .header-inner {
+    min-height: 64px;
+    gap: 12px;
+    padding: 0 4px;
+  }
+
+  /* Mobile nav overlay — full-screen, elegant */
+  .site-nav {
+    padding: 88px 32px 40px;
+    gap: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .site-nav a {
+    padding: 16px 0;
+    font-size: 1.3rem;
+    letter-spacing: 0.02em;
+  }
+
+  /* Hamburger — larger tap target */
+  .menu-toggle {
+    padding: 10px;
+    margin-right: -4px;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Book Now button hidden on mobile (already in nav) */
+  .header-inner .btn-primary {
+    display: none;
+  }
+}
+
+/* ── 3. Buttons — tap targets & layout ───────────────────── */
+@media (max-width: 820px) {
+  /* Buttons should be full-width only in hero/CTA contexts,
+     not globally. Override the blanket rule. */
+  .btn {
+    width: auto;
+    min-height: 52px;
+    padding: 0 22px;
+    font-size: 0.95rem;
+  }
+
+  /* Hero action rows — full width stacked */
+  .hero-actions .btn,
+  .center-actions .btn,
+  .hero-cta-row .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Profile page action buttons — full width */
+  .profile-snap-section .hero-actions .btn {
+    width: 100%;
+  }
+}
+
+/* ── 4. Hero sections ─────────────────────────────────────── */
+@media (max-width: 820px) {
+  /* Index hero — disable nowrap, scale headline */
+  .hero-headline {
+    white-space: normal !important;
+    font-size: clamp(1.9rem, 7.5vw, 2.6rem) !important;
+    line-height: 1.18 !important;
+  }
+
+  .hero-sub {
+    font-size: 0.88rem;
+    max-width: 100%;
+  }
+
+  /* Hero text wrap — bottom-aligned with comfortable padding */
+  .hero-text-wrap {
+    padding: 0 20px 48px !important;
+    align-items: flex-start !important;
+  }
+
+  /* Page hero (girls, roster, services) */
+  .page-hero {
+    min-height: 38vh;
+  }
+
+  .page-hero-content {
+    padding: 80px 0 44px;
+  }
+
+  .page-hero-content p:last-child {
+    max-width: 100%;
+  }
+}
+
+/* ── 5. Typography scaling ────────────────────────────────── */
+@media (max-width: 820px) {
+  h1 {
+    font-size: clamp(2.4rem, 8vw, 3.6rem);
+  }
+
+  h2 {
+    font-size: clamp(1.8rem, 6vw, 2.6rem);
+    max-width: 100%;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+  }
+
+  .hero-copy {
+    font-size: 0.98rem;
+    max-width: 100%;
+  }
+
+  .section-intro {
+    font-size: 0.95rem;
+    max-width: 100%;
+  }
+
+  .eyebrow {
+    font-size: 0.72rem;
+  }
+}
+
+/* ── 6. Section spacing ───────────────────────────────────── */
+@media (max-width: 820px) {
+  .section {
+    padding: 56px 0;
+  }
+
+  .section-head {
+    margin-bottom: 28px;
+    gap: 16px;
+  }
+
+  /* Container side padding on very small screens */
+  .container,
+  .narrow {
+    width: min(100% - 32px, var(--container));
+  }
+}
+
+@media (max-width: 375px) {
+  .section {
+    padding: 44px 0;
+  }
+
+  .container,
+  .narrow {
+    width: min(100% - 24px, var(--container));
+  }
+}
+
+/* ── 7. Card grids ────────────────────────────────────────── */
+@media (max-width: 820px) {
+  /* All grids → single column */
+  .profile-grid,
+  .service-grid,
+  .pillar-grid,
+  .steps-grid,
+  .compact-grid,
+  .roster-grid,
+  .services-page-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* Index "Meet the Ladies" — 2-column on mobile */
+  #roster .profile-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px;
+  }
+
+  /* Card images — reasonable height on mobile */
+  #roster .real-card-image {
+    max-height: 260px !important;
+    aspect-ratio: 3 / 4 !important;
+  }
+
+  /* Profile card body */
+  .profile-body {
+    padding: 12px 14px 14px;
+  }
+
+  #roster .profile-body h3 {
+    font-size: 1.3rem !important;
+  }
+
+  /* Pillar cards */
+  .pillar-card {
+    padding: 20px;
+  }
+
+  /* Steps grid */
+  .steps-grid article {
+    padding: 20px;
+  }
+}
+
+/* ── 8. Girls listing page ────────────────────────────────── */
+@media (max-width: 820px) {
+  /* Disable scroll-snap body lock on mobile */
+  body.girls-body {
+    overflow: auto !important;
+    height: auto !important;
+  }
+
+  /* Scroll wrap becomes normal flow */
+  .girls-scroll-wrap {
+    height: auto !important;
+    overflow-y: auto !important;
+    scroll-snap-type: none !important;
+  }
+
+  /* Each snap section becomes normal block */
+  .girls-snap-section {
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 72px 0 32px !important;
+    scroll-snap-align: none !important;
+    display: block !important;
+  }
+
+  /* Hero section on girls page */
+  .girls-hero-snap {
+    min-height: 56vh !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+  }
+
+  .girls-hero-snap .container {
+    padding: 100px 0 40px !important;
+    transform: none !important;
+  }
+
+  .girls-hero-snap h1 {
+    font-size: clamp(2.8rem, 9vw, 4rem) !important;
+    transform: none !important;
+  }
+
+  .girls-hero-snap .hero-intro {
+    font-size: 0.95rem !important;
+    margin: 16px auto 0 !important;
+    max-width: 100% !important;
+  }
+
+  /* Girls grid — 2 columns on mobile */
+  .girls-row {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+    overflow: visible !important;
+    max-height: none !important;
+    padding: 0 !important;
+  }
+
+  /* Card image — fixed portrait ratio, no dvh dependency */
+  .girls-row .profile-card > a {
+    height: auto !important;
+    display: block !important;
+    position: relative !important;
+    aspect-ratio: 3 / 4;
+    overflow: hidden !important;
+  }
+
+  .girls-row .profile-card > a .real-card-image {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center top !important;
+  }
+
+  .girls-row .real-card-image {
+    height: auto !important;
+    aspect-ratio: 3 / 4 !important;
+    max-height: none !important;
+  }
+
+  /* Card body */
+  .girls-row .profile-body {
+    padding: 10px 12px 12px !important;
+  }
+
+  .girls-row .profile-body h3 {
+    font-size: 1.2rem !important;
+  }
+
+  /* Scroll hint — hide on mobile */
+  .scroll-hint {
+    display: none !important;
+  }
+
+  /* CTA section */
+  .girls-cta-snap {
+    padding: 56px 0 48px !important;
+    min-height: 0 !important;
+    height: auto !important;
+  }
+
+  /* Dot nav — already hidden via existing rule */
+  .girls-page-indicator {
+    display: none !important;
+  }
+}
+
+/* Very small screens — 1 column for girls grid */
+@media (max-width: 360px) {
+  .girls-row {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ── 9. Profile pages ─────────────────────────────────────── */
+@media (max-width: 820px) {
+  /* Disable scroll-snap body lock */
+  body.profile-body {
+    overflow: auto !important;
+    height: auto !important;
+  }
+
+  .profile-scroll-wrap {
+    height: auto !important;
+    overflow: visible !important;
+    scroll-snap-type: none !important;
+  }
+
+  /* Profile snap sections → normal blocks */
+  .profile-snap-section {
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 88px 0 40px !important;
+    scroll-snap-align: none !important;
+    display: block !important;
+    align-items: unset !important;
+    justify-content: unset !important;
+  }
+
+  /* Hero section — always visible */
+  .profile-snap-section.profile-hero-section {
+    padding-top: 80px !important;
+  }
+
+  /* Profile hero grid — stack image below text */
+  .profile-hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+
+  /* Hero carousel — reasonable height */
+  .hero-carousel {
+    height: 62vw !important;
+    max-height: 420px !important;
+    min-height: 240px !important;
+    width: 100% !important;
+  }
+
+  /* Profile image */
+  .real-profile-image {
+    width: 100% !important;
+    height: 62vw !important;
+    max-height: 420px !important;
+    min-height: 240px !important;
+    object-fit: cover !important;
+    object-position: center top !important;
+  }
+
+  /* Detail strip — wrap tags */
+  .detail-strip {
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .detail-strip span {
+    font-size: 0.82rem;
+    padding: 6px 12px;
+  }
+
+  /* About + details grid */
+  .profile-content-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  /* Content panels */
+  .content-panel {
+    padding: 20px;
+  }
+
+  /* Detail list */
+  .detail-list li {
+    padding: 12px 0;
+    gap: 12px;
+  }
+
+  .detail-list span {
+    font-size: 0.88rem;
+  }
+
+  .detail-list strong {
+    font-size: 0.88rem;
+  }
+
+  /* Gallery filmstrip section — fixed height */
+  .gallery-snap-section {
+    height: 56vw !important;
+    min-height: 200px !important;
+    max-height: 360px !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+  }
+
+  .filmstrip-wrap {
+    height: 100% !important;
+  }
+
+  .filmstrip-img {
+    min-width: 180px !important;
+  }
+
+  /* Filmstrip arrows — smaller on mobile */
+  .filmstrip-arrow {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  /* CTA section */
+  .profile-cta-section {
+    padding: 48px 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+  }
+
+  .cta-name {
+    font-size: clamp(2.8rem, 10vw, 5rem) !important;
+  }
+
+  .cta-tagline {
+    font-size: 0.9rem;
+    margin-bottom: 32px;
+  }
+
+  .cta-book-btn {
+    padding: 14px 40px !important;
+    width: 100% !important;
+    max-width: 320px !important;
+  }
+
+  /* More girls section */
+  .more-girls-section .compact-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .more-girls-section .real-card-image {
+    max-height: 200px !important;
+  }
+
+  /* Profile copyright */
+  .profile-copyright {
+    position: static !important;
+    padding: 16px 0 8px !important;
+    text-align: center !important;
+  }
+
+  /* Fade animations — disable on mobile (content always visible) */
+  .profile-snap-section .container {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ── 10. Roster page ──────────────────────────────────────── */
+@media (max-width: 820px) {
+  .roster-dashboard {
+    padding: 16px 14px 20px;
+    border-radius: 16px;
+  }
+
+  .roster-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .roster-topbar h2 {
+    font-size: clamp(1.6rem, 6vw, 2rem);
+  }
+
+  .roster-actions {
+    width: 100%;
+  }
+
+  /* Segmented toggle — full width, no min-width overflow */
+  .mode-toggle-wrap.segmented-toggle {
+    min-width: 0 !important;
+    width: 100% !important;
+    display: flex !important;
+  }
+
+  .segmented-option {
+    flex: 1;
+    min-height: 44px;
+    padding: 0 10px;
+    font-size: 0.85rem;
+    text-align: center;
+  }
+
+  /* Day selector — 4 columns on mobile (Mon–Sun fits in 2 rows) */
+  .day-selector {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .day-pill {
+    padding: 9px 6px 8px;
+    font-size: 0.82rem;
+    border-radius: 10px;
+    text-align: center;
+  }
+
+  .day-pill span {
+    font-size: 0.7rem;
+    margin-top: 2px;
+  }
+
+  /* Availability grid — 2 columns */
+  .availability-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  .availability-card .real-card-image {
+    max-height: 240px !important;
+  }
+
+  .availability-card .profile-body {
+    padding: 10px 12px 12px !important;
+  }
+
+  .availability-card h3 {
+    font-size: 1.2rem !important;
+  }
+}
+
+/* Very small — 1 column availability grid */
+@media (max-width: 360px) {
+  .availability-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .day-selector {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+/* ── 11. Services page ────────────────────────────────────── */
+@media (max-width: 820px) {
+  .no-surcharge-banner {
+    font-size: 0.82rem;
+    padding: 12px 16px;
+    gap: 8px;
+    flex-wrap: wrap;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .pricing-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .pricing-category-header {
+    padding: 18px 20px 14px;
+  }
+
+  .pricing-category-header h3 {
+    font-size: 1.3rem;
+  }
+
+  .pricing-row {
+    padding: 13px 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .pricing-row strong {
+    font-size: 1rem;
+  }
+
+  .pricing-badge {
+    margin-left: 0;
+    margin-top: 4px;
+    display: inline-block;
+  }
+}
+
+/* ── 12. Join page ────────────────────────────────────────── */
+@media (max-width: 820px) {
+  .join-split {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+
+  .join-form-panel {
+    padding: 24px 18px !important;
+    max-width: 100%;
+  }
+
+  .join-form-panel input,
+  .join-form-panel textarea,
+  .join-form-panel select {
+    font-size: 16px !important; /* Prevent iOS zoom on focus */
+    padding: 13px 14px;
+    margin-bottom: 16px;
+  }
+
+  .join-contact-item {
+    padding: 14px 0;
+  }
+
+  .join-contact-item a,
+  .join-contact-item strong {
+    font-size: 1rem;
+  }
+}
+
+/* ── 13. Contact section & map ────────────────────────────── */
+@media (max-width: 820px) {
+  /* Index contact section — disable snap lock */
+  .snap-section.contact-section {
+    height: auto !important;
+    overflow: visible !important;
+    padding: 56px 0 48px !important;
+  }
+
+  /* Contact grid — single column */
+  .snap-section.contact-section .contact-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .contact-panel {
+    padding: 20px !important;
+    min-height: 0 !important;
+  }
+
+  /* Map — fixed height on mobile */
+  .map-frame {
+    height: 260px !important;
+  }
+
+  .dark-map-live-wrap {
+    min-height: 260px !important;
+  }
+
+  .dark-map-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 18px;
+  }
+
+  .dark-map-meta h3 {
+    font-size: 1.3rem;
+  }
+
+  .map-link {
+    width: 100%;
+    justify-content: center;
+    min-height: 48px;
+  }
+
+  /* Hours list */
+  .hours-list li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    padding: 10px 0;
+  }
+
+  .hours-list strong {
+    text-align: left;
+  }
+
+  /* Contact list items */
+  .elevated-contact-list p {
+    padding: 12px;
+  }
+
+  .elevated-contact-list a {
+    font-size: 0.95rem;
+  }
+}
+
+/* ── 14. Footer ───────────────────────────────────────────── */
+@media (max-width: 820px) {
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+    padding: 40px 0 28px !important;
+  }
+
+  .footer-grid h4 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+
+  .footer-bottom {
+    padding: 14px 16px 24px;
+    font-size: 0.85rem;
+  }
+}
+
+/* ── 15. Services split (index) ───────────────────────────── */
+@media (max-width: 820px) {
+  .services-split {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+  }
+
+  .services-feature-image {
+    min-height: 260px !important;
+    max-height: 360px !important;
+    width: 100% !important;
+  }
+}
+
+/* ── 16. Index snap sections — mobile layout ──────────────── */
+@media (max-width: 820px) {
+  /* Disable snap lock on body */
+  body.snap-body {
+    overflow: auto !important;
+    height: auto !important;
+  }
+
+  .index-scroll-wrap {
+    height: auto !important;
+    overflow-y: auto !important;
+    scroll-snap-type: none !important;
+  }
+
+  /* All snap sections → normal block layout */
+  .snap-section {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    padding: 56px 0 !important;
+    scroll-snap-align: none !important;
+    display: block !important;
+  }
+
+  /* Hero section — full viewport height */
+  .snap-section.real-hero {
+    height: 100svh !important;
+    min-height: 520px !important;
+    display: flex !important;
+    align-items: flex-end !important;
+    padding: 0 !important;
+  }
+
+  /* About section */
+  .about-bg-section {
+    padding: 56px 0 !important;
+  }
+
+  /* Roster section */
+  .snap-section#roster {
+    padding: 56px 0 !important;
+  }
+
+  /* Contact section */
+  .snap-section.contact-section {
+    padding: 56px 0 48px !important;
+  }
+
+  /* Reveal animations — disable on mobile */
+  .snap-section .container {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  /* Dot nav — already hidden */
+  .index-page-indicator {
+    display: none !important;
+  }
+}
+
+/* ── 17. Back to top button ───────────────────────────────── */
+@media (max-width: 820px) {
+  .back-to-top {
+    bottom: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+  }
+
+  /* Girls page back-to-top override */
+  .girls-body .back-to-top {
+    right: 20px !important;
+  }
+}
+
+/* ── 18. CTA band ─────────────────────────────────────────── */
+@media (max-width: 820px) {
+  .cta-band {
+    padding: 0;
+  }
+
+  .cta-band h2 {
+    font-size: clamp(1.8rem, 6vw, 2.4rem);
+    max-width: 100%;
+  }
+
+  .cta-band p {
+    font-size: 0.95rem;
+  }
+}
+
+/* ── 19. Lightbox — mobile friendly ──────────────────────── */
+@media (max-width: 820px) {
+  .lightbox-img-container {
+    width: 96vw;
+    height: 80vh;
+  }
+
+  .lightbox-arrow {
+    width: 44px;
+    height: 44px;
+  }
+
+  .lightbox-prev-arrow {
+    left: 8px;
+  }
+
+  .lightbox-next-arrow {
+    right: 8px;
+  }
+
+  .lightbox-close {
+    top: 12px;
+    right: 12px;
+  }
+}
+
+/* ── 20. New pill badge ───────────────────────────────────── */
+@media (max-width: 820px) {
+  .new-pill {
+    font-size: 0.6rem;
+    padding: 2px 5px;
+    margin-left: 5px;
+    transform: translateY(-2px);
+  }
+}
+
+/* ── 21. Profile page — section padding fix ──────────────── */
+@media (max-width: 820px) {
+  /* Section alt (about/details) on profile pages */
+  .profile-snap-section.section-alt {
+    background: var(--bg-elevated);
+    padding: 40px 0 !important;
+  }
+}
+
+/* ── 22. Jasmine card — explicit stability fix ────────────── */
+/* Ensure the last row on girls.html renders consistently */
+.girls-snap-section[data-row="14"] .girls-row .profile-card > a {
+  aspect-ratio: 3 / 4;
+  display: block;
+  overflow: hidden;
+  position: relative;
+}
+
+.girls-snap-section[data-row="14"] .girls-row .profile-card > a .real-card-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+/* ── 23. Very small screens (320px) ──────────────────────── */
+@media (max-width: 340px) {
+  .brand {
+    font-size: 1.35rem;
+  }
+
+  h1 {
+    font-size: 2.1rem;
+  }
+
+  h2 {
+    font-size: 1.6rem;
+  }
+
+  .btn {
+    font-size: 0.88rem;
+    padding: 0 16px;
+  }
+
+  .detail-strip span {
+    font-size: 0.76rem;
+    padding: 5px 10px;
+  }
+
+  .segmented-option {
+    font-size: 0.78rem;
+    padding: 0 8px;
+  }
+}
+
+/* ── 24. Prevent horizontal overflow on all pages ─────────── */
+@media (max-width: 820px) {
+  /* Ensure nothing breaks out of viewport */
+  .hero,
+  .real-hero,
+  .page-hero,
+  .section,
+  .site-footer,
+  .roster-dashboard,
+  .profile-hero-grid,
+  .girls-row,
+  .availability-grid,
+  .day-selector,
+  .contact-grid,
+  .footer-grid,
+  .pricing-grid,
+  .services-split,
+  .join-split {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Fix any absolute positioned elements that could overflow */
+  .hero-overlay,
+  .page-hero-overlay,
+  .hero-bg {
+    max-width: 100%;
+  }
+}
+
+/* ── 25. Index contact — copyright position fix ───────────── */
+@media (max-width: 820px) {
+  /* The absolute-positioned copyright in contact section */
+  .snap-section.contact-section > p,
+  .contact-section > p {
+    position: static !important;
+    padding: 16px 0 4px !important;
+    display: block !important;
+    opacity: 1 !important;
+  }
+}
+
+/* ── 26. Girls page — copyright position fix ─────────────── */
+@media (max-width: 820px) {
+  .girls-cta-snap > p {
+    position: static !important;
+    padding: 16px 0 4px !important;
+    opacity: 1 !important;
+  }
+}
+
+/* ── 27. Profile pages — more girls compact grid ─────────── */
+@media (max-width: 820px) {
+  .more-girls-section {
+    padding: 32px 0 24px !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  .more-girls-section .compact-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .more-girls-section .profile-card .profile-body h3 {
+    font-size: 1.2rem !important;
+  }
+
+  .more-girls-section .real-card-image {
+    max-height: none !important;
+    aspect-ratio: 3 / 4 !important;
+  }
+
+  /* Fade animation — always visible on mobile */
+  .more-girls-section > p {
+    opacity: 1 !important;
+  }
+}
+
+/* ── 28. Roster page — section padding ───────────────────── */
+@media (max-width: 820px) {
+  /* Roster main section top padding accounts for fixed header */
+  .roster-dashboard ~ * {
+    margin-top: 0;
+  }
+
+  section[style*="padding-top: 24px"] {
+    padding-top: 88px !important;
+  }
+}
+
+/* ── 29. Services page — page hero ───────────────────────── */
+@media (max-width: 820px) {
+  .page-hero-services,
+  .page-hero-roster {
+    min-height: 36vh !important;
+    background-attachment: scroll !important; /* Fix iOS parallax */
+  }
+}
+
+/* ── 30. iOS Safari fixes ─────────────────────────────────── */
+@supports (-webkit-touch-callout: none) {
+  /* Fix 100vh on iOS Safari */
+  .snap-section.real-hero {
+    height: 100svh;
+    min-height: -webkit-fill-available;
+  }
+
+  /* Prevent bounce scroll from showing background */
+  body {
+    background-attachment: fixed;
+  }
+
+  /* Fix input zoom */
+  .join-form-panel input,
+  .join-form-panel textarea,
+  .join-form-panel select {
+    font-size: 16px;
+  }
+}
+
+/* ── END MOBILE IMPROVEMENTS ──────────────────────────────── */

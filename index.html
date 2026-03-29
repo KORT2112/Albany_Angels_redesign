@@ -46,7 +46,7 @@
       color: #f5f1ea;
       margin: 0 0 14px 0;
       text-shadow: 0 2px 30px rgba(0,0,0,0.5);
-      white-space: nowrap;
+      white-space: normal;
     }
 
     .hero-sub {
@@ -66,24 +66,36 @@
     }
 
     /* Responsive hero */
-    @media (max-width: 768px) {
+    @media (max-width: 820px) {
       .hero-text-wrap {
-        align-items: flex-end;
-        padding: 0 24px 60px;
+        align-items: flex-start;
+        padding: 0 20px 52px !important;
+        justify-content: flex-end;
       }
       .hero-text-inner {
         padding: 0;
         background: none;
+        max-width: 100%;
       }
       .hero-headline {
-        font-size: 2.4rem;
+        font-size: clamp(1.9rem, 7.5vw, 2.6rem);
+        white-space: normal;
       }
       .hero-sub {
-        font-size: 0.85rem;
+        font-size: 0.88rem;
+        max-width: 100%;
+      }
+      .hero-sub br {
+        display: none;
       }
       .hero-cta-row {
         flex-direction: column;
         gap: 10px;
+      }
+      .hero-cta-row .btn {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
       }
     }
 
@@ -321,16 +333,57 @@
 
     @media (max-width: 820px) {
       .index-page-indicator { display: none; }
-      .snap-section {
-        min-height: auto !important;
-        padding: 72px 0 !important;
-        scroll-snap-align: none;
-      }
-      body.snap-body { overflow: auto; height: auto; }
+
+      body.snap-body { overflow: auto !important; height: auto !important; }
+
       .index-scroll-wrap {
-        height: auto;
-        overflow-y: auto;
-        scroll-snap-type: none;
+        height: auto !important;
+        overflow-y: auto !important;
+        scroll-snap-type: none !important;
+      }
+
+      .snap-section {
+        height: auto !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+        padding: 56px 0 !important;
+        scroll-snap-align: none !important;
+        display: block !important;
+      }
+
+      /* Hero — full viewport */
+      .snap-section.real-hero {
+        height: 100svh !important;
+        min-height: 520px !important;
+        display: flex !important;
+        align-items: flex-end !important;
+        padding: 0 !important;
+      }
+
+      /* Reveal animations — disable on mobile */
+      .snap-section .container {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+
+      /* Contact section */
+      .snap-section.contact-section {
+        padding: 56px 0 48px !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+
+      .snap-section.contact-section .contact-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+      }
+
+      /* Contact copyright */
+      .contact-section > p {
+        position: static !important;
+        padding: 16px 0 4px !important;
+        opacity: 1 !important;
       }
     }
   </style>
@@ -570,6 +623,9 @@
       nav.classList.remove('open');
     }));
 
+    // Detect mobile
+    const isMobile = () => window.innerWidth <= 820;
+
     // Scroll-snap observer
     const scrollWrap = document.getElementById('indexScroll');
     const sections = scrollWrap.querySelectorAll('.snap-section');
@@ -588,62 +644,72 @@
 
     const dots = dotsNav.querySelectorAll('.index-dot');
 
-    function syncVisibleSection() {
-      let best = null, bestRatio = 0;
-      sections.forEach((sec, i) => {
-        const r = sec.getBoundingClientRect();
-        const visible = Math.max(0, Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0));
-        const ratio = visible / window.innerHeight;
-        if (ratio > bestRatio) { bestRatio = ratio; best = i; }
-      });
-      if (best !== null) {
-        sections.forEach((sec, i) => {
-          if (i === best) {
-            sec.classList.add('in-view');
-            if (i + 1 < sections.length) sections[i + 1].classList.add('preload');
-            if (i - 1 >= 0) sections[i - 1].classList.add('preload');
-          } else {
-            sec.classList.remove('in-view');
-            sec.classList.remove('preload');
-          }
-        });
-        dots.forEach((d, i) => d.classList.toggle('active', i === best));
-      }
-    }
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        const idx = [...sections].indexOf(entry.target);
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in-view');
-          dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-          if (idx + 1 < sections.length) sections[idx + 1].classList.add('preload');
-          if (idx - 1 >= 0) sections[idx - 1].classList.add('preload');
-        } else {
-          entry.target.classList.remove('in-view');
-          entry.target.classList.remove('preload');
-        }
-      });
-    }, {
-      root: scrollWrap,
-      threshold: 0.2
-    });
-
-    sections.forEach(s => observer.observe(s));
-    if (dots.length) dots[0].classList.add('active');
-    if (sections.length) sections[0].classList.add('in-view');
-
-    // Scrollend fallback for fast navigation
-    scrollWrap.addEventListener('scrollend', syncVisibleSection);
     // Preload all images
     document.querySelectorAll('.real-card-image, .services-feature-image').forEach(img => {
       if (img.src) { const p = new Image(); p.src = img.src; }
     });
 
-    // Back to top
+    if (isMobile()) {
+      // Mobile: mark all sections in-view immediately, no snap animations
+      sections.forEach(s => s.classList.add('in-view'));
+    } else {
+      // Desktop: full snap observer
+      function syncVisibleSection() {
+        let best = null, bestRatio = 0;
+        sections.forEach((sec, i) => {
+          const r = sec.getBoundingClientRect();
+          const visible = Math.max(0, Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0));
+          const ratio = visible / window.innerHeight;
+          if (ratio > bestRatio) { bestRatio = ratio; best = i; }
+        });
+        if (best !== null) {
+          sections.forEach((sec, i) => {
+            if (i === best) {
+              sec.classList.add('in-view');
+              if (i + 1 < sections.length) sections[i + 1].classList.add('preload');
+              if (i - 1 >= 0) sections[i - 1].classList.add('preload');
+            } else {
+              sec.classList.remove('in-view');
+              sec.classList.remove('preload');
+            }
+          });
+          dots.forEach((d, i) => d.classList.toggle('active', i === best));
+        }
+      }
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const idx = [...sections].indexOf(entry.target);
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+            if (idx + 1 < sections.length) sections[idx + 1].classList.add('preload');
+            if (idx - 1 >= 0) sections[idx - 1].classList.add('preload');
+          } else {
+            entry.target.classList.remove('in-view');
+            entry.target.classList.remove('preload');
+          }
+        });
+      }, {
+        root: scrollWrap,
+        threshold: 0.2
+      });
+
+      sections.forEach(s => observer.observe(s));
+      if (dots.length) dots[0].classList.add('active');
+      if (sections.length) sections[0].classList.add('in-view');
+      scrollWrap.addEventListener('scrollend', syncVisibleSection);
+    }
+
+    // Back to top — works on both mobile (window scroll) and desktop (scrollWrap)
     const btt = document.getElementById('backToTop');
-    scrollWrap.addEventListener('scroll', () => btt.classList.toggle('visible', scrollWrap.scrollTop > 400));
-    btt.addEventListener('click', () => scrollWrap.scrollTo({ top: 0, behavior: 'smooth' }));
+    if (isMobile()) {
+      window.addEventListener('scroll', () => btt.classList.toggle('visible', window.scrollY > 400));
+      btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    } else {
+      scrollWrap.addEventListener('scroll', () => btt.classList.toggle('visible', scrollWrap.scrollTop > 400));
+      btt.addEventListener('click', () => scrollWrap.scrollTo({ top: 0, behavior: 'smooth' }));
+    }
   </script>
 </body>
 </html>

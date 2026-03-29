@@ -300,49 +300,58 @@ ${buildMoreGirls(getMoreGirls(girl))}
       nav.classList.remove('open');
     }));
 
+    // Detect mobile
+    const isMobile = () => window.innerWidth <= 820;
+
     // Scroll-snap observer for section animations
     const scrollWrap = document.getElementById('profileScroll');
     const sections = scrollWrap.querySelectorAll('.profile-snap-section');
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in-view');
-        } else {
-          entry.target.classList.remove('in-view');
-        }
-      });
-    }, {
-      root: scrollWrap,
-      threshold: 0.2
-    });
-
-    sections.forEach(s => observer.observe(s));
-
-    // Hero always visible on load
-    if (sections.length) sections[0].classList.add('in-view');
-
-    // Fallback sync on scrollend
-    function syncVisibleSection() {
-      let best = null, bestRatio = 0;
-      sections.forEach((sec, i) => {
-        const r = sec.getBoundingClientRect();
-        const visible = Math.max(0, Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0));
-        const ratio = visible / window.innerHeight;
-        if (ratio > bestRatio) { bestRatio = ratio; best = i; }
-      });
-      if (best !== null) {
-        sections.forEach((sec, i) => {
-          if (i === best) {
-            sec.classList.add('in-view');
+    if (isMobile()) {
+      // Mobile: mark all sections in-view immediately, no snap animations
+      sections.forEach(s => s.classList.add('in-view'));
+    } else {
+      // Desktop: IntersectionObserver for snap animations
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
           } else {
-            sec.classList.remove('in-view');
+            entry.target.classList.remove('in-view');
           }
         });
-      }
-    }
+      }, {
+        root: scrollWrap,
+        threshold: 0.2
+      });
 
-    scrollWrap.addEventListener('scrollend', syncVisibleSection);
+      sections.forEach(s => observer.observe(s));
+
+      // Hero always visible on load
+      if (sections.length) sections[0].classList.add('in-view');
+
+      // Fallback sync on scrollend
+      function syncVisibleSection() {
+        let best = null, bestRatio = 0;
+        sections.forEach((sec, i) => {
+          const r = sec.getBoundingClientRect();
+          const visible = Math.max(0, Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0));
+          const ratio = visible / window.innerHeight;
+          if (ratio > bestRatio) { bestRatio = ratio; best = i; }
+        });
+        if (best !== null) {
+          sections.forEach((sec, i) => {
+            if (i === best) {
+              sec.classList.add('in-view');
+            } else {
+              sec.classList.remove('in-view');
+            }
+          });
+        }
+      }
+
+      scrollWrap.addEventListener('scrollend', syncVisibleSection);
+    }
 
     // Preload next carousel images only
     document.querySelectorAll('.carousel-slide').forEach((img, i) => {

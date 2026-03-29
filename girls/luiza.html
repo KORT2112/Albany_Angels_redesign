@@ -139,10 +139,10 @@
           </div>
         </div>
         <div class="profile-grid compact-grid">
-          <article class="profile-card"><a href="maddison.html" class="card-link"><img class="real-card-image" loading="lazy" src="../assets/girls/maddison/hero.jpg" alt="Maddison" /><div class="profile-body"><h3>Maddison</h3></div></a></article>
-          <article class="profile-card"><a href="mea.html" class="card-link"><img class="real-card-image" loading="lazy" src="../assets/girls/mea/hero.jpg" alt="Mea" /><div class="profile-body"><h3>Mea</h3></div></a></article>
-          <article class="profile-card"><a href="megan.html" class="card-link"><img class="real-card-image" loading="lazy" src="../assets/girls/megan/hero.jpg" alt="Megan" /><div class="profile-body"><h3>Megan</h3></div></a></article>
-          <article class="profile-card"><a href="mel.html" class="card-link"><img class="real-card-image" loading="lazy" src="../assets/girls/mel/hero.png" alt="Mel" /><div class="profile-body"><h3>Mel</h3></div></a></article>
+          <article class="profile-card"><img class="real-card-image" loading="lazy" src="../assets/roster/chantelle-1.jpg" alt="Chantelle" /><div class="profile-body"><h3>Chantelle</h3><a href="./chantelle.html" class="text-link">View profile</a></div></article>
+          <article class="profile-card"><img class="real-card-image" loading="lazy" src="../assets/roster/maddison.jpg" alt="Maddison" /><div class="profile-body"><h3>Maddison</h3><a href="./maddison.html" class="text-link">View profile</a></div></article>
+          <article class="profile-card"><img class="real-card-image" loading="lazy" src="../assets/roster/alexa.jpg" alt="Alexa" /><div class="profile-body"><h3>Alexa</h3><a href="./alexa.html" class="text-link">View profile</a></div></article>
+          <article class="profile-card"><img class="real-card-image" loading="lazy" src="../assets/roster/ally.png" alt="Ally" /><div class="profile-body"><h3>Ally</h3><a href="./ally.html" class="text-link">View profile</a></div></article>
         </div>
       </div>
       <p style="text-align:center; color:rgba(255,255,255,0.55); font-size:0.75rem; letter-spacing:0.02em; margin:0 0 0 -2px; padding-top:8px; position:absolute; bottom:15px; left:0; right:0;">&copy; 2026 Albany Angels. All rights reserved.</p>
@@ -169,49 +169,58 @@
       nav.classList.remove('open');
     }));
 
+    // Detect mobile
+    const isMobile = () => window.innerWidth <= 820;
+
     // Scroll-snap observer for section animations
     const scrollWrap = document.getElementById('profileScroll');
     const sections = scrollWrap.querySelectorAll('.profile-snap-section');
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in-view');
-        } else {
-          entry.target.classList.remove('in-view');
-        }
-      });
-    }, {
-      root: scrollWrap,
-      threshold: 0.2
-    });
-
-    sections.forEach(s => observer.observe(s));
-
-    // Hero always visible on load
-    if (sections.length) sections[0].classList.add('in-view');
-
-    // Fallback sync on scrollend
-    function syncVisibleSection() {
-      let best = null, bestRatio = 0;
-      sections.forEach((sec, i) => {
-        const r = sec.getBoundingClientRect();
-        const visible = Math.max(0, Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0));
-        const ratio = visible / window.innerHeight;
-        if (ratio > bestRatio) { bestRatio = ratio; best = i; }
-      });
-      if (best !== null) {
-        sections.forEach((sec, i) => {
-          if (i === best) {
-            sec.classList.add('in-view');
+    if (isMobile()) {
+      // Mobile: mark all sections in-view immediately, no snap animations
+      sections.forEach(s => s.classList.add('in-view'));
+    } else {
+      // Desktop: IntersectionObserver for snap animations
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
           } else {
-            sec.classList.remove('in-view');
+            entry.target.classList.remove('in-view');
           }
         });
-      }
-    }
+      }, {
+        root: scrollWrap,
+        threshold: 0.2
+      });
 
-    scrollWrap.addEventListener('scrollend', syncVisibleSection);
+      sections.forEach(s => observer.observe(s));
+
+      // Hero always visible on load
+      if (sections.length) sections[0].classList.add('in-view');
+
+      // Fallback sync on scrollend
+      function syncVisibleSection() {
+        let best = null, bestRatio = 0;
+        sections.forEach((sec, i) => {
+          const r = sec.getBoundingClientRect();
+          const visible = Math.max(0, Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0));
+          const ratio = visible / window.innerHeight;
+          if (ratio > bestRatio) { bestRatio = ratio; best = i; }
+        });
+        if (best !== null) {
+          sections.forEach((sec, i) => {
+            if (i === best) {
+              sec.classList.add('in-view');
+            } else {
+              sec.classList.remove('in-view');
+            }
+          });
+        }
+      }
+
+      scrollWrap.addEventListener('scrollend', syncVisibleSection);
+    }
 
     // Preload next carousel images only
     document.querySelectorAll('.carousel-slide').forEach((img, i) => {
@@ -223,70 +232,35 @@
       const carousel = document.getElementById('heroCarousel');
       if (!carousel) return;
       const track = carousel.querySelector('.carousel-track');
-      const origSlides = Array.from(carousel.querySelectorAll('.carousel-slide'));
+      const slides = carousel.querySelectorAll('.carousel-slide');
       const prevBtn = carousel.querySelector('.carousel-prev');
       const nextBtn = carousel.querySelector('.carousel-next');
       const currentEl = document.getElementById('carouselCurrent');
       const totalEl = document.getElementById('carouselTotal');
-      const total = origSlides.length;
+      let current = 0;
+      const total = slides.length;
 
       if (totalEl) totalEl.textContent = total;
 
-      if (total <= 1) {
-        if (prevBtn) prevBtn.style.display = 'none';
-        if (nextBtn) nextBtn.style.display = 'none';
-        return;
-      }
-
-      // Infinite loop: clone last slide before first, first slide after last
-      const firstClone = origSlides[0].cloneNode(true);
-      const lastClone = origSlides[total - 1].cloneNode(true);
-      firstClone.classList.add('carousel-clone');
-      lastClone.classList.add('carousel-clone');
-      track.insertBefore(lastClone, origSlides[0]);
-      track.appendChild(firstClone);
-      // DOM order: [lastClone, slide0, slide1, ..., slideN-1, firstClone]
-
-      let current = 1; // 1 = first real slide
-      let jumping = false;
-
-      function moveTo(idx, animate) {
-        track.style.transition = animate ? '' : 'none';
-        track.style.transform = `translateX(-${idx * 100}%)`;
-      }
-
-      function updateCounter(idx) {
-        const real = ((idx - 1) % total + total) % total;
-        if (currentEl) currentEl.textContent = real + 1;
-      }
-
-      moveTo(current, false);
-      updateCounter(current);
-
-      track.addEventListener('transitionend', (e) => {
-        if (e.propertyName !== 'transform') return;
-        if (current <= 0) { current = total; moveTo(current, false); }
-        else if (current >= total + 1) { current = 1; moveTo(current, false); }
-        jumping = false;
-      });
-
-      function goTo(idx) {
-        if (jumping) return;
-        jumping = true;
-        current = idx;
-        moveTo(current, true);
-        updateCounter(current);
+      function goTo(index) {
+        if (index < 0) index = total - 1;
+        if (index >= total) index = 0;
+        current = index;
+        track.style.transform = `translateX(-${current * 100}%)`;
+        if (currentEl) currentEl.textContent = current + 1;
       }
 
       prevBtn.addEventListener('click', (e) => { e.stopPropagation(); goTo(current - 1); });
       nextBtn.addEventListener('click', (e) => { e.stopPropagation(); goTo(current + 1); });
 
+      // Keyboard navigation
       carousel.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowLeft') goTo(current - 1);
         if (e.key === 'ArrowRight') goTo(current + 1);
       });
       carousel.setAttribute('tabindex', '0');
 
+      // Swipe support
       let startX = 0;
       carousel.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
       carousel.addEventListener('touchend', (e) => {
@@ -301,70 +275,64 @@
     (function() {
       const track = document.getElementById('filmstripTrack');
       if (!track) return;
-      const origImgs = Array.from(track.querySelectorAll('.filmstrip-img'));
+      const imgs = track.querySelectorAll('.filmstrip-img');
       const prevBtn = document.getElementById('filmPrev');
       const nextBtn = document.getElementById('filmNext');
-      const total = origImgs.length;
-      if (total === 0) return;
-
-      // Append clones for right-wrap; left-wrap uses pre-warp technique
-      origImgs.forEach(img => {
-        const c = img.cloneNode(true);
-        c.classList.add('filmstrip-clone');
-        track.appendChild(c);
-      });
-
+      const total = imgs.length;
       let offset = 0;
-      let animating = false;
 
-      function getStep() {
-        const img = track.querySelector('img');
-        return img ? img.getBoundingClientRect().width + 6 : 400;
-      }
-
-      function getTotalW() {
-        return origImgs.reduce((w, img) => w + img.getBoundingClientRect().width + 6, 0);
-      }
-
-      function setPos(val, animate) {
-        offset = val;
-        track.style.transition = animate
-          ? 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-          : 'none';
-        track.style.transform = `translateX(-${offset}px)`;
-      }
-
-      // Right-wrap: after animating into clone zone, silently reset to originals
-      track.addEventListener('transitionend', (e) => {
-        if (e.propertyName !== 'transform') return;
-        const tw = getTotalW();
-        if (offset >= tw) setPos(offset - tw, false);
-        animating = false;
+      // Clone images for infinite loop effect
+      const clones = [];
+      imgs.forEach(img => {
+        const clone = img.cloneNode(true);
+        clone.classList.add('filmstrip-clone');
+        track.appendChild(clone);
+        clones.push(clone);
       });
+
+      function getScrollStep() {
+        const firstImg = track.querySelector('.filmstrip-img');
+        return firstImg ? firstImg.getBoundingClientRect().width + 6 : 400;
+      }
+
+      function getTotalOriginalWidth() {
+        let w = 0;
+        imgs.forEach(img => { w += img.getBoundingClientRect().width + 6; });
+        return w;
+      }
 
       function scroll(dir) {
-        if (animating) return;
-        animating = true;
+        const step = getScrollStep();
+        offset += step * dir;
+        const totalW = getTotalOriginalWidth();
 
-        const step = getStep();
-        const tw = getTotalW();
-        const target = offset + step * dir;
-
-        if (target < 0) {
-          // Left-wrap: pre-warp to equivalent position in clone zone, then animate backward
+        if (offset >= totalW) {
           track.style.transition = 'none';
-          track.style.transform = `translateX(-${offset + tw}px)`;
+          offset -= totalW;
+          track.style.transform = `translateX(-${offset}px)`;
           requestAnimationFrame(() => {
-            requestAnimationFrame(() => { setPos(target + tw, true); });
+            requestAnimationFrame(() => {
+              track.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            });
+          });
+        } else if (offset < 0) {
+          track.style.transition = 'none';
+          offset += totalW;
+          track.style.transform = `translateX(-${offset}px)`;
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              track.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            });
           });
         } else {
-          setPos(target, true);
+          track.style.transform = `translateX(-${offset}px)`;
         }
       }
 
       nextBtn.addEventListener('click', () => scroll(1));
       prevBtn.addEventListener('click', () => scroll(-1));
 
+      // Swipe
       let startX = 0;
       track.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
       track.addEventListener('touchend', (e) => {
@@ -384,8 +352,9 @@
       let lbAnimating = false;
       let activeImg = imgA;
       let standbyImg = imgB;
-      const allSrcs = origImgs.map(img => img.src);
+      const allSrcs = Array.from(imgs).map(img => img.src);
 
+      // Preload all lightbox images
       allSrcs.forEach(src => { const p = new Image(); p.src = src; });
 
       function openLightbox(index) {
@@ -404,31 +373,44 @@
       function lbNav(dir) {
         if (lbAnimating) return;
         lbAnimating = true;
+
         lbIndex = (lbIndex + dir + total) % total;
         lightboxCounter.textContent = `${lbIndex + 1} / ${total}`;
+
+        // Step 1: Force standby invisible with no transition
         standbyImg.classList.add('lb-loading');
         standbyImg.classList.remove('lb-active');
         standbyImg.src = allSrcs[lbIndex];
+
+        // Step 2: Wait for image to be decoded and painted invisibly
         const ready = standbyImg.decode ? standbyImg.decode() : Promise.resolve();
         ready.catch(() => {}).then(() => {
+          // Step 3: Remove loading class, restore transitions
           standbyImg.classList.remove('lb-loading');
+
+          // Step 4: Wait one frame for the browser to apply opacity:0 with transition
           requestAnimationFrame(() => {
             requestAnimationFrame(() => {
+              // Step 5: Crossfade
               standbyImg.classList.add('lb-active');
               activeImg.classList.remove('lb-active');
+
+              // Swap references
               const temp = activeImg;
               activeImg = standbyImg;
               standbyImg = temp;
+
               setTimeout(() => { lbAnimating = false; }, 650);
             });
           });
         });
       }
 
-      // Click on filmstrip images (originals + clones) — src lookup handles clones correctly
-      track.querySelectorAll('img').forEach(img => {
+      // Click on filmstrip images (originals + clones)
+      track.querySelectorAll('.filmstrip-img').forEach(img => {
         img.addEventListener('click', () => {
-          const idx = allSrcs.indexOf(img.src);
+          const src = img.src;
+          const idx = allSrcs.indexOf(src);
           openLightbox(idx >= 0 ? idx : 0);
         });
       });
@@ -456,24 +438,6 @@
         if (e.key === 'ArrowRight') lbNav(1);
       });
     })();
-
-    // Global keyboard nav — left/right arrows control the visible carousel
-    document.addEventListener('keydown', (e) => {
-      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-      if (document.getElementById('lightbox')?.classList.contains('active')) return;
-      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) return;
-
-      const dir = e.key === 'ArrowLeft' ? 'prev' : 'next';
-      const activeSection = Array.from(document.querySelectorAll('.profile-snap-section'))
-        .find(s => s.classList.contains('in-view'));
-      if (!activeSection) return;
-
-      if (activeSection.classList.contains('profile-hero-section')) {
-        activeSection.querySelector(dir === 'prev' ? '.carousel-prev' : '.carousel-next')?.click();
-      } else if (activeSection.classList.contains('gallery-snap-section')) {
-        document.getElementById(dir === 'prev' ? 'filmPrev' : 'filmNext')?.click();
-      }
-    });
   </script>
 </body>
 </html>
