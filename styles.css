@@ -982,6 +982,12 @@ h3 { font-size: 1.9rem; }
   color: var(--accent);
 }
 
+/* nav-book-now is a mobile-only element inside the nav overlay.
+   Hide it on desktop so only the standalone header btn-primary shows. */
+.site-nav .nav-book-now {
+  display: none;
+}
+
 /* Pricing table styles */
 .pricing-section { padding: 0; }
 
