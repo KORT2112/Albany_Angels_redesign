@@ -22,6 +22,7 @@
         <a href="../index.html#about">About</a>
         <a href="../index.html#contact-details">Contact</a>
         <a href="../join.html">Join Us</a>
+        <a href="../index.html#contact" class="nav-book-now btn btn-primary">Book Now</a>
       </nav>
       <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
         <span></span><span></span><span></span>
@@ -34,33 +35,42 @@
     <!-- 1. Hero -->
     <section class="profile-snap-section profile-hero-section">
       <div class="container profile-hero-grid">
-        <div>
-          <p class="eyebrow">Full Service</p>
-          <h1>Asia</h1>
+        <!-- Left: name + lead info (no eyebrow above name) -->
+        <div class="profile-hero-text">
+          <h1 class="profile-hero-name">Asia</h1>
           <p class="profile-lead">Polynesian &middot; Age: 25</p>
           <div class="detail-strip">
             <span>Full Service</span>
             <span>Polynesian</span>
           </div>
-          <div class="hero-actions">
+          <!-- Desktop: buttons beside photo -->
+          <div class="hero-actions profile-hero-actions-desktop">
             <a class="btn btn-primary" href="../index.html#contact">Book Asia</a>
             <a class="btn btn-secondary" href="../girls.html">Back to Ladies</a>
           </div>
         </div>
-        <div class="hero-carousel" id="heroCarousel">
-          <div class="carousel-track">
+        <!-- Right: photo carousel -->
+        <div class="profile-hero-photo-wrap">
+          <div class="hero-carousel" id="heroCarousel">
+            <div class="carousel-track">
             <img class="carousel-slide real-profile-image" src="../assets/girls/asia/hero.jpg" alt="Asia photo 1" />
             <img class="carousel-slide real-profile-image" loading="lazy" src="../assets/girls/asia/gallery-01.jpg" alt="Asia photo 2" />
             <img class="carousel-slide real-profile-image" loading="lazy" src="../assets/girls/asia/gallery-02.jpg" alt="Asia photo 3" />
             <img class="carousel-slide real-profile-image" loading="lazy" src="../assets/girls/asia/gallery-03.jpg" alt="Asia photo 4" />
+            </div>
+            <button class="carousel-arrow carousel-prev" aria-label="Previous photo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <button class="carousel-arrow carousel-next" aria-label="Next photo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+            </button>
+            <div class="carousel-counter"><span id="carouselCurrent">1</span> / <span id="carouselTotal">4</span></div>
           </div>
-          <button class="carousel-arrow carousel-prev" aria-label="Previous photo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-          </button>
-          <button class="carousel-arrow carousel-next" aria-label="Next photo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
-          </button>
-          <div class="carousel-counter"><span id="carouselCurrent">1</span> / <span id="carouselTotal">4</span></div>
+          <!-- Mobile: buttons below photo -->
+          <div class="hero-actions profile-hero-actions-mobile">
+            <a class="btn btn-primary" href="../index.html#contact">Book Asia</a>
+            <a class="btn btn-secondary" href="../girls.html">Back to Ladies</a>
+          </div>
         </div>
       </div>
     </section>
@@ -144,10 +154,10 @@
           </div>
         </div>
         <div class="profile-grid compact-grid">
-          <article class="profile-card"><img class="real-card-image" loading="lazy" src="../assets/roster/natalya.jpg" alt="Natalya" /><div class="profile-body"><h3>Natalya</h3><a href="./natalya.html" class="text-link">View profile</a></div></article>
-          <article class="profile-card"><img class="real-card-image" loading="lazy" src="../assets/roster/arabella.jpg" alt="Arabella" /><div class="profile-body"><h3>Arabella</h3><a href="./arabella.html" class="text-link">View profile</a></div></article>
-          <article class="profile-card"><img class="real-card-image" loading="lazy" src="../assets/roster/hannah.jpg" alt="Hannah" /><div class="profile-body"><h3>Hannah</h3><a href="./hannah.html" class="text-link">View profile</a></div></article>
-          <article class="profile-card"><img class="real-card-image" loading="lazy" src="../assets/roster/alexa.jpg" alt="Alexa" /><div class="profile-body"><h3>Alexa</h3><a href="./alexa.html" class="text-link">View profile</a></div></article>
+          <article class="profile-card"><a href="./natalya.html"><img class="real-card-image" loading="lazy" src="../assets/girls/natalya/hero.jpg" alt="Natalya" /></a><div class="profile-body"><h3><a href="./natalya.html">Natalya</a></h3></div></article>
+          <article class="profile-card"><a href="./arabella.html"><img class="real-card-image" loading="lazy" src="../assets/girls/arabella/hero.jpg" alt="Arabella" /></a><div class="profile-body"><h3><a href="./arabella.html">Arabella</a></h3></div></article>
+          <article class="profile-card"><a href="./hannah.html"><img class="real-card-image" loading="lazy" src="../assets/girls/hannah/hero.jpg" alt="Hannah" /></a><div class="profile-body"><h3><a href="./hannah.html">Hannah</a></h3></div></article>
+          <article class="profile-card"><a href="./alexa.html"><img class="real-card-image" loading="lazy" src="../assets/girls/alexa/hero.jpg" alt="Alexa" /></a><div class="profile-body"><h3><a href="./alexa.html">Alexa</a></h3></div></article>
         </div>
       </div>
       <p style="text-align:center; color:rgba(255,255,255,0.55); font-size:0.75rem; letter-spacing:0.02em; margin:0 0 0 -2px; padding-top:8px; position:absolute; bottom:15px; left:0; right:0;">&copy; 2026 Albany Angels. All rights reserved.</p>

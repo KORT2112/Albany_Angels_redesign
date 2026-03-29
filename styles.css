@@ -1350,15 +1350,42 @@ body.profile-body .site-header {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 40px;
-  align-items: center;
+  align-items: start;
 }
 
-/* Hero carousel */
+/* Profile hero name — no eyebrow above it */
+.profile-hero-name {
+  margin: 0 0 8px;
+  font-size: clamp(2.4rem, 4vw, 3.6rem);
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+/* Profile hero text column */
+.profile-hero-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Photo wrap — contains carousel + mobile buttons */
+.profile-hero-photo-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Desktop: show desktop buttons, hide mobile buttons */
+.profile-hero-actions-mobile { display: none; }
+.profile-hero-actions-desktop { display: flex; margin-top: 28px; }
+
+/* Hero carousel — 4:3 aspect ratio */
 .hero-carousel {
   position: relative;
   width: 100%;
-  height: calc(100dvh - 140px);
-  max-height: 780px;
+  aspect-ratio: 4 / 3;
+  height: auto;
+  max-height: 600px;
   border-radius: var(--radius-lg);
   overflow: hidden;
   border: 1px solid var(--border);
@@ -1429,8 +1456,9 @@ body.profile-body .site-header {
 
 .real-profile-image {
   width: 100%;
-  height: calc(100dvh - 140px);
-  max-height: 780px;
+  aspect-ratio: 4 / 3;
+  height: auto;
+  max-height: 600px;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
@@ -1884,16 +1912,37 @@ img {
 
   /* Mobile nav overlay — full-screen, elegant */
   .site-nav {
-    padding: 88px 32px 40px;
+    padding: 0 32px 40px;
+    padding-top: max(80px, env(safe-area-inset-top, 0px) + 80px);
     gap: 0;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    /* Ensure all items are visible */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
   }
 
   .site-nav a {
-    padding: 16px 0;
+    padding: 15px 0;
     font-size: 1.3rem;
     letter-spacing: 0.02em;
+    width: 100%;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Book Now inside nav — styled as a full-width button at the bottom */
+  .site-nav .nav-book-now {
+    display: flex !important;
+    width: 100% !important;
+    margin-top: 24px;
+    border-bottom: none !important;
+    justify-content: center;
+    font-size: 1rem !important;
+    letter-spacing: 0.05em !important;
+    min-height: 52px;
+    border-radius: 999px;
   }
 
   /* Hamburger — larger tap target */
@@ -1908,9 +1957,15 @@ img {
     justify-content: center;
   }
 
-  /* Book Now button hidden on mobile (already in nav) */
-  .header-inner .btn-primary {
+  /* Book Now button in header bar — hide on mobile (it's in the nav overlay) */
+  .header-inner > .btn-primary {
     display: none;
+  }
+
+  /* Ensure hamburger is always on top of nav overlay */
+  .menu-toggle {
+    z-index: 30;
+    position: relative;
   }
 }
 
@@ -2224,26 +2279,51 @@ img {
     padding-top: 80px !important;
   }
 
-  /* Profile hero grid — stack image below text */
+  /* Profile hero grid — stack photo below name/info */
   .profile-hero-grid {
     grid-template-columns: 1fr !important;
-    gap: 24px !important;
+    gap: 20px !important;
   }
 
-  /* Hero carousel — reasonable height */
+  /* On mobile: name block first, then photo, then buttons below photo */
+  .profile-hero-text {
+    order: 1;
+  }
+  .profile-hero-photo-wrap {
+    order: 2;
+  }
+
+  /* Hide desktop buttons, show mobile buttons (below photo) */
+  .profile-hero-actions-desktop {
+    display: none !important;
+  }
+  .profile-hero-actions-mobile {
+    display: flex !important;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  .profile-hero-actions-mobile .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Hero carousel — 4:3 ratio, no fixed height override needed */
   .hero-carousel {
-    height: 62vw !important;
-    max-height: 420px !important;
-    min-height: 240px !important;
+    aspect-ratio: 4 / 3 !important;
+    height: auto !important;
+    max-height: none !important;
+    min-height: 0 !important;
     width: 100% !important;
   }
 
   /* Profile image */
   .real-profile-image {
     width: 100% !important;
-    height: 62vw !important;
-    max-height: 420px !important;
-    min-height: 240px !important;
+    aspect-ratio: 4 / 3 !important;
+    height: auto !important;
+    max-height: none !important;
+    min-height: 0 !important;
     object-fit: cover !important;
     object-position: center top !important;
   }

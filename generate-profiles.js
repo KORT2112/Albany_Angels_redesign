@@ -3,9 +3,22 @@ const path = require('path');
 
 const data = JSON.parse(fs.readFileSync(path.join(__dirname, 'profile-data.json'), 'utf8'));
 
-// Map of girl names to their roster image for "more girls" cards
+// Build a map of girl names to their actual hero image path (from assets/girls folder)
 const rosterImages = {};
-data.forEach(g => { rosterImages[g.name] = g.heroImage; });
+data.forEach(g => {
+  const folderName = g.name.toLowerCase();
+  const galleryDir = path.join(__dirname, 'assets', 'girls', folderName);
+  if (fs.existsSync(galleryDir)) {
+    const files = fs.readdirSync(galleryDir);
+    const heroFile = files.find(f => f.toLowerCase().startsWith('hero.'));
+    if (heroFile) {
+      rosterImages[g.name] = `../assets/girls/${folderName}/${heroFile}`;
+      return;
+    }
+  }
+  // Fallback: use heroImage from profile-data.json
+  rosterImages[g.name] = g.heroImage;
+});
 
 // Map of girl names to ethnicity + service for "more girls" card descriptions
 const girlMeta = {};
@@ -95,8 +108,19 @@ function getMoreGirls(girl) {
 
 function buildMoreGirls(moreGirls) {
   return moreGirls.map(mg => {
-    const img = rosterImages[mg.name] || `../assets/roster/${mg.name.toLowerCase()}.jpg`;
-    return `          <article class="profile-card"><img class="real-card-image" loading="lazy" src="${img}" alt="${mg.name}" /><div class="profile-body"><h3>${mg.name}</h3><a href="${mg.href}" class="text-link">View profile</a></div></article>`;
+    // Derive image from actual assets/girls folder
+    const folderName = mg.name.toLowerCase();
+    const galleryDir = path.join(__dirname, 'assets', 'girls', folderName);
+    let img;
+    if (fs.existsSync(galleryDir)) {
+      const files = fs.readdirSync(galleryDir);
+      const heroFile = files.find(f => f.toLowerCase().startsWith('hero.'));
+      img = heroFile ? `../assets/girls/${folderName}/${heroFile}` : (rosterImages[mg.name] || `../assets/girls/${folderName}/hero.jpg`);
+    } else {
+      img = rosterImages[mg.name] || `../assets/girls/${folderName}/hero.jpg`;
+    }
+    // Card: image links to profile, name links to profile, no 'View profile' text
+    return `          <article class="profile-card"><a href="${mg.href}"><img class="real-card-image" loading="lazy" src="${img}" alt="${mg.name}" /></a><div class="profile-body"><h3><a href="${mg.href}">${mg.name}</a></h3></div></article>`;
   }).join('\n');
 }
 
@@ -163,6 +187,7 @@ function generateProfile(girl) {
         <a href="../index.html#about">About</a>
         <a href="../index.html#contact-details">Contact</a>
         <a href="../join.html">Join Us</a>
+        <a href="../index.html#contact" class="nav-book-now btn btn-primary">Book Now</a>
       </nav>
       <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
         <span></span><span></span><span></span>
@@ -175,29 +200,38 @@ function generateProfile(girl) {
     <!-- 1. Hero -->
     <section class="profile-snap-section profile-hero-section">
       <div class="container profile-hero-grid">
-        <div>
-          <p class="eyebrow">${girl.service}</p>
-          <h1>${girl.name}</h1>
+        <!-- Left: name + lead info (no eyebrow above name) -->
+        <div class="profile-hero-text">
+          <h1 class="profile-hero-name">${girl.name}</h1>
           <p class="profile-lead">${buildProfileLead(girl)}</p>
           <div class="detail-strip">
 ${buildDetailStrip(girl)}
           </div>
-          <div class="hero-actions">
+          <!-- Desktop: buttons beside photo -->
+          <div class="hero-actions profile-hero-actions-desktop">
             <a class="btn btn-primary" href="../index.html#contact">Book ${girl.name}</a>
             <a class="btn btn-secondary" href="../girls.html">Back to Ladies</a>
           </div>
         </div>
-        <div class="hero-carousel" id="heroCarousel">
-          <div class="carousel-track">
+        <!-- Right: photo carousel -->
+        <div class="profile-hero-photo-wrap">
+          <div class="hero-carousel" id="heroCarousel">
+            <div class="carousel-track">
 ${buildCarouselSlides(girl, heroFile, galleryFiles)}
+            </div>
+            <button class="carousel-arrow carousel-prev" aria-label="Previous photo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <button class="carousel-arrow carousel-next" aria-label="Next photo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+            </button>
+            <div class="carousel-counter"><span id="carouselCurrent">1</span> / <span id="carouselTotal">${totalSlides}</span></div>
           </div>
-          <button class="carousel-arrow carousel-prev" aria-label="Previous photo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-          </button>
-          <button class="carousel-arrow carousel-next" aria-label="Next photo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
-          </button>
-          <div class="carousel-counter"><span id="carouselCurrent">1</span> / <span id="carouselTotal">${totalSlides}</span></div>
+          <!-- Mobile: buttons below photo -->
+          <div class="hero-actions profile-hero-actions-mobile">
+            <a class="btn btn-primary" href="../index.html#contact">Book ${girl.name}</a>
+            <a class="btn btn-secondary" href="../girls.html">Back to Ladies</a>
+          </div>
         </div>
       </div>
     </section>

@@ -22,6 +22,7 @@
         <a href="../index.html#about">About</a>
         <a href="../index.html#contact-details">Contact</a>
         <a href="../join.html">Join Us</a>
+        <a href="../index.html#contact" class="nav-book-now btn btn-primary">Book Now</a>
       </nav>
       <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
         <span></span><span></span><span></span>
@@ -34,30 +35,39 @@
     <!-- 1. Hero -->
     <section class="profile-snap-section profile-hero-section">
       <div class="container profile-hero-grid">
-        <div>
-          <p class="eyebrow">Full Service</p>
-          <h1>Bianca</h1>
+        <!-- Left: name + lead info (no eyebrow above name) -->
+        <div class="profile-hero-text">
+          <h1 class="profile-hero-name">Bianca</h1>
           <p class="profile-lead">Latina &middot; Age: 26 &middot; 5'1"</p>
           <div class="detail-strip">
             <span>Full Service</span>
             <span>Latina</span>
           </div>
-          <div class="hero-actions">
+          <!-- Desktop: buttons beside photo -->
+          <div class="hero-actions profile-hero-actions-desktop">
             <a class="btn btn-primary" href="../index.html#contact">Book Bianca</a>
             <a class="btn btn-secondary" href="../girls.html">Back to Ladies</a>
           </div>
         </div>
-        <div class="hero-carousel" id="heroCarousel">
-          <div class="carousel-track">
+        <!-- Right: photo carousel -->
+        <div class="profile-hero-photo-wrap">
+          <div class="hero-carousel" id="heroCarousel">
+            <div class="carousel-track">
             <img class="carousel-slide real-profile-image" src="../assets/girls/bianca/hero.jpg" alt="Bianca photo 1" />
+            </div>
+            <button class="carousel-arrow carousel-prev" aria-label="Previous photo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <button class="carousel-arrow carousel-next" aria-label="Next photo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+            </button>
+            <div class="carousel-counter"><span id="carouselCurrent">1</span> / <span id="carouselTotal">1</span></div>
           </div>
-          <button class="carousel-arrow carousel-prev" aria-label="Previous photo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-          </button>
-          <button class="carousel-arrow carousel-next" aria-label="Next photo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
-          </button>
-          <div class="carousel-counter"><span id="carouselCurrent">1</span> / <span id="carouselTotal">1</span></div>
+          <!-- Mobile: buttons below photo -->
+          <div class="hero-actions profile-hero-actions-mobile">
+            <a class="btn btn-primary" href="../index.html#contact">Book Bianca</a>
+            <a class="btn btn-secondary" href="../girls.html">Back to Ladies</a>
+          </div>
         </div>
       </div>
     </section>
@@ -139,10 +149,10 @@
           </div>
         </div>
         <div class="profile-grid compact-grid">
-          <article class="profile-card"><img class="real-card-image" loading="lazy" src="../assets/roster/gia.jpg" alt="Gia" /><div class="profile-body"><h3>Gia</h3><a href="./gia.html" class="text-link">View profile</a></div></article>
-          <article class="profile-card"><img class="real-card-image" loading="lazy" src="../assets/roster/melissa.jpg" alt="Melissa" /><div class="profile-body"><h3>Melissa</h3><a href="./melissa.html" class="text-link">View profile</a></div></article>
-          <article class="profile-card"><img class="real-card-image" loading="lazy" src="../assets/roster/copy-of-ivy.jpg" alt="Angel" /><div class="profile-body"><h3>Angel</h3><a href="./angel.html" class="text-link">View profile</a></div></article>
-          <article class="profile-card"><img class="real-card-image" loading="lazy" src="../assets/roster/alexa.jpg" alt="Alexa" /><div class="profile-body"><h3>Alexa</h3><a href="./alexa.html" class="text-link">View profile</a></div></article>
+          <article class="profile-card"><a href="./gia.html"><img class="real-card-image" loading="lazy" src="../assets/girls/gia/hero.jpg" alt="Gia" /></a><div class="profile-body"><h3><a href="./gia.html">Gia</a></h3></div></article>
+          <article class="profile-card"><a href="./melissa.html"><img class="real-card-image" loading="lazy" src="../assets/girls/melissa/hero.jpg" alt="Melissa" /></a><div class="profile-body"><h3><a href="./melissa.html">Melissa</a></h3></div></article>
+          <article class="profile-card"><a href="./angel.html"><img class="real-card-image" loading="lazy" src="../assets/girls/angel/hero.jpg" alt="Angel" /></a><div class="profile-body"><h3><a href="./angel.html">Angel</a></h3></div></article>
+          <article class="profile-card"><a href="./alexa.html"><img class="real-card-image" loading="lazy" src="../assets/girls/alexa/hero.jpg" alt="Alexa" /></a><div class="profile-body"><h3><a href="./alexa.html">Alexa</a></h3></div></article>
         </div>
       </div>
       <p style="text-align:center; color:rgba(255,255,255,0.55); font-size:0.75rem; letter-spacing:0.02em; margin:0 0 0 -2px; padding-top:8px; position:absolute; bottom:15px; left:0; right:0;">&copy; 2026 Albany Angels. All rights reserved.</p>

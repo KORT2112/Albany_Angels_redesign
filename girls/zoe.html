@@ -22,6 +22,7 @@
         <a href="../index.html#about">About</a>
         <a href="../index.html#contact-details">Contact</a>
         <a href="../join.html">Join Us</a>
+        <a href="../index.html#contact" class="nav-book-now btn btn-primary">Book Now</a>
       </nav>
       <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
         <span></span><span></span><span></span>
@@ -34,21 +35,24 @@
     <!-- 1. Hero -->
     <section class="profile-snap-section profile-hero-section">
       <div class="container profile-hero-grid">
-        <div>
-          <p class="eyebrow">Sensual Massage Expert</p>
-          <h1>Zoe</h1>
+        <!-- Left: name + lead info (no eyebrow above name) -->
+        <div class="profile-hero-text">
+          <h1 class="profile-hero-name">Zoe</h1>
           <p class="profile-lead">Kiwi Tahitian &middot; Age: 18 &middot; 5'6"</p>
           <div class="detail-strip">
             <span>Sensual Massage Expert</span>
             <span>Kiwi Tahitian</span>
           </div>
-          <div class="hero-actions">
+          <!-- Desktop: buttons beside photo -->
+          <div class="hero-actions profile-hero-actions-desktop">
             <a class="btn btn-primary" href="../index.html#contact">Book Zoe</a>
             <a class="btn btn-secondary" href="../girls.html">Back to Ladies</a>
           </div>
         </div>
-        <div class="hero-carousel" id="heroCarousel">
-          <div class="carousel-track">
+        <!-- Right: photo carousel -->
+        <div class="profile-hero-photo-wrap">
+          <div class="hero-carousel" id="heroCarousel">
+            <div class="carousel-track">
             <img class="carousel-slide real-profile-image" src="../assets/girls/zoe/hero.jpg" alt="Zoe photo 1" />
             <img class="carousel-slide real-profile-image" loading="lazy" src="../assets/girls/zoe/gallery-01.png" alt="Zoe photo 2" />
             <img class="carousel-slide real-profile-image" loading="lazy" src="../assets/girls/zoe/gallery-02.png" alt="Zoe photo 3" />
@@ -59,14 +63,20 @@
             <img class="carousel-slide real-profile-image" loading="lazy" src="../assets/girls/zoe/gallery-07.jpg" alt="Zoe photo 8" />
             <img class="carousel-slide real-profile-image" loading="lazy" src="../assets/girls/zoe/gallery-08.jpg" alt="Zoe photo 9" />
             <img class="carousel-slide real-profile-image" loading="lazy" src="../assets/girls/zoe/gallery-09.jpg" alt="Zoe photo 10" />
+            </div>
+            <button class="carousel-arrow carousel-prev" aria-label="Previous photo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <button class="carousel-arrow carousel-next" aria-label="Next photo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+            </button>
+            <div class="carousel-counter"><span id="carouselCurrent">1</span> / <span id="carouselTotal">10</span></div>
           </div>
-          <button class="carousel-arrow carousel-prev" aria-label="Previous photo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-          </button>
-          <button class="carousel-arrow carousel-next" aria-label="Next photo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
-          </button>
-          <div class="carousel-counter"><span id="carouselCurrent">1</span> / <span id="carouselTotal">10</span></div>
+          <!-- Mobile: buttons below photo -->
+          <div class="hero-actions profile-hero-actions-mobile">
+            <a class="btn btn-primary" href="../index.html#contact">Book Zoe</a>
+            <a class="btn btn-secondary" href="../girls.html">Back to Ladies</a>
+          </div>
         </div>
       </div>
     </section>
@@ -157,10 +167,10 @@
           </div>
         </div>
         <div class="profile-grid compact-grid">
-          <article class="profile-card"><img class="real-card-image" loading="lazy" src="../assets/roster/bibi.jpg" alt="Bibi" /><div class="profile-body"><h3>Bibi</h3><a href="./bibi.html" class="text-link">View profile</a></div></article>
-          <article class="profile-card"><img class="real-card-image" loading="lazy" src="../assets/roster/krystal.png" alt="Krystal" /><div class="profile-body"><h3>Krystal</h3><a href="./krystal.html" class="text-link">View profile</a></div></article>
-          <article class="profile-card"><img class="real-card-image" loading="lazy" src="../assets/roster/victoria.jpg" alt="Victoria" /><div class="profile-body"><h3>Victoria</h3><a href="./victoria.html" class="text-link">View profile</a></div></article>
-          <article class="profile-card"><img class="real-card-image" loading="lazy" src="../assets/roster/alexa.jpg" alt="Alexa" /><div class="profile-body"><h3>Alexa</h3><a href="./alexa.html" class="text-link">View profile</a></div></article>
+          <article class="profile-card"><a href="./bibi.html"><img class="real-card-image" loading="lazy" src="../assets/girls/bibi/hero.jpg" alt="Bibi" /></a><div class="profile-body"><h3><a href="./bibi.html">Bibi</a></h3></div></article>
+          <article class="profile-card"><a href="./krystal.html"><img class="real-card-image" loading="lazy" src="../assets/girls/krystal/hero.png" alt="Krystal" /></a><div class="profile-body"><h3><a href="./krystal.html">Krystal</a></h3></div></article>
+          <article class="profile-card"><a href="./victoria.html"><img class="real-card-image" loading="lazy" src="../assets/girls/victoria/hero.jpg" alt="Victoria" /></a><div class="profile-body"><h3><a href="./victoria.html">Victoria</a></h3></div></article>
+          <article class="profile-card"><a href="./alexa.html"><img class="real-card-image" loading="lazy" src="../assets/girls/alexa/hero.jpg" alt="Alexa" /></a><div class="profile-body"><h3><a href="./alexa.html">Alexa</a></h3></div></article>
         </div>
       </div>
       <p style="text-align:center; color:rgba(255,255,255,0.55); font-size:0.75rem; letter-spacing:0.02em; margin:0 0 0 -2px; padding-top:8px; position:absolute; bottom:15px; left:0; right:0;">&copy; 2026 Albany Angels. All rights reserved.</p>

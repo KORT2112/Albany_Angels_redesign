@@ -347,6 +347,14 @@
         padding: 0 !important;
       }
 
+      /* Orphan card (3rd in a 3-card row on mobile 2-col grid)
+         Span both columns, constrain to ~50% width, and center */
+      .girls-row .profile-card:last-child:nth-child(odd) {
+        grid-column: 1 / -1 !important;
+        max-width: calc(50% - 6px) !important;
+        margin: 0 auto !important;
+      }
+
       /* Card image wrapper — aspect ratio based */
       .girls-row .profile-card > a {
         height: auto !important;
@@ -435,6 +443,7 @@
         <a href="./index.html#about">About</a>
         <a href="./index.html#contact-details">Contact</a>
         <a href="./join.html">Join Us</a>
+        <a href="./index.html#contact" class="nav-book-now btn btn-primary">Book Now</a>
       </nav>
       <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
         <span></span><span></span><span></span>

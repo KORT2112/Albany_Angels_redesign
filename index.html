@@ -65,17 +65,26 @@
       gap: 14px;
     }
 
+    /* Desktop: show desktop CTA, hide mobile CTA */
+    .hero-cta-mobile { display: none; }
+    .hero-cta-desktop { display: flex; }
+
     /* Responsive hero */
     @media (max-width: 820px) {
+      /* Spread text and buttons across the full hero height */
       .hero-text-wrap {
         align-items: flex-start;
-        padding: 0 20px 52px !important;
-        justify-content: flex-end;
+        padding: 0 20px 44px !important;
+        justify-content: space-between;
+        flex-direction: column;
       }
       .hero-text-inner {
         padding: 0;
         background: none;
         max-width: 100%;
+        /* Clear the fixed header */
+        padding-top: 90px;
+        flex-shrink: 0;
       }
       .hero-headline {
         font-size: clamp(1.9rem, 7.5vw, 2.6rem);
@@ -88,11 +97,17 @@
       .hero-sub br {
         display: none;
       }
-      .hero-cta-row {
+      /* Hide desktop CTA row (inside text block), show mobile CTA at bottom */
+      .hero-cta-desktop { display: none !important; }
+      .hero-cta-mobile {
+        display: flex !important;
         flex-direction: column;
         gap: 10px;
+        width: 100%;
+        margin-top: auto;
+        flex-shrink: 0;
       }
-      .hero-cta-row .btn {
+      .hero-cta-mobile .btn {
         width: 100%;
         text-align: center;
         justify-content: center;
@@ -398,6 +413,7 @@
         <a href="#about">About</a>
         <a href="#contact-details">Contact</a>
         <a href="./join.html">Join Us</a>
+        <a href="#contact-details" class="nav-book-now btn btn-primary">Book Now</a>
       </nav>
       <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
         <span></span><span></span><span></span>
@@ -415,10 +431,16 @@
           <span class="hero-overline">Albany Angels</span>
           <h1 class="hero-headline">Where Elegance<br>Meets Discretion</h1>
           <p class="hero-sub">Auckland's most discreet, premium companionship,<br>crafted around your comfort.</p>
-          <div class="hero-actions hero-cta-row">
+          <!-- Desktop: buttons inside text block -->
+          <div class="hero-actions hero-cta-row hero-cta-desktop">
             <a class="btn btn-primary" href="./girls.html">View Ladies</a>
             <a class="btn btn-secondary" href="./services.html">Explore Services</a>
           </div>
+        </div>
+        <!-- Mobile: buttons at bottom of hero, outside text block -->
+        <div class="hero-actions hero-cta-row hero-cta-mobile">
+          <a class="btn btn-primary" href="./girls.html">View Ladies</a>
+          <a class="btn btn-secondary" href="./services.html">Explore Services</a>
         </div>
       </div>
     </section>

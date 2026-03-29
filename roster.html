@@ -155,6 +155,7 @@
         <a href="./index.html#about">About</a>
         <a href="./index.html#contact-details">Contact</a>
         <a href="./join.html">Join Us</a>
+        <a href="./index.html#contact" class="nav-book-now btn btn-primary">Book Now</a>
       </nav>
       <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
         <span></span><span></span><span></span>
@@ -164,7 +165,7 @@
   </header>
 
   <main>
-    <section class="section roster-main-section" style="padding-top: 24px; padding-bottom: 48px;">
+    <section class="section roster-main-section">
       <div class="container">
         <div class="roster-dashboard">
           <div class="roster-topbar">
@@ -475,16 +476,7 @@
       modeSwitchWrap.setAttribute('data-mode', currentMode);
     }
 
-    buttons.forEach(btn => btn.addEventListener('click', () => renderDay(btn.dataset.day)));
-    fullServiceLabel.addEventListener('click', () => {
-      currentMode = 'full';
-      renderDay(buttons.find(btn => btn.classList.contains('active'))?.dataset.day || currentDayKey);
-    });
-    sensualLabel.addEventListener('click', () => {
-      currentMode = 'sensual';
-      renderDay(buttons.find(btn => btn.classList.contains('active'))?.dataset.day || currentDayKey);
-    });
-
+    // Determine current day first so event handlers can reference it
     const now = new Date();
     const weekdayMap = {
       0: 'sunday',
@@ -495,8 +487,25 @@
       5: 'friday',
       6: 'saturday'
     };
-    const currentDayKey = weekdayMap[now.getDay()] || 'monday';
-    renderDay(currentDayKey);
+    let activeDayKey = weekdayMap[now.getDay()] || 'monday';
+
+    // Day pill click — update activeDayKey and re-render
+    buttons.forEach(btn => btn.addEventListener('click', () => {
+      activeDayKey = btn.dataset.day;
+      renderDay(activeDayKey);
+    }));
+
+    // Mode switch — re-render current day in new mode
+    fullServiceLabel.addEventListener('click', () => {
+      currentMode = 'full';
+      renderDay(activeDayKey);
+    });
+    sensualLabel.addEventListener('click', () => {
+      currentMode = 'sensual';
+      renderDay(activeDayKey);
+    });
+
+    renderDay(activeDayKey);
 
     // Mobile menu
     const toggle = document.getElementById('menuToggle');
