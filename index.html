@@ -26,28 +26,22 @@
       z-index: 2;
       display: flex;
       flex-direction: column;
-      justify-content: center;       /* desktop: text vertically centred */
-      padding: 0 8vw;
+      /* Desktop: anchor to top-left, bottom padding reserves space for buttons */
+      justify-content: flex-start;
+      padding: clamp(110px, 15vh, 160px) 8vw 80px;
     }
 
-    /* Text column — constrained so copy never runs too wide on big screens */
+    /* Text column — flex column so CTA can be pushed to bottom via margin-top:auto */
     .hero-text-inner {
       max-width: 580px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;   /* fills remaining height so margin-top:auto on CTA has room to work */
     }
 
     /* ── Overline — hidden on desktop, already hidden on mobile ── */
     .hero-overline {
       display: none;
-    }
-
-    /* ── Gold rule — editorial accent above headline ── */
-    .hero-headline::before {
-      content: '';
-      display: block;
-      width: 36px;
-      height: 1px;
-      background: var(--accent, #bf9b60);
-      margin-bottom: 22px;
     }
 
     /* ── Headline ── */
@@ -75,7 +69,7 @@
       letter-spacing: 0.025em;
       color: rgba(245, 241, 234, 0.72);
       max-width: 360px;
-      margin: 0 0 62px 0;
+      margin: 0;
       text-shadow: 0 1px 18px rgba(0,0,0,0.52);
     }
 
@@ -87,7 +81,10 @@
 
     /* Desktop shows inline CTA; mobile CTA is a separate bottom element */
     .hero-cta-mobile  { display: none; }
-    .hero-cta-desktop { display: flex; }
+    .hero-cta-desktop {
+      display: flex;
+      margin-top: auto;   /* pushes buttons to the bottom of the flex text-inner */
+    }
 
     /* ─── Mobile (≤ 820 px) ──────────────────────────────────
        Cinematic poster layout:
@@ -106,8 +103,11 @@
       }
 
       /* Push text block down just enough to clear the fixed header,
-         keeping it well inside the dark upper-left negative space */
+         keeping it well inside the dark upper-left negative space.
+         flex:none cancels the desktop flex:1 so mobile space-between works. */
       .hero-text-inner {
+        flex: none !important;
+        display: block !important;
         padding-top: clamp(88px, 20svh, 130px) !important;
         padding-right: 0 !important;
         padding-bottom: 0 !important;
