@@ -1417,9 +1417,17 @@ body.profile-body .site-header {
 .profile-hero-actions-mobile { display: none; }
 .profile-hero-actions-desktop { display: flex; margin-top: 28px; }
 
-/* New unified button group — always below the photo, no split */
-.profile-hero-actions-below {
+/* Desktop-only button group — sits below pills in left column */
+.profile-hero-actions-left {
   display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+/* Mobile button group — hidden on desktop, shown below photo on mobile */
+.profile-hero-actions-below {
+  display: none; /* hidden on desktop */
   flex-wrap: wrap;
   gap: 12px;
   margin-top: 16px;
@@ -2409,7 +2417,12 @@ img {
     display: none !important;
   }
 
-  /* New unified button group — full-width stacked on mobile */
+  /* Hide the desktop left-column buttons on mobile */
+  .profile-hero-actions-left {
+    display: none !important;
+  }
+
+  /* Show the below-photo button group on mobile — full-width stacked */
   .profile-hero-actions-below {
     display: flex !important;
     flex-direction: column !important;

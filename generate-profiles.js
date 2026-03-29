@@ -230,12 +230,17 @@ function generateProfile(girl) {
     <!-- 1. Hero -->
     <section class="profile-snap-section profile-hero-section">
       <div class="container profile-hero-grid">
-        <!-- Left: name + detail tags only (no lead text, no eyebrow) -->
+        <!-- Left: name + meta + pills + buttons (desktop) -->
         <div class="profile-hero-text">
           <h1 class="profile-hero-name">${girl.name}</h1>
           <p class="profile-hero-meta">${buildProfileLead(girl)}</p>
           <div class="detail-strip">
 ${buildDetailStrip(girl)}
+          </div>
+          <!-- Desktop-only buttons — hidden on mobile -->
+          <div class="hero-actions profile-hero-actions-left">
+            <a class="btn btn-primary" href="../index.html#contact-details">Book ${girl.name}</a>
+            <a class="btn btn-secondary" href="../girls.html">Back to Ladies</a>
           </div>
         </div>
         <!-- Right: photo carousel + buttons below (on both desktop and mobile) -->
@@ -252,7 +257,7 @@ ${buildCarouselSlides(girl, heroFile, galleryFiles)}
             </button>
             <div class="carousel-counter"><span id="carouselCurrent">1</span> / <span id="carouselTotal">${totalSlides}</span></div>
           </div>
-          <!-- Buttons always below photo — single group, no duplicate -->
+          <!-- Mobile-only buttons — hidden on desktop -->
           <div class="hero-actions profile-hero-actions-below">
             <a class="btn btn-primary" href="../index.html#contact-details">Book ${girl.name}</a>
             <a class="btn btn-secondary" href="../girls.html">Back to Ladies</a>
