@@ -965,19 +965,33 @@ h3 { font-size: 1.9rem; }
   transition: 0.3s ease;
 }
 
+/* When open, use absolute positioning so both bars are guaranteed to
+   cross at the exact same centre point — immune to flex/margin quirks. */
+.menu-toggle.active {
+  position: relative;
+}
+
+.menu-toggle.active span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: 0;
+  /* width:24px, so offset left by 12px to centre horizontally;
+     height:2px, so offset top by 1px to centre vertically */
+  transform: translate(-12px, -1px);
+}
+
 .menu-toggle.active span:nth-child(1) {
-  /* Translate down by exactly half the inter-span gap (margin 6px + half bar 1px = 7px)
-     before rotating so the two bars cross at the visual centre of the icon */
-  transform: translateY(7px) rotate(45deg);
+  transform: translate(-12px, -1px) rotate(45deg);
 }
 
 .menu-toggle.active span:nth-child(2) {
   opacity: 0;
-  transform: scaleX(0);
+  transform: translate(-12px, -1px) scaleX(0);
 }
 
 .menu-toggle.active span:nth-child(3) {
-  transform: translateY(-7px) rotate(-45deg);
+  transform: translate(-12px, -1px) rotate(-45deg);
 }
 
 /* Active nav state */
