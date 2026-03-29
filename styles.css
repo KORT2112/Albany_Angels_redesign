@@ -982,23 +982,25 @@ h3 { font-size: 1.9rem; }
   top: 50%;
   left: 50%;
   margin: 0;
-  width: 26px;
-  /* Offset: half of width (13px) left, half of height (1px) up */
-  transform: translate(-13px, -1px);
+  /* 34px = 24 × √2: when rotated 45°, each arm projects exactly 24px
+     on both axes, matching the hamburger bars' 24px visual width */
+  width: 34px;
+  /* Offset: half of width (17px) left, half of height (1px) up */
+  transform: translate(-17px, -1px);
 }
 
 .menu-toggle.active span:nth-child(1) {
-  transform: translate(-13px, -1px) rotate(45deg);
+  transform: translate(-17px, -1px) rotate(45deg);
 }
 
 .menu-toggle.active span:nth-child(2) {
   opacity: 0;
   width: 0;
-  transform: translate(-13px, -1px) scaleX(0);
+  transform: translate(-17px, -1px) scaleX(0);
 }
 
 .menu-toggle.active span:nth-child(3) {
-  transform: translate(-13px, -1px) rotate(-45deg);
+  transform: translate(-17px, -1px) rotate(-45deg);
 }
 
 /* Active nav state */
