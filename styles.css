@@ -3150,3 +3150,49 @@ img {
 body.nav-open {
   overflow: hidden;
 }
+
+
+/* ============================================================
+   STEP 2 — Desktop hero image frame enlargement
+   Target: right-side image in individual girl profile hero
+   Desktop only (min-width: 1101px) — mobile untouched
+   ============================================================ */
+
+@media (min-width: 1101px) {
+
+  /* Give the hero section a comfortable vertical breathing room
+     so the image can stretch near top-to-bottom of the viewport */
+  .profile-snap-section.profile-hero-section {
+    align-items: center;
+    padding-top: 79px;
+    padding-bottom: 24px;
+  }
+
+  /* Widen the image column relative to the text column
+     so the photo feels dominant and premium */
+  .profile-hero-grid {
+    grid-template-columns: 1fr 1.25fr !important;
+    gap: 48px !important;
+    align-items: center !important;
+  }
+
+  /* Photo wrap — fill the full column height */
+  .profile-hero-photo-wrap {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* Hero carousel — switch to 3:4 portrait ratio (tall & dominant)
+     Remove max-height cap so it breathes to fill the section
+     Use height: 100% so it stretches within the column */
+  .hero-carousel {
+    aspect-ratio: 3 / 4 !important;
+    max-height: calc(100dvh - 140px) !important;
+    height: auto !important;
+    width: 100% !important;
+    min-height: 0 !important;
+  }
+
+}
