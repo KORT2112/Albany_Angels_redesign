@@ -706,6 +706,30 @@ h3 { font-size: 1.9rem; }
   font-size: 0.92rem;
 }
 
+.profile-liquid-pill {
+  display: inline-block;
+}
+
+.profile-liquid-pill glass-element {
+  --glass-padding: 0;
+  display: inline-block;
+}
+
+.profile-liquid-pill-inner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  padding: 8px 16px;
+  border-radius: 999px;
+  color: rgba(248, 244, 236, 0.96);
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.015em;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.18);
+}
+
 .gallery-grid {
   grid-template-columns: 1.5fr 1fr 1fr;
 }
@@ -1525,6 +1549,30 @@ body.profile-body .site-header {
   border-radius: 999px;
   color: var(--text-secondary);
   font-size: 0.92rem;
+}
+
+.profile-liquid-pill {
+  display: inline-block;
+}
+
+.profile-liquid-pill glass-element {
+  --glass-padding: 0;
+  display: inline-block;
+}
+
+.profile-liquid-pill-inner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  padding: 8px 16px;
+  border-radius: 999px;
+  color: rgba(248, 244, 236, 0.96);
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.015em;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.18);
 }
 
 /* Profile content grid */
