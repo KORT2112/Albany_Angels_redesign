@@ -160,8 +160,8 @@ function buildDetailStrip(girl) {
   if (!service) return '';
 
   const customSplits = {
-    'Full Service (All) & Sensual Massage': ['Full Service (All)', 'Sensual Massage'],
-    'Full Service (All) & Sensual Massage Expert': ['Full Service (All)', 'Sensual Massage Expert'],
+    'Full Service (All) & Sensual Massage': ['Full Service', 'Sensual Massage'],
+    'Full Service (All) & Sensual Massage Expert': ['Full Service', 'Sensual Massage Expert'],
     'Full Service & Sensual Massage Expert': ['Full Service', 'Sensual Massage Expert'],
     'Full Service & Sensual Massage': ['Full Service', 'Sensual Massage'],
     'Full Service / Sensual Massage': ['Full Service', 'Sensual Massage'],
