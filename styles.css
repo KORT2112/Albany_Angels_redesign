@@ -1371,12 +1371,12 @@ body.profile-body .site-header {
   scroll-snap-align: start;
 }
 
-/* Profile hero grid */
+/* Profile hero grid — text col wider, photo col narrower for clear portrait feel */
 .profile-hero-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
-  align-items: start;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 60px;
+  align-items: center;
 }
 
 /* Profile hero name — no eyebrow above it */
