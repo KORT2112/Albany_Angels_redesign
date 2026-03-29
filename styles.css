@@ -1371,10 +1371,10 @@ body.profile-body .site-header {
   scroll-snap-align: start;
 }
 
-/* Profile hero grid — text col wider, photo col narrower for clear portrait feel */
+/* Profile hero grid — text left, photo right, photo column fixed to portrait width */
 .profile-hero-grid {
   display: grid;
-  grid-template-columns: 1.4fr 1fr;
+  grid-template-columns: 1fr auto;
   gap: 60px;
   align-items: center;
 }
@@ -1434,16 +1434,16 @@ body.profile-body .site-header {
   width: 100%;
 }
 
-/* Hero carousel — true 3:4 portrait, width-driven */
+/* Hero carousel — height-driven portrait, same approach as girls.html cards */
 .hero-carousel {
   position: relative;
-  width: 100%;
+  width: auto;
+  height: calc(100dvh - 200px);
   aspect-ratio: 3 / 4;
-  height: auto;
-  max-height: calc(100dvh - 200px); /* safety cap so it never overflows viewport */
   overflow: hidden;
   border-radius: var(--radius-lg);
   background: #222;
+  flex-shrink: 0;
 }
 
 .carousel-track {
