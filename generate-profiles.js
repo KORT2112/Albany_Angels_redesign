@@ -153,9 +153,9 @@ function buildProfileLead(girl) {
 }
 
 function buildDetailStrip(girl) {
+  // Only show service — ethnicity is already in the metadata line above the name
   const tags = [];
   if (girl.service) tags.push(girl.service);
-  if (girl.ethnicity) tags.push(girl.ethnicity);
   return tags.map(t => `            <span>${t}</span>`).join('\n');
 }
 
