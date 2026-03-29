@@ -962,45 +962,37 @@ h3 { font-size: 1.9rem; }
   background: var(--text);
   margin: 5px 0;
   border-radius: 2px;
-  /* Smooth transition for all properties — covers opacity, transform, width */
-  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-              opacity   0.25s cubic-bezier(0.4, 0, 0.2, 1),
-              width     0.35s cubic-bezier(0.4, 0, 0.2, 1);
   transform-origin: center center;
+  /* Pure-transform transition: CSS interpolates transform smoothly
+     with no layout/position changes, giving a fluid morph feel.
+     Slightly longer duration + gentle ease-in-out for premium feel. */
+  transition: transform 0.42s cubic-bezier(0.65, 0, 0.35, 1),
+              opacity   0.28s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-/* Open state: absolute-position both active bars to the exact button centre
-   so they always cross at the same point — immune to flex/margin quirks.
-   X bars are 26px (slightly wider than the 24px hamburger bars) so the
-   diagonal arms look visually proportionate to the closed icon's height. */
+/* Open state: pure transform only — no position, top, left, or width changes.
+   Bars 1 and 3 travel 12px vertically to meet at the icon centre (midpoint
+   between their natural positions), scale to √2 × width so the diagonal
+   arms project exactly 24px per axis, then rotate ±45°.
+   Using only transform means CSS animates it as one continuous smooth motion. */
 .menu-toggle.active {
   position: relative;
 }
 
-.menu-toggle.active span {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin: 0;
-  /* 34px = 24 × √2: when rotated 45°, each arm projects exactly 24px
-     on both axes, matching the hamburger bars' 24px visual width */
-  width: 34px;
-  /* Offset: half of width (17px) left, half of height (1px) up */
-  transform: translate(-17px, -1px);
-}
-
 .menu-toggle.active span:nth-child(1) {
-  transform: translate(-17px, -1px) rotate(45deg);
+  /* Move down 12px to centre, stretch to √2 width, rotate to form top-left→bottom-right arm */
+  transform: translateY(12px) scaleX(1.414) rotate(45deg);
 }
 
 .menu-toggle.active span:nth-child(2) {
+  /* Fade and collapse the middle bar */
   opacity: 0;
-  width: 0;
-  transform: translate(-17px, -1px) scaleX(0);
+  transform: scaleX(0);
 }
 
 .menu-toggle.active span:nth-child(3) {
-  transform: translate(-17px, -1px) rotate(-45deg);
+  /* Move up 12px to centre, stretch to √2 width, rotate to form top-right→bottom-left arm */
+  transform: translateY(-12px) scaleX(1.414) rotate(-45deg);
 }
 
 /* Active nav state */
