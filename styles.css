@@ -955,18 +955,20 @@ h3 { font-size: 1.9rem; }
   z-index: 30;
 }
 
-/* ── SVG hamburger icon (ham8 curved paths, hooks hidden via dasharray) ──
-   The top/bottom paths each start with a 40-unit straight bar, then curve
-   into a hook. stroke-dasharray: 40 999 shows ONLY the straight bar in the
-   closed state — the hook sits in the invisible gap and is never rendered.
-   Opening the menu shifts the visible window past the bar onto the diagonal
-   curve arm, morphing into a clean X. Middle bar rotates 90° to form the
-   second X arm. Smooth 0.4s cubic-bezier easing throughout. */
+/* ── SVG hamburger icon — CodePen ham8 by Mikael Ainalem (ainalem/LJYRxz) ──
+   Exact values from the original source. The top/bottom paths each begin
+   with a 40-unit straight bar then curve into a hook. The dasharray gap
+   (160 / 85) is large enough that the hook always sits in the invisible
+   portion at any rendered size. Open state shifts the window to the
+   diagonal arm; middle bar rotates 90° to form the second X arm.
+   All transitions use the author’s original 400ms timing. */
 .menu-toggle svg.ham-icon {
   display: block;
   pointer-events: none;
   -webkit-tap-highlight-color: transparent;
-  transition: transform 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 400ms;
+  -webkit-user-select: none;
+  -ms-user-select: none;
   user-select: none;
 }
 
@@ -977,26 +979,28 @@ h3 { font-size: 1.9rem; }
 .ham-icon .ham-line {
   fill: none;
   stroke: currentColor;
-  stroke-width: 6;
+  stroke-width: 5.5;
   stroke-linecap: round;
-  transition: stroke-dasharray 400ms cubic-bezier(0.4, 0, 0.2, 1),
-              stroke-dashoffset 400ms cubic-bezier(0.4, 0, 0.2, 1),
-              transform 400ms cubic-bezier(0.4, 0, 0.2, 1);
-  transform-origin: 50% 50%;
+  transition: stroke-dasharray 400ms, stroke-dashoffset 400ms;
 }
 
-/* Closed state: show only the 40-unit straight bar; hook is hidden in the gap */
-.ham-icon .ham-top    { stroke-dasharray: 40 999; }
-.ham-icon .ham-middle { stroke-dasharray: 40 999; }
-.ham-icon .ham-bottom { stroke-dasharray: 40 999; }
+/* Closed state — exact CodePen ham8 values */
+.ham-icon .ham-top    { stroke-dasharray: 40 160; }
+.ham-icon .ham-middle {
+  stroke-dasharray: 40 142;
+  transform-origin: 50%;
+  transition: transform 400ms, stroke-dashoffset 400ms;
+}
+.ham-icon .ham-bottom {
+  stroke-dasharray: 40 85;
+  transform-origin: 50%;
+  transition: transform 400ms, stroke-dashoffset 400ms;
+}
 
-/* Open state: shift window past the bar onto the diagonal curve arm.
-   dashoffset -40 moves the start of the visible dash to where the curve begins.
-   dasharray 48 covers the full diagonal arm length (~48 SVG units).
-   Middle bar rotates 90° to become the second X arm. */
-.menu-toggle.active .ham-top    { stroke-dasharray: 48 999; stroke-dashoffset: -40px; }
+/* Open state — exact CodePen ham8 values */
+.menu-toggle.active .ham-top    { stroke-dashoffset: -64px; }
 .menu-toggle.active .ham-middle { transform: rotate(90deg); }
-.menu-toggle.active .ham-bottom { stroke-dasharray: 48 999; stroke-dashoffset: -40px; }
+.menu-toggle.active .ham-bottom { stroke-dashoffset: -64px; }
 
 /* Active nav state */
 .site-nav a.nav-active {
