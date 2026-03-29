@@ -56,8 +56,8 @@
         <aside class="profile-details-card">
           <h2 class="profile-details-title">Details</h2>
           <ul class="profile-detail-rows">
-            <li><span class="profile-liquid-pill"><glass-element auto-size min-width="132" min-height="38" radius="18" depth="3.5" blur="1" strength="20" chromatic-aberration="0" background-color="rgba(214,184,128,0.14)"><div class="profile-liquid-pill-inner">Services</div></glass-element></span><span class="detail-dots"></span><strong>Available</strong></li>
-            <li><span class="profile-liquid-pill"><glass-element auto-size min-width="132" min-height="38" radius="18" depth="3.5" blur="1" strength="20" chromatic-aberration="0" background-color="rgba(214,184,128,0.14)"><div class="profile-liquid-pill-inner">Profile</div></glass-element></span><span class="detail-dots"></span><strong>Melena</strong></li>
+            <li><span>Services</span><span class="detail-dots"></span><strong>Available</strong></li>
+            <li><span>Profile</span><span class="detail-dots"></span><strong>Melena</strong></li>
           </ul>
         </aside>
       </div>
@@ -151,7 +151,5 @@
     window.addEventListener('scroll', () => btt.classList.toggle('visible', window.scrollY > 400));
     btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
   </script>
-  <script src="../assets/displacement-utils.js"></script>
-  <script src="../assets/glass-element.js"></script>
 </body>
 </html>
