@@ -395,7 +395,10 @@ h3 { font-size: 1.9rem; }
 
 .services-feature-image {
   width: 100%;
-  min-height: 520px;
+  height: 520px;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
@@ -1275,8 +1278,7 @@ h3 { font-size: 1.9rem; }
   .hero-actions { width: 100%; }
   .btn { width: 100%; }
   .real-profile-image,
-  .real-gallery-item,
-  .services-feature-image { min-height: 320px; }
+  .real-gallery-item { min-height: 320px; }
   .pricing-grid { grid-template-columns: 1fr; }
   .join-split { grid-template-columns: 1fr; }
   .join-form-panel { padding: 28px 20px; }
@@ -2790,9 +2792,12 @@ img {
   }
 
   .services-feature-image {
-    min-height: 260px !important;
-    max-height: 360px !important;
+    height: 300px !important;
+    min-height: unset !important;
+    max-height: unset !important;
     width: 100% !important;
+    object-fit: cover !important;
+    object-position: center top !important;
   }
 }
 /* ── 16. Index snap sections — mobile layout ──────────────── */
