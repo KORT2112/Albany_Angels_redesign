@@ -35,16 +35,9 @@
       max-width: 580px;
     }
 
-    /* ── Overline ── */
+    /* ── Overline — hidden on desktop, already hidden on mobile ── */
     .hero-overline {
-      display: block;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.68rem;
-      font-weight: 600;
-      letter-spacing: 0.36em;
-      text-transform: uppercase;
-      color: var(--accent, #bf9b60);
-      margin-bottom: 14px;
+      display: none;
     }
 
     /* ── Gold rule — editorial accent above headline ── */
@@ -60,14 +53,17 @@
     /* ── Headline ── */
     .hero-headline {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(2.8rem, 4.2vw, 4.4rem);
+      /* 3.8vw reaches 44.8px min at ≤1180px — keeps both "Where Elegance"
+         and "Meets Discretion" on one line each before the explicit <br>.
+         nowrap prevents any mid-phrase wrapping; mobile override cancels it. */
+      font-size: clamp(2.8rem, 3.8vw, 4rem);
       font-weight: 600;
       line-height: 1.07;
       letter-spacing: -0.015em;
+      white-space: nowrap;
       color: #f5f1ea;
-      margin: 0 0 22px 0;
+      margin: 0 0 20px 0;
       text-shadow: 0 2px 48px rgba(0,0,0,0.42);
-      white-space: normal;
     }
 
     /* ── Subheading ── */
@@ -79,7 +75,7 @@
       letter-spacing: 0.025em;
       color: rgba(245, 241, 234, 0.72);
       max-width: 360px;
-      margin: 0 0 34px 0;
+      margin: 0 0 62px 0;
       text-shadow: 0 1px 18px rgba(0,0,0,0.52);
     }
 
