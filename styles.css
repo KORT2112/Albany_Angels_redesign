@@ -1438,9 +1438,9 @@ body.profile-body .site-header {
 .hero-carousel {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 3 / 4;
   height: auto;
-  max-height: 600px;
+  max-height: calc(100dvh - 158px); /* 79px top + 79px bottom padding */
   border-radius: var(--radius-lg);
   overflow: hidden;
   border: 1px solid var(--border);
@@ -1511,9 +1511,9 @@ body.profile-body .site-header {
 
 .real-profile-image {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 3 / 4;
   height: auto;
-  max-height: 600px;
+  max-height: calc(100dvh - 158px);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
@@ -2435,7 +2435,7 @@ img {
     justify-content: center !important;
   }
 
-  /* Hero carousel — 4:3 ratio, no fixed height override needed */
+  /* Hero carousel — keep 4:3 landscape on mobile (portrait too tall on small screens) */
   .hero-carousel {
     aspect-ratio: 4 / 3 !important;
     height: auto !important;
@@ -2444,7 +2444,7 @@ img {
     width: 100% !important;
   }
 
-  /* Profile image */
+  /* Profile image — keep 4:3 on mobile */
   .real-profile-image {
     width: 100% !important;
     aspect-ratio: 4 / 3 !important;
