@@ -960,13 +960,19 @@ h3 { font-size: 1.9rem; }
   width: 24px;
   height: 2px;
   background: var(--text);
-  margin: 6px 0;
+  margin: 5px 0;
   border-radius: 2px;
-  transition: 0.3s ease;
+  /* Smooth transition for all properties — covers opacity, transform, width */
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity   0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              width     0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center center;
 }
 
-/* When open, use absolute positioning so both bars are guaranteed to
-   cross at the exact same centre point — immune to flex/margin quirks. */
+/* Open state: absolute-position both active bars to the exact button centre
+   so they always cross at the same point — immune to flex/margin quirks.
+   X bars are 26px (slightly wider than the 24px hamburger bars) so the
+   diagonal arms look visually proportionate to the closed icon's height. */
 .menu-toggle.active {
   position: relative;
 }
@@ -976,22 +982,23 @@ h3 { font-size: 1.9rem; }
   top: 50%;
   left: 50%;
   margin: 0;
-  /* width:24px, so offset left by 12px to centre horizontally;
-     height:2px, so offset top by 1px to centre vertically */
-  transform: translate(-12px, -1px);
+  width: 26px;
+  /* Offset: half of width (13px) left, half of height (1px) up */
+  transform: translate(-13px, -1px);
 }
 
 .menu-toggle.active span:nth-child(1) {
-  transform: translate(-12px, -1px) rotate(45deg);
+  transform: translate(-13px, -1px) rotate(45deg);
 }
 
 .menu-toggle.active span:nth-child(2) {
   opacity: 0;
-  transform: translate(-12px, -1px) scaleX(0);
+  width: 0;
+  transform: translate(-13px, -1px) scaleX(0);
 }
 
 .menu-toggle.active span:nth-child(3) {
-  transform: translate(-12px, -1px) rotate(-45deg);
+  transform: translate(-13px, -1px) rotate(-45deg);
 }
 
 /* Active nav state */
