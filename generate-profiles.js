@@ -153,9 +153,27 @@ function buildProfileLead(girl) {
 }
 
 function buildDetailStrip(girl) {
-  // Only show service — ethnicity is already in the metadata line above the name
+  // Only show service/specialty — ethnicity is already in the metadata line above the name
   const tags = [];
-  if (girl.service) tags.push(girl.service);
+  const service = (girl.service || '').trim();
+
+  if (!service) return '';
+
+  const customSplits = {
+    'Full Service (All) & Sensual Massage': ['Full Service (All)', 'Sensual Massage'],
+    'Full Service (All) & Sensual Massage Expert': ['Full Service (All)', 'Sensual Massage Expert'],
+    'Full Service & Sensual Massage Expert': ['Full Service', 'Sensual Massage Expert'],
+    'Full Service & Sensual Massage': ['Full Service', 'Sensual Massage'],
+    'Full Service / Sensual Massage': ['Full Service', 'Sensual Massage'],
+    'GFE Service & Sensual Massage': ['GFE Service', 'Sensual Massage']
+  };
+
+  if (customSplits[service]) {
+    tags.push(...customSplits[service]);
+  } else {
+    tags.push(service);
+  }
+
   return tags.map(t => `            <span>${t}</span>`).join('\n');
 }
 
