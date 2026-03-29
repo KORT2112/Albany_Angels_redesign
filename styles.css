@@ -1379,6 +1379,15 @@ body.profile-body .site-header {
 .profile-hero-actions-mobile { display: none; }
 .profile-hero-actions-desktop { display: flex; margin-top: 28px; }
 
+/* New unified button group — always below the photo, no split */
+.profile-hero-actions-below {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+  width: 100%;
+}
+
 /* Hero carousel — 4:3 aspect ratio */
 .hero-carousel {
   position: relative;
@@ -1910,62 +1919,96 @@ img {
     padding: 0 4px;
   }
 
-  /* Mobile nav overlay — full-screen, elegant */
+  /* ── Mobile nav overlay: full-screen, no scroll trap ── */
+  /* Override the original block completely with definitive rules */
   .site-nav {
-    padding: 0 32px 40px;
-    padding-top: max(80px, env(safe-area-inset-top, 0px) + 80px);
-    gap: 0;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    /* Ensure all items are visible */
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
+    /* Full-screen overlay */
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 25 !important;
+    /* Dark premium background */
+    background: rgba(14, 14, 14, 0.98) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    /* Layout: vertical stack, items start below header */
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    /* Padding: top clears the fixed header (~64px) + breathing room */
+    padding: 88px 40px 56px !important;
+    gap: 0 !important;
+    /* NO overflow-y: auto — this was the scroll trap */
+    overflow: hidden !important;
+    /* Visibility toggle */
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transition: opacity 0.28s ease, visibility 0.28s ease !important;
   }
 
+  .site-nav.open {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  /* Nav links — large, elegant, full-width */
   .site-nav a {
-    padding: 15px 0;
-    font-size: 1.3rem;
-    letter-spacing: 0.02em;
-    width: 100%;
-    border-bottom: 1px solid var(--border);
+    display: block !important;
+    width: 100% !important;
+    padding: 16px 0 !important;
+    font-family: 'Cormorant Garamond', serif !important;
+    font-size: 1.45rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.02em !important;
+    color: rgba(245, 241, 234, 0.9) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    text-decoration: none !important;
+    transition: color 0.18s ease !important;
   }
 
-  /* Book Now inside nav — styled as a full-width button at the bottom */
+  .site-nav a:hover {
+    color: var(--accent) !important;
+  }
+
+  /* Book Now inside nav — gold button at the bottom */
   .site-nav .nav-book-now {
     display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     width: 100% !important;
-    margin-top: 24px;
+    margin-top: 28px !important;
+    padding: 0 24px !important;
+    min-height: 52px !important;
+    border-radius: 999px !important;
     border-bottom: none !important;
-    justify-content: center;
-    font-size: 1rem !important;
-    letter-spacing: 0.05em !important;
-    min-height: 52px;
-    border-radius: 999px;
+    background: var(--accent) !important;
+    color: #111 !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 0.95rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.06em !important;
+    text-transform: uppercase !important;
   }
 
-  /* Hamburger — larger tap target */
+  /* Hamburger — larger tap target, always above overlay */
   .menu-toggle {
-    padding: 10px;
-    margin-right: -4px;
-    min-width: 44px;
-    min-height: 44px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    position: relative !important;
+    z-index: 30 !important;
+    padding: 10px !important;
+    margin-right: -4px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 
   /* Book Now button in header bar — hide on mobile (it's in the nav overlay) */
   .header-inner > .btn-primary {
-    display: none;
-  }
-
-  /* Ensure hamburger is always on top of nav overlay */
-  .menu-toggle {
-    z-index: 30;
-    position: relative;
+    display: none !important;
   }
 }
 
@@ -2293,19 +2336,25 @@ img {
     order: 2;
   }
 
-  /* Hide desktop buttons, show mobile buttons (below photo) */
+  /* Hide old desktop/mobile split button groups (legacy) */
   .profile-hero-actions-desktop {
     display: none !important;
   }
   .profile-hero-actions-mobile {
-    display: flex !important;
-    flex-direction: column;
-    gap: 10px;
-    width: 100%;
+    display: none !important;
   }
-  .profile-hero-actions-mobile .btn {
-    width: 100%;
-    justify-content: center;
+
+  /* New unified button group — full-width stacked on mobile */
+  .profile-hero-actions-below {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: 100% !important;
+    margin-top: 14px !important;
+  }
+  .profile-hero-actions-below .btn {
+    width: 100% !important;
+    justify-content: center !important;
   }
 
   /* Hero carousel — 4:3 ratio, no fixed height override needed */

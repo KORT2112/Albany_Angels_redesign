@@ -347,12 +347,15 @@
         padding: 0 !important;
       }
 
-      /* Orphan card (3rd in a 3-card row on mobile 2-col grid)
-         Span both columns, constrain to ~50% width, and center */
-      .girls-row .profile-card:last-child:nth-child(odd) {
+      /* Orphan card — 3rd card in every 3-card row on 2-col mobile grid.
+         Every .girls-row has exactly 3 cards, so the 3rd is always :nth-child(3).
+         Span both columns, constrain to 50% width, and center it. */
+      .girls-row .profile-card:nth-child(3) {
         grid-column: 1 / -1 !important;
+        width: calc(50% - 6px) !important;
         max-width: calc(50% - 6px) !important;
-        margin: 0 auto !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
       }
 
       /* Card image wrapper — aspect ratio based */
@@ -443,12 +446,12 @@
         <a href="./index.html#about">About</a>
         <a href="./index.html#contact-details">Contact</a>
         <a href="./join.html">Join Us</a>
-        <a href="./index.html#contact" class="nav-book-now btn btn-primary">Book Now</a>
+        <a href="./index.html#contact-details" class="nav-book-now btn btn-primary">Book Now</a>
       </nav>
       <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
         <span></span><span></span><span></span>
       </button>
-      <a class="btn btn-primary" href="./index.html#contact">Book Now</a>
+      <a class="btn btn-primary" href="./index.html#contact-details">Book Now</a>
     </div>
   </header>
 
@@ -662,7 +665,7 @@
         <p style="color:var(--text-secondary); margin-top:16px;">Check the roster for today's availability, or get in touch to arrange your booking.</p>
         <div class="hero-actions center-actions" style="margin-top:32px;">
           <a class="btn btn-primary" href="./roster.html">Check Roster</a>
-          <a class="btn btn-secondary" href="./index.html#contact">Contact Us</a>
+          <a class="btn btn-secondary" href="./index.html#contact-details">Contact Us</a>
         </div>
       </div>
       <p style="text-align:center; color:rgba(255,255,255,0.55); font-size:0.75rem; letter-spacing:0.02em; margin:0 0 0 -1px; padding-top:8px; position:absolute; bottom:16px; left:0; right:0;">&copy; 2026 Albany Angels. All rights reserved.</p>

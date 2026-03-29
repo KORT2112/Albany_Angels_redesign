@@ -187,12 +187,12 @@ function generateProfile(girl) {
         <a href="../index.html#about">About</a>
         <a href="../index.html#contact-details">Contact</a>
         <a href="../join.html">Join Us</a>
-        <a href="../index.html#contact" class="nav-book-now btn btn-primary">Book Now</a>
+        <a href="../index.html#contact-details" class="nav-book-now btn btn-primary">Book Now</a>
       </nav>
       <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
         <span></span><span></span><span></span>
       </button>
-      <a class="btn btn-primary" href="../index.html#contact">Book Now</a>
+      <a class="btn btn-primary" href="../index.html#contact-details">Book Now</a>
     </div>
   </header>
 
@@ -200,20 +200,14 @@ function generateProfile(girl) {
     <!-- 1. Hero -->
     <section class="profile-snap-section profile-hero-section">
       <div class="container profile-hero-grid">
-        <!-- Left: name + lead info (no eyebrow above name) -->
+        <!-- Left: name + detail tags only (no lead text, no eyebrow) -->
         <div class="profile-hero-text">
           <h1 class="profile-hero-name">${girl.name}</h1>
-          <p class="profile-lead">${buildProfileLead(girl)}</p>
           <div class="detail-strip">
 ${buildDetailStrip(girl)}
           </div>
-          <!-- Desktop: buttons beside photo -->
-          <div class="hero-actions profile-hero-actions-desktop">
-            <a class="btn btn-primary" href="../index.html#contact">Book ${girl.name}</a>
-            <a class="btn btn-secondary" href="../girls.html">Back to Ladies</a>
-          </div>
         </div>
-        <!-- Right: photo carousel -->
+        <!-- Right: photo carousel + buttons below (on both desktop and mobile) -->
         <div class="profile-hero-photo-wrap">
           <div class="hero-carousel" id="heroCarousel">
             <div class="carousel-track">
@@ -227,9 +221,9 @@ ${buildCarouselSlides(girl, heroFile, galleryFiles)}
             </button>
             <div class="carousel-counter"><span id="carouselCurrent">1</span> / <span id="carouselTotal">${totalSlides}</span></div>
           </div>
-          <!-- Mobile: buttons below photo -->
-          <div class="hero-actions profile-hero-actions-mobile">
-            <a class="btn btn-primary" href="../index.html#contact">Book ${girl.name}</a>
+          <!-- Buttons always below photo — single group, no duplicate -->
+          <div class="hero-actions profile-hero-actions-below">
+            <a class="btn btn-primary" href="../index.html#contact-details">Book ${girl.name}</a>
             <a class="btn btn-secondary" href="../girls.html">Back to Ladies</a>
           </div>
         </div>
@@ -293,7 +287,7 @@ ${buildFilmstripImages(girl, heroFile, galleryFiles)}
         <h2 class="cta-name">${girl.name}</h2>
         <div class="cta-accent-line"></div>
         <p class="cta-tagline">Discreet. Effortless. Yours.</p>
-        <a class="btn btn-primary cta-book-btn" href="../index.html#contact">Book Now</a>
+        <a class="btn btn-primary cta-book-btn" href="../index.html#contact-details">Book Now</a>
       </div>
     </section>
 

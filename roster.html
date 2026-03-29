@@ -38,35 +38,51 @@
 
     /* Roster page top padding for fixed header */
     .roster-main-section {
+      /* Desktop: small top padding inside the section */
       padding-top: 24px;
       padding-bottom: 48px;
     }
 
     @media (max-width: 820px) {
-      /* Account for fixed header height */
+      /* Mobile: section starts right below the fixed header (64px) */
       .roster-main-section {
-        padding-top: 88px !important;
-        padding-bottom: 32px;
+        padding-top: 76px !important;
+        padding-bottom: 24px !important;
       }
 
+      /* Dashboard card — tighter padding, no border-radius clip */
       .roster-dashboard {
-        padding: 16px 14px 20px;
-        border-radius: 16px;
+        padding: 14px 12px 18px !important;
+        border-radius: 14px !important;
+        /* Prevent any overflow clipping of day pills */
+        overflow: visible !important;
       }
 
+      /* Topbar — stack vertically */
       .roster-topbar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-        margin-bottom: 14px;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+        margin-bottom: 12px !important;
+      }
+
+      .roster-topbar .eyebrow {
+        margin-bottom: 2px !important;
       }
 
       .roster-topbar h2 {
-        font-size: clamp(1.6rem, 6vw, 2rem);
+        font-size: clamp(1.5rem, 6vw, 1.9rem) !important;
+        margin-bottom: 0 !important;
+      }
+
+      /* Date line */
+      .roster-date {
+        font-size: 0.85rem !important;
+        margin-top: 2px !important;
       }
 
       .roster-actions {
-        width: 100%;
+        width: 100% !important;
       }
 
       /* Segmented toggle — full width, no overflow */
@@ -77,53 +93,85 @@
       }
 
       .segmented-option {
-        flex: 1;
-        min-height: 44px;
-        padding: 0 8px;
-        font-size: 0.84rem;
-        text-align: center;
-        white-space: nowrap;
+        flex: 1 !important;
+        min-height: 44px !important;
+        padding: 0 10px !important;
+        font-size: 0.85rem !important;
+        text-align: center !important;
+        white-space: nowrap !important;
       }
 
-      /* Day selector — 4 columns (Mon-Sun in 2 rows) */
+      /* Day selector — 7 pills in 4+3 layout */
       .day-selector {
+        display: grid !important;
         grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-        gap: 8px !important;
-        margin-bottom: 16px !important;
+        gap: 7px !important;
+        margin-bottom: 14px !important;
+        /* Ensure pills are never clipped */
+        overflow: visible !important;
       }
 
+      /* Day pill — clean, centered, no clipping */
       .day-pill {
-        padding: 9px 6px 8px;
-        font-size: 0.82rem;
-        border-radius: 10px;
-        text-align: center;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 8px 4px 7px !important;
+        font-size: 0.82rem !important;
+        font-weight: 600 !important;
+        border-radius: 10px !important;
+        text-align: center !important;
+        min-height: 48px !important;
+        /* Ensure active state is fully visible */
+        box-sizing: border-box !important;
       }
 
       .day-pill span {
-        font-size: 0.68rem;
-        margin-top: 2px;
+        display: block !important;
+        font-size: 0.66rem !important;
+        margin-top: 2px !important;
+        color: var(--text-muted) !important;
+      }
+
+      /* Active pill — ensure gold border is fully rendered */
+      .day-pill.active {
+        border-color: var(--accent) !important;
+        background: rgba(199, 164, 106, 0.14) !important;
+        box-shadow: 0 0 0 1px rgba(199, 164, 106, 0.2) !important;
       }
 
       /* Availability grid — 2 columns */
       .availability-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        gap: 12px !important;
+        gap: 10px !important;
       }
 
       .availability-card .real-card-image {
-        max-height: 220px !important;
+        max-height: 200px !important;
       }
 
       .availability-card .profile-body {
-        padding: 10px 12px 12px !important;
+        padding: 10px 10px 12px !important;
       }
 
       .availability-card h3 {
-        font-size: 1.15rem !important;
+        font-size: 1.1rem !important;
       }
 
       .roster-card-body .availability-time {
-        font-size: 0.68rem;
+        font-size: 0.68rem !important;
+      }
+    }
+
+    @media (max-width: 390px) {
+      /* On very small screens, 4-col day pills may get too narrow — switch to 4-col with smaller text */
+      .day-pill {
+        font-size: 0.76rem !important;
+        padding: 7px 2px 6px !important;
+      }
+      .day-pill span {
+        font-size: 0.62rem !important;
       }
     }
 
@@ -132,13 +180,21 @@
         grid-template-columns: 1fr !important;
       }
 
+      /* At 360px, 4-col is too tight — use 4-col but even smaller */
       .day-selector {
-        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 5px !important;
+      }
+
+      .day-pill {
+        font-size: 0.72rem !important;
+        padding: 6px 2px 5px !important;
+        min-height: 44px !important;
       }
 
       .segmented-option {
-        font-size: 0.76rem;
-        padding: 0 6px;
+        font-size: 0.78rem !important;
+        padding: 0 6px !important;
       }
     }
   </style>
@@ -155,12 +211,12 @@
         <a href="./index.html#about">About</a>
         <a href="./index.html#contact-details">Contact</a>
         <a href="./join.html">Join Us</a>
-        <a href="./index.html#contact" class="nav-book-now btn btn-primary">Book Now</a>
+        <a href="./index.html#contact-details" class="nav-book-now btn btn-primary">Book Now</a>
       </nav>
       <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
         <span></span><span></span><span></span>
       </button>
-      <a class="btn btn-primary" href="./index.html#contact">Book Now</a>
+      <a class="btn btn-primary" href="./index.html#contact-details">Book Now</a>
     </div>
   </header>
 
