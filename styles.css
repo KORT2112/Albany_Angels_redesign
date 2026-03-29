@@ -1206,30 +1206,17 @@ h3 { font-size: 1.9rem; }
 
 @media (max-width: 820px) {
   .menu-toggle { display: block; }
+  /* site-nav mobile rules: see definitive block below (~line 1937)
+     This stub is kept only to preserve the cascade order.
+     All nav overlay rules are set with !important in the block below. */
   .site-nav {
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    inset: 0;
-    z-index: 25;
-    background: rgba(17, 17, 17, 0.97);
-    backdrop-filter: blur(20px);
-    padding: 120px 40px 40px;
-    gap: 0;
+    /* hidden by default on mobile — definitive block overrides all properties */
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s, visibility 0.3s;
   }
   .site-nav.open {
     opacity: 1;
     visibility: visible;
-  }
-  .site-nav a {
-    padding: 18px 0;
-    font-size: 1.4rem;
-    border-bottom: 1px solid var(--border);
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 600;
   }
   .header-inner .btn-primary {
     display: none;
@@ -1910,6 +1897,29 @@ img {
   .brand {
     font-size: 1.55rem;
     letter-spacing: 0.01em;
+  }
+
+  /* ── CRITICAL: remove backdrop-filter from header on mobile.
+     backdrop-filter creates a new containing block for position:fixed children.
+     Without this, the nav's position:fixed;inset:0 is relative to the header
+     box (~64px tall) instead of the viewport — causing the clipping bug.
+     The header's solid background still provides visual separation.
+
+     Also raise header z-index above the nav overlay (25) so the hamburger
+     button (inside the header stacking context) remains tappable when the
+     nav is open. The hamburger's own z-index:30 is relative to the header
+     stacking context; the header itself must be above the nav in the page
+     stacking order for the hamburger to receive tap events. ── */
+  .site-header {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgba(14, 14, 14, 0.96) !important;
+    z-index: 35 !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
   }
 
   /* Ensure header inner never overflows */
