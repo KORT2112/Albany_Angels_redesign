@@ -1434,12 +1434,13 @@ body.profile-body .site-header {
   width: 100%;
 }
 
-/* Hero carousel — matches girls.html card treatment exactly */
+/* Hero carousel — true 3:4 portrait, width-driven */
 .hero-carousel {
   position: relative;
   width: 100%;
   aspect-ratio: 3 / 4;
-  height: calc(100dvh - 260px);
+  height: auto;
+  max-height: calc(100dvh - 200px); /* safety cap so it never overflows viewport */
   overflow: hidden;
   border-radius: var(--radius-lg);
   background: #222;
@@ -1514,7 +1515,8 @@ body.profile-body .site-header {
 .real-profile-image {
   width: 100%;
   aspect-ratio: 3 / 4;
-  height: calc(100dvh - 260px);
+  height: auto;
+  max-height: calc(100dvh - 200px);
   border-radius: var(--radius-lg);
   object-fit: cover;
   object-position: center top;
