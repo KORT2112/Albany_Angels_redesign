@@ -3164,8 +3164,9 @@ body.nav-open {
      so the image can stretch near top-to-bottom of the viewport */
   .profile-snap-section.profile-hero-section {
     align-items: center;
-    padding-top: 48px;
-    padding-bottom: 48px;
+    padding-top: 0;
+    padding-bottom: 0;
+    min-height: calc(100dvh - 78px);
   }
 
   /* Widen the image column relative to the text column
@@ -3189,7 +3190,7 @@ body.nav-open {
      Use height: 100% so it stretches within the column */
   .hero-carousel {
     aspect-ratio: 3 / 4 !important;
-    max-height: calc(100dvh - 140px) !important;
+    max-height: calc(100dvh - 78px - 96px) !important;
     height: auto !important;
     width: 100% !important;
     min-height: 0 !important;
