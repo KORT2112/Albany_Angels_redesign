@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Albany Angels - Melena</title>
+  <meta name="description" content="View Melena's profile at Albany Angels." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <header class="site-header solid-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html">Albany Angels</a>
+      <nav class="site-nav" id="mainNav">
+        <a href="../index.html">Home</a>
+        <a href="../girls.html" class="nav-active">Girls</a>
+        <a href="../roster.html">Roster</a>
+        <a href="../services.html">Services</a>
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#contact">Contact</a>
+      </nav>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <a class="btn btn-primary" href="../index.html#contact">Book Now</a>
+    </div>
+  </header>
+
+  <main class="profile-page">
+    <section class="profile-name-banner">
+      <div class="container">
+        <h1 class="profile-display-name">Melena</h1>
+      </div>
+    </section>
+
+    <section class="profile-hero-full">
+      <img class="profile-hero-img" src="../assets/roster/alexa.jpg" alt="Melena" />
+    </section>
+
+    <section class="profile-intro">
+      <div class="container profile-intro-grid">
+        <div class="profile-bio">
+          <p class="profile-bio-text">Melena is presented in a premium, polished profile layout while full descriptive details are being refined.</p>
+          <div class="profile-cta-row">
+            <a class="btn btn-primary" href="../index.html#contact">Book Melena</a>
+            <a class="btn btn-secondary" href="../girls.html">Back to Girls</a>
+          </div>
+        </div>
+        <aside class="profile-details-card">
+          <h2 class="profile-details-title">Details</h2>
+          <ul class="profile-detail-rows">
+            <li><span>Services</span><span class="detail-dots"></span><strong>Available</strong></li>
+            <li><span>Profile</span><span class="detail-dots"></span><strong>Melena</strong></li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="profile-gallery">
+      <div class="container">
+        <div class="profile-gallery-grid">
+          <img class="profile-gallery-img" src="../assets/roster/alexa.jpg" alt="Melena photo 1" />
+          <img class="profile-gallery-img" src="../assets/roster/alexa.jpg" alt="Melena photo 2" />
+        </div>
+      </div>
+    </section>
+
+    <section class="profile-cta-band">
+      <div class="container narrow center-text">
+        <p class="eyebrow">Ready to book?</p>
+        <h2>Arrange your visit with Melena</h2>
+        <p class="profile-cta-sub">Check availability on the roster, or get in touch directly to make a booking.</p>
+        <div class="hero-actions center-actions">
+          <a class="btn btn-primary" href="../index.html#contact">Book Now</a>
+          <a class="btn btn-secondary" href="../roster.html">Check Roster</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="profile-related">
+      <div class="container">
+        <h2 class="profile-related-title">You may also like</h2>
+        <div class="profile-related-grid">
+          <a href="./arabella.html" class="profile-related-card">
+            <img src="../assets/roster/arabella.jpg" alt="Arabella" />
+            <span class="profile-related-name">Arabella</span>
+          </a>
+          <a href="./harper.html" class="profile-related-card">
+            <img src="../assets/roster/harper.jpg" alt="Harper" />
+            <span class="profile-related-name">Harper</span>
+          </a>
+          <a href="./miley.html" class="profile-related-card">
+            <img src="../assets/roster/miley.png" alt="Miley" />
+            <span class="profile-related-name">Miley</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Albany Angels</h3>
+        <p>Discreet, premium experiences in Albany.</p>
+      </div>
+      <div>
+        <h4>Navigate</h4>
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../girls.html">Girls</a></li>
+          <li><a href="../services.html">Services</a></li>
+          <li><a href="../roster.html">Roster</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="../index.html#contact">Book Now</a></li>
+          <li><a href="../index.html#contact">Enquire</a></li>
+          <li><a href="../join.html">Join Our Team</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">&copy; Albany Angels. All rights reserved.</div>
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+  </button>
+
+  <script>
+    const toggle = document.getElementById('menuToggle');
+    const nav = document.getElementById('mainNav');
+    toggle.addEventListener('click', () => {
+      toggle.classList.toggle('active');
+      nav.classList.toggle('open');
+    });
+    nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      toggle.classList.remove('active');
+      nav.classList.remove('open');
+    }));
+    const btt = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => btt.classList.toggle('visible', window.scrollY > 400));
+    btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+</body>
+</html>

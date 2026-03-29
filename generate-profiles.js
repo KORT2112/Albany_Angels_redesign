@@ -1,0 +1,584 @@
+const fs = require('fs');
+const path = require('path');
+
+const data = JSON.parse(fs.readFileSync(path.join(__dirname, 'profile-data.json'), 'utf8'));
+
+// Map of girl names to their roster image for "more girls" cards
+const rosterImages = {};
+data.forEach(g => { rosterImages[g.name] = g.heroImage; });
+
+// Map of girl names to ethnicity + service for "more girls" card descriptions
+const girlMeta = {};
+data.forEach(g => { girlMeta[g.name] = { ethnicity: g.ethnicity, service: g.service, age: g.age }; });
+
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+}
+
+// Scan actual gallery folder for files
+function scanGalleryFiles(girlName) {
+  const folderName = girlName.toLowerCase();
+  const galleryDir = path.join(__dirname, 'assets', 'girls', folderName);
+  if (!fs.existsSync(galleryDir)) return { heroFile: null, galleryFiles: [] };
+
+  const allFiles = fs.readdirSync(galleryDir).sort();
+  let heroFile = null;
+  const galleryFiles = [];
+
+  allFiles.forEach(f => {
+    const lower = f.toLowerCase();
+    if (lower.startsWith('hero.')) {
+      heroFile = f;
+    } else if (lower.startsWith('gallery')) {
+      galleryFiles.push(f);
+    }
+  });
+
+  return { heroFile, galleryFiles };
+}
+
+function buildCarouselSlides(girl, heroFile, galleryFiles) {
+  const folderName = girl.name.toLowerCase();
+  const slides = [];
+
+  // First slide: eager load (visible on page load)
+  if (heroFile) {
+    slides.push(`            <img class="carousel-slide real-profile-image" src="../assets/girls/${folderName}/${heroFile}" alt="${girl.name} photo 1" />`);
+  } else {
+    slides.push(`            <img class="carousel-slide real-profile-image" src="${girl.heroImage}" alt="${girl.name} photo 1" />`);
+  }
+
+  // Remaining slides: lazy load
+  galleryFiles.forEach((file, i) => {
+    slides.push(`            <img class="carousel-slide real-profile-image" loading="lazy" src="../assets/girls/${folderName}/${file}" alt="${girl.name} photo ${i + 2}" />`);
+  });
+
+  return slides.join('\n');
+}
+
+function buildFilmstripImages(girl, heroFile, galleryFiles) {
+  const folderName = girl.name.toLowerCase();
+  const imgs = [];
+
+  if (heroFile) {
+    imgs.push(`          <img class="filmstrip-img" loading="lazy" src="../assets/girls/${folderName}/${heroFile}" alt="${girl.name} photo 1" />`);
+  } else {
+    imgs.push(`          <img class="filmstrip-img" loading="lazy" src="${girl.heroImage}" alt="${girl.name} photo 1" />`);
+  }
+
+  galleryFiles.forEach((file, i) => {
+    imgs.push(`          <img class="filmstrip-img" loading="lazy" src="../assets/girls/${folderName}/${file}" alt="${girl.name} photo ${i + 2}" />`);
+  });
+
+  return imgs.join('\n');
+}
+
+function getMoreGirls(girl) {
+  // Ensure we have 4 recommendations
+  const existing = [...girl.moreGirls];
+  const existingNames = new Set(existing.map(mg => mg.name));
+  existingNames.add(girl.name);
+
+  if (existing.length < 4) {
+    // Pick additional girls not already in the list
+    for (const g of data) {
+      if (existing.length >= 4) break;
+      if (!existingNames.has(g.name)) {
+        existing.push({ name: g.name, href: `./${g.name.toLowerCase()}.html` });
+        existingNames.add(g.name);
+      }
+    }
+  }
+
+  return existing.slice(0, 4);
+}
+
+function buildMoreGirls(moreGirls) {
+  return moreGirls.map(mg => {
+    const img = rosterImages[mg.name] || `../assets/roster/${mg.name.toLowerCase()}.jpg`;
+    return `          <article class="profile-card"><img class="real-card-image" loading="lazy" src="${img}" alt="${mg.name}" /><div class="profile-body"><h3>${mg.name}</h3><a href="${mg.href}" class="text-link">View profile</a></div></article>`;
+  }).join('\n');
+}
+
+function buildDetailList(girl) {
+  const items = [];
+  items.push(`            <li><span>Services</span><strong>${girl.service}</strong></li>`);
+  if (girl.age) items.push(`            <li><span>Age</span><strong>${girl.age}</strong></li>`);
+  if (girl.bust) items.push(`            <li><span>Bust</span><strong>${girl.bust}</strong></li>`);
+  if (girl.dressSize) items.push(`            <li><span>Dress Size</span><strong>${girl.dressSize}</strong></li>`);
+  if (girl.ethnicity) items.push(`            <li><span>Ethnicity</span><strong>${girl.ethnicity}</strong></li>`);
+  if (girl.height) items.push(`            <li><span>Height</span><strong>${escapeHtml(girl.height)}</strong></li>`);
+  items.push(`            <li><span>Bookings</span><strong>Phone, text, or WhatsApp</strong></li>`);
+  return items.join('\n');
+}
+
+function buildProfileLead(girl) {
+  const parts = [];
+  if (girl.ethnicity) parts.push(girl.ethnicity);
+  if (girl.age) parts.push(`Age: ${girl.age}`);
+  if (girl.height) parts.push(girl.height);
+  return parts.join(' &middot; ');
+}
+
+function buildDetailStrip(girl) {
+  const tags = [];
+  if (girl.service) tags.push(girl.service);
+  if (girl.ethnicity) tags.push(girl.ethnicity);
+  return tags.map(t => `            <span>${t}</span>`).join('\n');
+}
+
+function buildAbout(girl) {
+  const paragraphs = girl.aboutText.split('\n').filter(p => p.trim());
+  if (paragraphs.length <= 1) {
+    return `          <p>${girl.aboutText}</p>`;
+  }
+  return paragraphs.map(p => `          <p>${p.trim()}</p>`).join('\n');
+}
+
+function generateProfile(girl) {
+  const { heroFile, galleryFiles } = scanGalleryFiles(girl.name);
+  const totalSlides = 1 + galleryFiles.length; // hero + gallery files
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Albany Angels - ${girl.name}</title>
+  <meta name="description" content="View ${girl.name}'s profile at Albany Angels. ${girl.service} in Albany, Auckland." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body class="profile-body">
+  <header class="site-header solid-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html">Albany Angels</a>
+      <nav class="site-nav" id="mainNav">
+        <a href="../index.html">Home</a>
+        <a href="../girls.html" class="nav-active">Ladies</a>
+        <a href="../roster.html">Roster</a>
+        <a href="../services.html">Services</a>
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#contact-details">Contact</a>
+        <a href="../join.html">Join Us</a>
+      </nav>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <a class="btn btn-primary" href="../index.html#contact">Book Now</a>
+    </div>
+  </header>
+
+  <div class="profile-scroll-wrap" id="profileScroll">
+    <!-- 1. Hero -->
+    <section class="profile-snap-section profile-hero-section">
+      <div class="container profile-hero-grid">
+        <div>
+          <p class="eyebrow">${girl.service}</p>
+          <h1>${girl.name}</h1>
+          <p class="profile-lead">${buildProfileLead(girl)}</p>
+          <div class="detail-strip">
+${buildDetailStrip(girl)}
+          </div>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="../index.html#contact">Book ${girl.name}</a>
+            <a class="btn btn-secondary" href="../girls.html">Back to Ladies</a>
+          </div>
+        </div>
+        <div class="hero-carousel" id="heroCarousel">
+          <div class="carousel-track">
+${buildCarouselSlides(girl, heroFile, galleryFiles)}
+          </div>
+          <button class="carousel-arrow carousel-prev" aria-label="Previous photo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <button class="carousel-arrow carousel-next" aria-label="Next photo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+          </button>
+          <div class="carousel-counter"><span id="carouselCurrent">1</span> / <span id="carouselTotal">${totalSlides}</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. About + Details -->
+    <section class="profile-snap-section section-alt">
+      <div class="container profile-content-grid">
+        <article class="content-panel">
+          <p class="eyebrow">About</p>
+          <h2>About ${girl.name}</h2>
+${buildAbout(girl)}
+        </article>
+        <aside class="content-panel details-panel">
+          <p class="eyebrow">Details</p>
+          <h2>Profile details</h2>
+          <ul class="detail-list">
+${buildDetailList(girl)}
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <!-- 3. Gallery filmstrip -->
+    <section class="profile-snap-section gallery-snap-section">
+      <div class="filmstrip-wrap">
+        <div class="filmstrip-track" id="filmstripTrack">
+${buildFilmstripImages(girl, heroFile, galleryFiles)}
+        </div>
+        <button class="filmstrip-arrow filmstrip-prev" id="filmPrev" aria-label="Previous">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <button class="filmstrip-arrow filmstrip-next" id="filmNext" aria-label="Next">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+        </button>
+      </div>
+
+      <!-- Lightbox overlay -->
+      <div class="lightbox-overlay" id="lightbox">
+        <button class="lightbox-close" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        <button class="lightbox-arrow lightbox-prev-arrow" aria-label="Previous">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <div class="lightbox-img-container" id="lightboxContainer">
+          <img class="lightbox-img lb-active" id="lightboxImgA" src="" alt="" />
+          <img class="lightbox-img" id="lightboxImgB" src="" alt="" />
+        </div>
+        <button class="lightbox-arrow lightbox-next-arrow" aria-label="Next">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+        </button>
+        <div class="lightbox-counter" id="lightboxCounter"></div>
+      </div>
+    </section>
+
+    <!-- 4. CTA -->
+    <section class="profile-snap-section profile-cta-section">
+      <div class="container narrow center-text">
+        <h2 class="cta-name">${girl.name}</h2>
+        <div class="cta-accent-line"></div>
+        <p class="cta-tagline">Discreet. Effortless. Yours.</p>
+        <a class="btn btn-primary cta-book-btn" href="../index.html#contact">Book Now</a>
+      </div>
+    </section>
+
+    <!-- 5. More Girls -->
+    <section class="profile-snap-section section-alt more-girls-section">
+      <div class="container">
+        <div class="section-head left-only">
+          <div>
+            <p class="eyebrow">You may also like</p>
+            <h2>More girls</h2>
+          </div>
+        </div>
+        <div class="profile-grid compact-grid">
+${buildMoreGirls(getMoreGirls(girl))}
+        </div>
+      </div>
+      <p style="text-align:center; color:rgba(255,255,255,0.55); font-size:0.75rem; letter-spacing:0.02em; margin:0 0 0 -2px; padding-top:8px; position:absolute; bottom:15px; left:0; right:0;">&copy; 2026 Albany Angels. All rights reserved.</p>
+    </section>
+
+  </div>
+
+  <script>
+    // Match accent line to name width
+    const ctaName = document.querySelector('.cta-name');
+    if (ctaName) {
+      const line = document.querySelector('.cta-accent-line');
+      if (line) line.style.width = (ctaName.offsetWidth * 1.3) + 'px';
+    }
+
+    const toggle = document.getElementById('menuToggle');
+    const nav = document.getElementById('mainNav');
+    toggle.addEventListener('click', () => {
+      toggle.classList.toggle('active');
+      nav.classList.toggle('open');
+    });
+    nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      toggle.classList.remove('active');
+      nav.classList.remove('open');
+    }));
+
+    // Scroll-snap observer for section animations
+    const scrollWrap = document.getElementById('profileScroll');
+    const sections = scrollWrap.querySelectorAll('.profile-snap-section');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+        } else {
+          entry.target.classList.remove('in-view');
+        }
+      });
+    }, {
+      root: scrollWrap,
+      threshold: 0.2
+    });
+
+    sections.forEach(s => observer.observe(s));
+
+    // Hero always visible on load
+    if (sections.length) sections[0].classList.add('in-view');
+
+    // Fallback sync on scrollend
+    function syncVisibleSection() {
+      let best = null, bestRatio = 0;
+      sections.forEach((sec, i) => {
+        const r = sec.getBoundingClientRect();
+        const visible = Math.max(0, Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0));
+        const ratio = visible / window.innerHeight;
+        if (ratio > bestRatio) { bestRatio = ratio; best = i; }
+      });
+      if (best !== null) {
+        sections.forEach((sec, i) => {
+          if (i === best) {
+            sec.classList.add('in-view');
+          } else {
+            sec.classList.remove('in-view');
+          }
+        });
+      }
+    }
+
+    scrollWrap.addEventListener('scrollend', syncVisibleSection);
+
+    // Preload next carousel images only
+    document.querySelectorAll('.carousel-slide').forEach((img, i) => {
+      if (i > 0 && i < 3 && img.src) { const p = new Image(); p.src = img.src; }
+    });
+
+    // Hero carousel
+    (function() {
+      const carousel = document.getElementById('heroCarousel');
+      if (!carousel) return;
+      const track = carousel.querySelector('.carousel-track');
+      const slides = carousel.querySelectorAll('.carousel-slide');
+      const prevBtn = carousel.querySelector('.carousel-prev');
+      const nextBtn = carousel.querySelector('.carousel-next');
+      const currentEl = document.getElementById('carouselCurrent');
+      const totalEl = document.getElementById('carouselTotal');
+      let current = 0;
+      const total = slides.length;
+
+      if (totalEl) totalEl.textContent = total;
+
+      function goTo(index) {
+        if (index < 0) index = total - 1;
+        if (index >= total) index = 0;
+        current = index;
+        track.style.transform = \`translateX(-\${current * 100}%)\`;
+        if (currentEl) currentEl.textContent = current + 1;
+      }
+
+      prevBtn.addEventListener('click', (e) => { e.stopPropagation(); goTo(current - 1); });
+      nextBtn.addEventListener('click', (e) => { e.stopPropagation(); goTo(current + 1); });
+
+      // Keyboard navigation
+      carousel.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') goTo(current - 1);
+        if (e.key === 'ArrowRight') goTo(current + 1);
+      });
+      carousel.setAttribute('tabindex', '0');
+
+      // Swipe support
+      let startX = 0;
+      carousel.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
+      carousel.addEventListener('touchend', (e) => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 40) {
+          diff > 0 ? goTo(current + 1) : goTo(current - 1);
+        }
+      }, { passive: true });
+    })();
+
+    // Filmstrip gallery
+    (function() {
+      const track = document.getElementById('filmstripTrack');
+      if (!track) return;
+      const imgs = track.querySelectorAll('.filmstrip-img');
+      const prevBtn = document.getElementById('filmPrev');
+      const nextBtn = document.getElementById('filmNext');
+      const total = imgs.length;
+      let offset = 0;
+
+      // Clone images for infinite loop effect
+      const clones = [];
+      imgs.forEach(img => {
+        const clone = img.cloneNode(true);
+        clone.classList.add('filmstrip-clone');
+        track.appendChild(clone);
+        clones.push(clone);
+      });
+
+      function getScrollStep() {
+        const firstImg = track.querySelector('.filmstrip-img');
+        return firstImg ? firstImg.getBoundingClientRect().width + 6 : 400;
+      }
+
+      function getTotalOriginalWidth() {
+        let w = 0;
+        imgs.forEach(img => { w += img.getBoundingClientRect().width + 6; });
+        return w;
+      }
+
+      function scroll(dir) {
+        const step = getScrollStep();
+        offset += step * dir;
+        const totalW = getTotalOriginalWidth();
+
+        if (offset >= totalW) {
+          track.style.transition = 'none';
+          offset -= totalW;
+          track.style.transform = \`translateX(-\${offset}px)\`;
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              track.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            });
+          });
+        } else if (offset < 0) {
+          track.style.transition = 'none';
+          offset += totalW;
+          track.style.transform = \`translateX(-\${offset}px)\`;
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              track.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            });
+          });
+        } else {
+          track.style.transform = \`translateX(-\${offset}px)\`;
+        }
+      }
+
+      nextBtn.addEventListener('click', () => scroll(1));
+      prevBtn.addEventListener('click', () => scroll(-1));
+
+      // Swipe
+      let startX = 0;
+      track.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
+      track.addEventListener('touchend', (e) => {
+        const diff = startX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 40) scroll(diff > 0 ? 1 : -1);
+      }, { passive: true });
+
+      // Lightbox — two-image crossfade (no flicker)
+      const lightbox = document.getElementById('lightbox');
+      const imgA = document.getElementById('lightboxImgA');
+      const imgB = document.getElementById('lightboxImgB');
+      const lightboxCounter = document.getElementById('lightboxCounter');
+      const lightboxClose = lightbox.querySelector('.lightbox-close');
+      const lightboxPrev = lightbox.querySelector('.lightbox-prev-arrow');
+      const lightboxNext = lightbox.querySelector('.lightbox-next-arrow');
+      let lbIndex = 0;
+      let lbAnimating = false;
+      let activeImg = imgA;
+      let standbyImg = imgB;
+      const allSrcs = Array.from(imgs).map(img => img.src);
+
+      // Preload all lightbox images
+      allSrcs.forEach(src => { const p = new Image(); p.src = src; });
+
+      function openLightbox(index) {
+        lbIndex = index;
+        activeImg.src = allSrcs[lbIndex];
+        activeImg.classList.add('lb-active');
+        standbyImg.classList.remove('lb-active');
+        lightboxCounter.textContent = \`\${lbIndex + 1} / \${total}\`;
+        lightbox.classList.add('active');
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove('active');
+      }
+
+      function lbNav(dir) {
+        if (lbAnimating) return;
+        lbAnimating = true;
+
+        lbIndex = (lbIndex + dir + total) % total;
+        lightboxCounter.textContent = \`\${lbIndex + 1} / \${total}\`;
+
+        // Step 1: Force standby invisible with no transition
+        standbyImg.classList.add('lb-loading');
+        standbyImg.classList.remove('lb-active');
+        standbyImg.src = allSrcs[lbIndex];
+
+        // Step 2: Wait for image to be decoded and painted invisibly
+        const ready = standbyImg.decode ? standbyImg.decode() : Promise.resolve();
+        ready.catch(() => {}).then(() => {
+          // Step 3: Remove loading class, restore transitions
+          standbyImg.classList.remove('lb-loading');
+
+          // Step 4: Wait one frame for the browser to apply opacity:0 with transition
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              // Step 5: Crossfade
+              standbyImg.classList.add('lb-active');
+              activeImg.classList.remove('lb-active');
+
+              // Swap references
+              const temp = activeImg;
+              activeImg = standbyImg;
+              standbyImg = temp;
+
+              setTimeout(() => { lbAnimating = false; }, 650);
+            });
+          });
+        });
+      }
+
+      // Click on filmstrip images (originals + clones)
+      track.querySelectorAll('.filmstrip-img').forEach(img => {
+        img.addEventListener('click', () => {
+          const src = img.src;
+          const idx = allSrcs.indexOf(src);
+          openLightbox(idx >= 0 ? idx : 0);
+        });
+      });
+
+      // Click on hero carousel slides to open lightbox
+      document.querySelectorAll('.carousel-slide').forEach((img, i) => {
+        img.style.cursor = 'pointer';
+        img.addEventListener('click', () => {
+          const idx = allSrcs.indexOf(img.src);
+          openLightbox(idx >= 0 ? idx : i);
+        });
+      });
+
+      lightboxClose.addEventListener('click', closeLightbox);
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox || e.target.classList.contains('lightbox-img-container')) closeLightbox();
+      });
+      lightboxPrev.addEventListener('click', (e) => { e.stopPropagation(); lbNav(-1); });
+      lightboxNext.addEventListener('click', (e) => { e.stopPropagation(); lbNav(1); });
+
+      document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') lbNav(-1);
+        if (e.key === 'ArrowRight') lbNav(1);
+      });
+    })();
+  </script>
+</body>
+</html>`;
+}
+
+// Generate all profiles
+const girlsDir = path.join(__dirname, 'girls');
+if (!fs.existsSync(girlsDir)) {
+  fs.mkdirSync(girlsDir, { recursive: true });
+}
+
+let count = 0;
+data.forEach(girl => {
+  const html = generateProfile(girl);
+  const outPath = path.join(__dirname, girl.filename);
+  fs.writeFileSync(outPath, html, 'utf8');
+  const { heroFile, galleryFiles } = scanGalleryFiles(girl.name);
+  count++;
+  console.log(`Generated: ${girl.filename} (hero: ${heroFile || 'none'}, ${galleryFiles.length} gallery images)`);
+});
+
+console.log(`\nDone! Generated ${count} profile pages.`);

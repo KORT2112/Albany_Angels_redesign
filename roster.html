@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Albany Angels - Weekly Roster</title>
+  <meta name="description" content="Albany Angels weekly roster. See who's available today with live availability for full service and sensual massage." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+  <style>
+    .roster-card-body {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 7px;
+    }
+
+    .roster-card-body h3 {
+      margin: 0;
+    }
+
+    .roster-card-body .availability-time {
+      margin: 0 0 0 -5px;
+      padding: 4px 8px;
+      line-height: 1;
+      display: inline-flex;
+      width: fit-content;
+      border-radius: 999px;
+      background: rgba(199, 164, 106, 0.1);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header solid-header">
+    <div class="container header-inner">
+      <a class="brand" href="./index.html">Albany Angels</a>
+      <nav class="site-nav" id="mainNav">
+        <a href="./index.html">Home</a>
+        <a href="./girls.html">Ladies</a>
+        <a href="./roster.html" class="nav-active">Roster</a>
+        <a href="./services.html">Services</a>
+        <a href="./index.html#about">About</a>
+        <a href="./index.html#contact-details">Contact</a>
+        <a href="./join.html">Join Us</a>
+      </nav>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <a class="btn btn-primary" href="./index.html#contact">Book Now</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="section" style="padding-top: 24px; padding-bottom: 48px;">
+      <div class="container">
+        <div class="roster-dashboard">
+          <div class="roster-topbar">
+            <div>
+              <p class="eyebrow">This week's roster</p>
+              <h2 id="selectedDayTitle">Monday</h2>
+              <p class="roster-date" id="selectedDate">23rd March</p>
+            </div>
+            <div class="roster-actions">
+              <div class="mode-toggle-wrap segmented-toggle" id="modeSwitchWrap" role="tablist" aria-label="Roster mode selector">
+                <button class="segmented-option active" id="fullServiceLabel" type="button">Full Service</button>
+                <button class="segmented-option" id="sensualLabel" type="button">Sensual Massage</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="day-selector" id="daySelector">
+            <button class="day-pill active" data-day="monday">Mon <span>30 Mar</span></button>
+            <button class="day-pill" data-day="tuesday">Tue <span>31 Mar</span></button>
+            <button class="day-pill" data-day="wednesday">Wed <span>1 Apr</span></button>
+            <button class="day-pill" data-day="thursday">Thu <span>2 Apr</span></button>
+            <button class="day-pill" data-day="friday">Fri <span>3 Apr</span></button>
+            <button class="day-pill" data-day="saturday">Sat <span>4 Apr</span></button>
+            <button class="day-pill" data-day="sunday">Sun <span>5 Apr</span></button>
+          </div>
+
+          <div class="availability-grid" id="availabilityGrid"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <p style="text-align:center; color:rgba(255,255,255,0.55); font-size:0.75rem; letter-spacing:0.02em; margin:0; padding:16px 0 12px;">&copy; 2026 Albany Angels. All rights reserved.</p>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+  </button>
+
+  <script>
+    const imageMap = {
+      ALLY: './assets/girls/ally/hero.jpg',
+      ALEXA: './assets/girls/alexa/hero.jpg',
+      ALYSSA: './assets/girls/alyssa/hero.jpeg',
+      AMORA: './assets/girls/amora/hero.jpg',
+      ANGEL: './assets/girls/angel/hero.jpg',
+      ANNA: './assets/girls/anna/hero.png',
+      ANNIE: './assets/girls/annie/hero.jpg',
+      ARABELLA: './assets/girls/arabella/hero.jpg',
+      ARI: './assets/girls/ari/hero.jpeg',
+      ARIA: './assets/girls/aria/hero.jpg',
+      ARIANNA: './assets/girls/arianna/hero.jpg',
+      ARIES: './assets/girls/aries/hero.png',
+      ASIA: './assets/girls/asia/hero.jpg',
+      BECKY: './assets/girls/becky/hero.jpg',
+      BELLA: './assets/girls/bella/hero.jpg',
+      BIANCA: './assets/girls/bianca/hero.jpg',
+      BIBI: './assets/girls/bibi/hero.jpg',
+      BRIANNA: './assets/girls/brianna/hero.jpg',
+      CAPRII: './assets/girls/caprii/hero.jpg',
+      CHANTELLE: './assets/girls/chantelle/hero.png',
+      COURTNEY: './assets/roster/shadow.jpg',
+      DAME: './assets/girls/dame/hero.jpg',
+      ELSA: './assets/girls/elsa/hero.jpg',
+      EMMA: './assets/girls/emma/hero.jpg',
+      FRANCIS: './assets/girls/francis/hero.png',
+      GIA: './assets/girls/gia/hero.jpg',
+      HANNAH: './assets/girls/hannah/hero.jpg',
+      HARPER: './assets/girls/harper/hero.jpg',
+      IRIS: './assets/girls/iris/hero.jpg',
+      ISABELLA: './assets/girls/isabella/hero.jpg',
+      ISLA: './assets/girls/isla/hero.jpg',
+      JADE: './assets/girls/jade/hero.jpg',
+      JASMINE: './assets/girls/jasmine/hero.jpg',
+      KATIE: './assets/girls/katie/hero.png',
+      KRYSTAL: './assets/girls/krystal/hero.png',
+      LACIE: './assets/girls/lacie/hero.jpeg',
+      LILITH: './assets/girls/lilith/hero.jpg',
+      LOLA: './assets/roster/shadow.jpg',
+      LUIZA: './assets/girls/luiza/hero.jpeg',
+      MADDISON: './assets/girls/maddison/hero.jpg',
+      MARIE: './assets/roster/shadow.jpg',
+      MEA: './assets/girls/mea/hero.jpg',
+      MEGAN: './assets/girls/megan/hero.jpg',
+      MEL: './assets/girls/mel/hero.png',
+      MELENA: './assets/girls/melena/hero.jpg',
+      MELISSA: './assets/girls/melissa/hero.jpg',
+      MILA: './assets/girls/mila/hero.jpg',
+      MILEY: './assets/girls/miley/hero.png',
+      NATALYA: './assets/girls/natalya/hero.jpg',
+      NATAYLA: './assets/girls/natalya/hero.jpg',
+      PEACHES: './assets/girls/peaches/hero.jpg',
+      SERENA: './assets/girls/serena/hero.jpg',
+      SHANAYA: './assets/girls/shanaya/hero.jpeg',
+      TAYLOR: './assets/girls/taylor/hero.jpg',
+      VICTORIA: './assets/girls/victoria/hero.jpg',
+      YUZUKI: './assets/girls/yuzuki/hero.jpeg',
+      ZARA: './assets/girls/zara/hero.jpg',
+      ZOE: './assets/girls/zoe/hero.jpg'
+    };
+
+    const sensualOnly = new Set(['NATALYA','NATAYLA','ZOE','ZARA','HANNAH','VICTORIA','ALEXA','BRIANNA','MELISSA','MILEY','BIBI','ELSA','HARPER']);
+
+    const profileMap = {
+      ALLY: 'ally.html',
+      ALEXA: 'alexa.html',
+      ALYSSA: 'alyssa.html',
+      AMORA: 'amora.html',
+      ANGEL: 'angel.html',
+      ANNA: 'anna.html',
+      ANNIE: 'annie.html',
+      ARABELLA: 'arabella.html',
+      ARI: 'ari.html',
+      ARIA: 'aria.html',
+      ARIANNA: 'arianna.html',
+      ARIES: 'aries.html',
+      ASIA: 'asia.html',
+      BECKY: 'becky.html',
+      BELLA: 'bella.html',
+      BIANCA: 'bianca.html',
+      BIBI: 'bibi.html',
+      BRIANNA: 'brianna.html',
+      CAPRII: 'caprii.html',
+      CHANTELLE: 'chantelle.html',
+      COURTNEY: 'alexa.html',
+      DAME: 'dame.html',
+      ELSA: 'elsa.html',
+      EMMA: 'emma.html',
+      FRANCIS: 'francis.html',
+      GIA: 'gia.html',
+      HANNAH: 'hannah.html',
+      HARPER: 'harper.html',
+      IRIS: 'iris.html',
+      ISABELLA: 'isabella.html',
+      ISLA: 'isla.html',
+      JADE: 'jade.html',
+      JASMINE: 'jasmine.html',
+      KATIE: 'katie.html',
+      KRYSTAL: 'krystal.html',
+      LACIE: 'lacie.html',
+      LILITH: 'lilith.html',
+      LOLA: 'alexa.html',
+      LUIZA: 'luiza.html',
+      MADDISON: 'maddison.html',
+      MARIE: 'alexa.html',
+      MEA: 'mea.html',
+      MEGAN: 'megan.html',
+      MEL: 'mel.html',
+      MELENA: 'melena.html',
+      MELISSA: 'melissa.html',
+      MILA: 'mila.html',
+      MILEY: 'miley.html',
+      NATALYA: 'natalya.html',
+      NATAYLA: 'natalya.html',
+      PEACHES: 'peaches.html',
+      SERENA: 'serena.html',
+      SHANAYA: 'shanaya.html',
+      TAYLOR: 'taylor.html',
+      VICTORIA: 'victoria.html',
+      YUZUKI: 'yuzuki.html',
+      ZARA: 'zara.html',
+      ZOE: 'zoe.html'
+    };
+
+    const roster = {
+      monday: {
+        label: 'Monday',
+        date: '30th March',
+        girls: [
+          ['IRIS','10-2'], ['ALLY','10-3'], ['ISLA','10-4'], ['ANNA','10-6'], ['BECKY','11-2'], ['ANGEL','11-5'], ['ARI','11-6.30'], ['ARIES','12-9'], ['YUZUKI','2-10'], ['ZOE','4-9'], ['HANNAH','4-10'], ['BIANCA','5-10']
+        ]
+      },
+      tuesday: {
+        label: 'Tuesday',
+        date: '31st March',
+        girls: [
+          ['IRIS','10-4'], ['ISLA','10-4'], ['LILITH','10-4'], ['ANNA','10-6'], ['JADE','10-6'], ['VICTORIA','10-6'], ['COURTNEY','10-6'], ['MARIE','11-3'], ['ANGEL','11-5'], ['JASMINE','11-6'], ['ARI','11-6.30'], ['BIANCA','11-10'], ['ARIA','11.30-5'], ['MELENA','12-6'], ['PEACHES','12-5'], ['ARIES','12.30-9'], ['ALYSSA','2-9'], ['CHANTELLE','3-8'], ['YUZUKI','5-10'], ['AMORA','6-10']
+        ]
+      },
+      wednesday: {
+        label: 'Wednesday',
+        date: '1st April',
+        girls: [
+          ['IRIS','10-2'], ['COURTNEY','10-2'], ['BIBI','10-2'], ['LILITH','10-4'], ['LOLA','10-8'], ['ARIA','11-5'], ['ARI','11-6.30'], ['BIANCA','11-10'], ['JADE','12-4'], ['PEACHES','12-5'], ['ALYSSA','12-8'], ['EMMA','1.30-6'], ['SERENA','4-10'], ['HANNAH','4-10'], ['MEGAN','6-10']
+        ]
+      },
+      thursday: {
+        label: 'Thursday',
+        date: '2nd April',
+        girls: [
+          ['BIBI','10-2'], ['JADE','10-4'], ['VICTORIA','10-4'], ['LILITH','10-4'], ['LOLA','10-8'], ['ANGEL','11-5'], ['JASMINE','11-6'], ['ARIA','11-6.30'], ['ARI','11-6.30'], ['PEACHES','12-5'], ['ARIES','12.30-9'], ['CHANTELLE','3-8'], ['HANNAH','4-10'], ['BIANCA','5-10'], ['YUZUKI','5-10']
+        ]
+      },
+      friday: {
+        label: 'Friday',
+        date: '3rd April',
+        girls: [
+          ['BIBI','10-2'], ['JADE','10-8'], ['LOLA','10-8'], ['ARIA','11.30-5'], ['PEACHES','12-5'], ['DAME','12-5.30'], ['YUZUKI','2-8'], ['EMMA','2-7'], ['GIA','2-10'], ['ALYSSA','3-9'], ['VICTORIA','3-9'], ['ELSA','4-10']
+        ]
+      },
+      saturday: {
+        label: 'Saturday',
+        date: '4th April',
+        girls: [
+          ['ISLA','10-1'], ['GIA','10-3'], ['ALYSSA','10-4'], ['VICTORIA','10-8'], ['ANGEL','11-5'], ['LILITH','12-8'], ['FRANCIS','12-6'], ['SERENA','4-10']
+        ]
+      },
+      sunday: {
+        label: 'Sunday',
+        date: '5th April',
+        girls: [
+          ['FRANCIS','12-6'], ['ZOE','1-7'], ['CHANTELLE','3-8'], ['VICTORIA','3-9']
+        ]
+      }
+    };
+
+    const grid = document.getElementById('availabilityGrid');
+    const title = document.getElementById('selectedDayTitle');
+    const date = document.getElementById('selectedDate');
+    const modeSwitchWrap = document.getElementById('modeSwitchWrap');
+    const fullServiceLabel = document.getElementById('fullServiceLabel');
+    const sensualLabel = document.getElementById('sensualLabel');
+    const buttons = [...document.querySelectorAll('.day-pill')];
+    let currentMode = 'full';
+
+    function formatTimeRange(raw) {
+      const [startRaw, endRaw] = raw.split('-').map(s => s.trim());
+
+      function parsePart(part) {
+        const normalized = part.replace(/\s+/g, '').toLowerCase();
+        let hours = 0;
+        let minutes = 0;
+
+        if (normalized.includes('.')) {
+          const [h, m] = normalized.split('.');
+          hours = parseInt(h, 10);
+          minutes = parseInt((m || '0').padEnd(2, '0').slice(0, 2), 10);
+        } else {
+          hours = parseInt(normalized, 10);
+        }
+        return { hours, minutes };
+      }
+
+      function render(hours24, minutes) {
+        const d = new Date(2000, 0, 1, hours24, minutes);
+        return d.toLocaleTimeString('en-NZ', { hour: 'numeric', minute: '2-digit', hour12: true }).replace('am', 'AM').replace('pm', 'PM');
+      }
+
+      const start = parsePart(startRaw);
+      const end = parsePart(endRaw);
+
+      let start24;
+      if (start.hours === 12) {
+        start24 = 12;
+      } else if (start.hours >= 10 && start.hours <= 11) {
+        start24 = start.hours;
+      } else if (start.hours >= 1 && start.hours <= 9) {
+        start24 = start.hours + 12;
+      } else {
+        start24 = start.hours;
+      }
+
+      let end24;
+      if (end.hours === 12) {
+        end24 = 12;
+      } else if (end.hours >= 1 && end.hours <= 11) {
+        end24 = end.hours + 12;
+      } else {
+        end24 = end.hours;
+      }
+
+      if (start24 >= 12 && end24 <= start24) {
+        end24 = end.hours === 12 ? 12 : end.hours + 12;
+      }
+      if (start24 < 12 && end24 < 12 && end.hours !== 12) {
+        end24 = end.hours + 12;
+      }
+
+      return `${render(start24, start.minutes)} - ${render(end24, end.minutes)}`;
+    }
+
+    function renderDay(dayKey) {
+      const day = roster[dayKey];
+      const list = currentMode === 'sensual'
+        ? day.girls.filter(([name]) => sensualOnly.has(name))
+        : day.girls.filter(([name]) => name !== 'ALEXA');
+      title.textContent = day.label;
+      date.textContent = day.date;
+      grid.innerHTML = list.length === 0
+        ? '<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center; padding: 40px 0;">No girls available for this service on ' + day.label + '. Try another day or switch modes.</p>'
+        : list.map(([name, time]) => {
+        const img = imageMap[name] || './assets/roster/shadow.jpg';
+        const prettyTime = formatTimeRange(time);
+        const profileHref = `./girls/${profileMap[name] || 'alexa.html'}`;
+        return `
+          <article class="profile-card availability-card">
+            <a class="profile-card-link" href="${profileHref}" aria-label="View ${name} profile">
+              <img class="real-card-image" src="${img}" alt="${name}" />
+            </a>
+            <div class="profile-body roster-card-body">
+              <h3><a class="profile-name-link" href="${profileHref}">${name.charAt(0) + name.slice(1).toLowerCase()}</a>${['ANNIE','BIBI','MELENA','LOLA'].includes(name) ? '<span class="new-pill">New</span>' : name === 'ARIES' ? '<span class="new-pill">She\'s Back!</span>' : ''}</h3>
+              <span class="availability-time">${prettyTime}</span>
+            </div>
+          </article>`;
+      }).join('');
+      buttons.forEach(btn => btn.classList.toggle('active', btn.dataset.day === dayKey));
+      fullServiceLabel.classList.toggle('active', currentMode === 'full');
+      sensualLabel.classList.toggle('active', currentMode === 'sensual');
+      modeSwitchWrap.setAttribute('data-mode', currentMode);
+    }
+
+    buttons.forEach(btn => btn.addEventListener('click', () => renderDay(btn.dataset.day)));
+    fullServiceLabel.addEventListener('click', () => {
+      currentMode = 'full';
+      renderDay(buttons.find(btn => btn.classList.contains('active'))?.dataset.day || currentDayKey);
+    });
+    sensualLabel.addEventListener('click', () => {
+      currentMode = 'sensual';
+      renderDay(buttons.find(btn => btn.classList.contains('active'))?.dataset.day || currentDayKey);
+    });
+
+    const now = new Date();
+    const weekdayMap = {
+      0: 'sunday',
+      1: 'monday',
+      2: 'tuesday',
+      3: 'wednesday',
+      4: 'thursday',
+      5: 'friday',
+      6: 'saturday'
+    };
+    const currentDayKey = weekdayMap[now.getDay()] || 'monday';
+    renderDay(currentDayKey);
+
+    // Mobile menu
+    const toggle = document.getElementById('menuToggle');
+    const nav = document.getElementById('mainNav');
+    toggle.addEventListener('click', () => {
+      toggle.classList.toggle('active');
+      nav.classList.toggle('open');
+    });
+    nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      toggle.classList.remove('active');
+      nav.classList.remove('open');
+    }));
+
+    // Back to top
+    const btt = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => btt.classList.toggle('visible', window.scrollY > 400));
+    btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+</body>
+</html>

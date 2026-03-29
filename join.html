@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Albany Angels - Join Our Team</title>
+  <meta name="description" content="Join the Albany Angels team. Apply to work at Auckland's premier establishment." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="site-header solid-header">
+    <div class="container header-inner">
+      <a class="brand" href="./index.html">Albany Angels</a>
+      <nav class="site-nav" id="mainNav">
+        <a href="./index.html">Home</a>
+        <a href="./girls.html">Ladies</a>
+        <a href="./roster.html">Roster</a>
+        <a href="./services.html">Services</a>
+        <a href="./index.html#about">About</a>
+        <a href="./index.html#contact-details">Contact</a>
+        <a href="./join.html" class="nav-active">Join Us</a>
+      </nav>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <a class="btn btn-primary" href="./index.html#contact-details">Book Now</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero page-hero-services">
+      <div class="page-hero-overlay"></div>
+      <div class="container page-hero-content narrow">
+        <p class="eyebrow">Careers</p>
+        <h1>Join our team</h1>
+        <p>We're always looking for confident, professional, and friendly people to join the Albany Angels roster.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container join-split">
+        <div class="join-form-panel">
+          <p class="eyebrow">Apply now</p>
+          <h2 style="margin-bottom: 24px;">Get in touch</h2>
+          <p style="color: var(--text-secondary); margin: 0 0 28px;">Text for an early response. Fill out the form below or contact us directly.</p>
+
+          <form id="joinForm" onsubmit="return false;">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" placeholder="Enter your name" required />
+
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" placeholder="e.g. 021 123 4567" required />
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="your@email.com" />
+
+            <label for="age">Age</label>
+            <input type="number" id="age" name="age" placeholder="Must be 18+" min="18" required />
+
+            <label for="experience">Tell us about yourself</label>
+            <textarea id="experience" name="experience" placeholder="Any relevant experience, availability, and what you're looking for..."></textarea>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 8px;">Submit Application</button>
+          </form>
+        </div>
+
+        <div class="join-info">
+          <p class="eyebrow">Why Albany Angels?</p>
+          <h3>A premium, supportive environment</h3>
+          <p>Albany Angels offers a safe, professional, and well-managed workplace. We pride ourselves on creating a comfortable environment where our team members feel supported and valued.</p>
+
+          <h3>What we offer</h3>
+          <p>Flexible scheduling, a clean and modern facility, a loyal client base, free parking on-site, and a friendly, respectful management team.</p>
+
+          <h3>Contact us directly</h3>
+          <p>Prefer to reach out directly? Text or call for a quick response.</p>
+
+          <div class="join-contact-item">
+            <span>Phone</span>
+            <a href="tel:+64211321932">021 132 1932</a>
+          </div>
+          <div class="join-contact-item">
+            <span>Email</span>
+            <a href="mailto:thealbanyangels@gmail.com">thealbanyangels@gmail.com</a>
+          </div>
+          <div class="join-contact-item">
+            <span>Location</span>
+            <strong>10F Ride Way, Rosedale, Auckland</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h3>Albany Angels</h3>
+        <p>Discreet, premium experiences in Albany.</p>
+      </div>
+      <div>
+        <h4>Navigate</h4>
+        <ul>
+          <li><a href="./index.html">Home</a></li>
+          <li><a href="./girls.html">Ladies</a></li>
+          <li><a href="./services.html">Services</a></li>
+          <li><a href="./roster.html">Roster</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="./index.html#contact">Book Now</a></li>
+          <li><a href="./index.html#contact">Enquire</a></li>
+          <li><a href="./join.html">Join Our Team</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">&copy; Albany Angels. All rights reserved.</div>
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+  </button>
+
+  <script>
+    const toggle = document.getElementById('menuToggle');
+    const nav = document.getElementById('mainNav');
+    toggle.addEventListener('click', () => {
+      toggle.classList.toggle('active');
+      nav.classList.toggle('open');
+    });
+    nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      toggle.classList.remove('active');
+      nav.classList.remove('open');
+    }));
+
+    const btt = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => btt.classList.toggle('visible', window.scrollY > 400));
+    btt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+</body>
+</html>
