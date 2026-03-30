@@ -807,23 +807,29 @@
     window.addEventListener('load', () => {
       const hash = window.location.hash;
       if (hash) {
-        const target = document.querySelector(hash);
-        if (target) {
-          setTimeout(() => {
-            target.scrollIntoView({ behavior: 'instant', block: 'center' });
-          }, 100);
-          return;
+        const girlCard = document.querySelector(hash);
+        if (girlCard) {
+          const rowSection = girlCard.closest('.girls-snap-section');
+          if (rowSection) {
+            setTimeout(() => {
+              rowSection.scrollIntoView({ behavior: 'auto', block: 'start' });
+            }, 50);
+            return;
+          }
         }
       }
       
       const lastGirl = sessionStorage.getItem('last_girl_viewed');
       if (lastGirl) {
-        const target = document.getElementById(lastGirl);
-        if (target) {
-          setTimeout(() => {
-            target.scrollIntoView({ behavior: 'instant', block: 'center' });
-            sessionStorage.removeItem('last_girl_viewed');
-          }, 100);
+        const girlCard = document.getElementById(lastGirl);
+        if (girlCard) {
+          const rowSection = girlCard.closest('.girls-snap-section');
+          if (rowSection) {
+            setTimeout(() => {
+              rowSection.scrollIntoView({ behavior: 'auto', block: 'start' });
+              sessionStorage.removeItem('last_girl_viewed');
+            }, 50);
+          }
         }
       }
     });
