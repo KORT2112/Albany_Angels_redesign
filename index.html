@@ -468,20 +468,41 @@
       padding: 0 !important;
     }
 
-    /* Contact section - 3-column fit to viewport */
+    /* Contact section - full viewport, centered grid + absolute copyright */
     .snap-section.contact-section {
       height: 100dvh;
       overflow: hidden;
+      flex-direction: column !important;
+      justify-content: center !important;
+      align-items: stretch !important;
+      padding: 79px 0 0 0 !important;
+      position: relative;
     }
 
-    .snap-section.contact-section .contact-grid {
+    .snap-section.contact-section > .container.contact-grid {
+      flex: 1;
+      min-height: 0;
       grid-template-columns: repeat(3, 1fr);
       gap: 24px;
       align-items: stretch;
+      padding-bottom: 40px; /* leave room for copyright */
     }
 
     .snap-section.contact-section .map-panel {
-      min-height: 300px;
+      min-height: 0;
+    }
+
+    .snap-section.contact-section > .contact-copyright {
+      position: absolute;
+      bottom: 16px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: rgba(255,255,255,0.55);
+      font-size: 0.75rem;
+      letter-spacing: 0.02em;
+      margin: 0;
+      padding: 0;
     }
 
     .snap-section.contact-section .contact-lead {
@@ -868,7 +889,7 @@
           </div>
         </div>
       </div>
-      <p style="text-align:center; color:rgba(255,255,255,0.55); font-size:0.75rem; letter-spacing:0.02em; margin:0; padding:12px 0 16px;">&copy; 2026 Albany Angels. All rights reserved.</p>
+      <p class="contact-copyright">&copy; 2026 Albany Angels. All rights reserved.</p>
     </section>
   </main>
   </div><!-- /index-scroll-wrap -->
