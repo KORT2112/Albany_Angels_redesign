@@ -480,16 +480,17 @@
     }
 
     .snap-section.contact-section > .container.contact-grid {
-      flex: 1;
-      min-height: 0;
+      flex-shrink: 0;
+      height: calc(100dvh - 160px);
+      max-height: 560px;
       grid-template-columns: repeat(3, 1fr);
       gap: 24px;
       align-items: stretch;
-      padding-bottom: 40px; /* leave room for copyright */
     }
 
     .snap-section.contact-section .map-panel {
       min-height: 0;
+      overflow: hidden;
     }
 
     .snap-section.contact-section > .contact-copyright {
