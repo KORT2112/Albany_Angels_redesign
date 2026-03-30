@@ -278,9 +278,40 @@
       50% { opacity: 1; transform: translateX(-50%) translateY(6px); }
     }
 
-    /* CTA snap section */
+    /* CTA snap section — video background */
     .girls-cta-snap {
-      background: var(--bg-elevated);
+      position: relative;
+      overflow: hidden;
+      background: #0a0a0a;
+    }
+
+    .girls-cta-snap .cta-video-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: blur(3px) brightness(0.45);
+      transform: scale(1.06); /* hide blur edge bleed */
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* subtle warm vignette over video */
+    .girls-cta-snap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.55) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .girls-cta-snap > .container,
+    .girls-cta-snap > p {
+      position: relative;
+      z-index: 2;
     }
 
     /* Footer snap */
@@ -668,6 +699,9 @@
 
     <!-- CTA -->
     <section class="girls-snap-section girls-cta-snap">
+      <video class="cta-video-bg" autoplay muted loop playsinline preload="auto">
+        <source src="./assets/images/girl.mp4" type="video/mp4">
+      </video>
       <div class="container narrow" style="text-align:center;">
         <p class="eyebrow">Ready to book?</p>
         <h2 style="max-width:none;">Found someone you like?</h2>
