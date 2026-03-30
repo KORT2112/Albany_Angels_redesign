@@ -1552,7 +1552,7 @@ body.profile-body .site-header {
 
 .real-profile-image {
   width: 100%;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 2 / 3;
   height: auto;
   max-height: calc(100dvh - 200px);
   border-radius: var(--radius-lg);
