@@ -15,8 +15,29 @@
     /* Hero */
     .svc-hero {
       padding: 140px 0 100px;
+      position: relative;
       background: #0B0B0B;
       text-align: center;
+      overflow: hidden;
+    }
+    .svc-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('./assets/girls/arabella/hero.jpg') center top / cover no-repeat;
+      opacity: 0.22;
+      z-index: 0;
+    }
+    .svc-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(11,11,11,0.55) 0%, rgba(11,11,11,0.72) 60%, #0B0B0B 100%);
+      z-index: 1;
+    }
+    .svc-hero .container {
+      position: relative;
+      z-index: 2;
     }
     .svc-hero .eyebrow {
       margin-bottom: 20px;
