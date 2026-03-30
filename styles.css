@@ -1501,7 +1501,7 @@ body.profile-body .site-header {
   aspect-ratio: 2 / 3;
   max-height: calc(100dvh - 180px);
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: var(--radius-lg); /* matches photo corner radius (24px) */
   background: #222;
   flex-shrink: 0;
 }
