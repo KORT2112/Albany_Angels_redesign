@@ -124,7 +124,8 @@
     }
     .girls-row .profile-card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(201, 164, 92, 0.35);
+      border-color: #C9A45C;
     }
     .girls-row .profile-card:hover .real-card-image {
       transform: scale(1.03);
@@ -195,7 +196,7 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: rgba(245, 241, 234, 0.15);
+      background: rgba(245, 245, 245, 0.15);
       transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       cursor: pointer;
       border: none;
@@ -205,7 +206,7 @@
     .girls-dot.active {
       background: var(--accent);
       transform: scale(1.5);
-      box-shadow: 0 0 12px rgba(191, 155, 96, 0.4);
+      box-shadow: 0 0 10px rgba(201, 164, 92, 0.3);
     }
 
     /* Hero snap section */
@@ -235,7 +236,7 @@
     }
 
     .girls-hero-snap .hero-intro {
-      color: rgba(245, 241, 234, 0.72) !important;
+      color: rgba(245, 245, 245, 0.72) !important;
       max-width: 52ch !important;
       margin: 33px auto 0 !important;
       line-height: 1.6;
