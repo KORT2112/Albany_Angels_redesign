@@ -1445,12 +1445,12 @@ body.profile-body .site-header {
   width: 100%;
 }
 
-/* Hero carousel — fixed narrow width, portrait enforced by aspect-ratio */
+/* Hero carousel — fixed narrow width, strict 2:3 portrait */
 .hero-carousel {
   position: relative;
   width: min(420px, 38vw);
   height: auto;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 2 / 3;
   max-height: calc(100dvh - 180px);
   overflow: hidden;
   border-radius: 8px;
@@ -2448,19 +2448,19 @@ img {
     justify-content: center !important;
   }
 
-  /* Hero carousel — keep 4:3 landscape on mobile (portrait too tall on small screens) */
+  /* Hero carousel — strict 2:3 portrait on mobile */
   .hero-carousel {
-    aspect-ratio: 4 / 3 !important;
+    aspect-ratio: 2 / 3 !important;
     height: auto !important;
     max-height: none !important;
     min-height: 0 !important;
     width: 100% !important;
   }
 
-  /* Profile image — keep 4:3 on mobile */
+  /* Profile image — strict 2:3 on mobile */
   .real-profile-image {
     width: 100% !important;
-    aspect-ratio: 4 / 3 !important;
+    aspect-ratio: 2 / 3 !important;
     height: auto !important;
     max-height: none !important;
     min-height: 0 !important;
@@ -3198,11 +3198,11 @@ body.nav-open {
     justify-content: center;
   }
 
-  /* Hero carousel — switch to 3:4 portrait ratio (tall & dominant)
+  /* Hero carousel — strict 2:3 portrait ratio (tall & premium)
      Remove max-height cap so it breathes to fill the section
      Use height: 100% so it stretches within the column */
   .hero-carousel {
-    aspect-ratio: 3 / 4 !important;
+    aspect-ratio: 2 / 3 !important;
     max-height: calc(100dvh - 78px - 96px) !important;
     height: auto !important;
     width: 100% !important;
