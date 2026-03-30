@@ -27,6 +27,28 @@ body {
   line-height: 1.65;
 }
 
+/* ── Global near-invisible scrollbar ──────────────────────────────
+   Matches the ultra-subtle scrollbar on the girl profile pages.
+   Firefox: scrollbar-width + scrollbar-color on html/body.
+   WebKit/Blink: ::-webkit-scrollbar rules on html. */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.04) #111111;
+}
+html::-webkit-scrollbar {
+  width: 5px;
+}
+html::-webkit-scrollbar-track {
+  background: #111111;
+}
+html::-webkit-scrollbar-thumb {
+  background: #1a1a1a;
+  border-radius: 3px;
+}
+html::-webkit-scrollbar-thumb:hover {
+  background: #222222;
+}
+
 a { color: inherit; text-decoration: none; }
 img { max-width: 100%; display: block; }
 
