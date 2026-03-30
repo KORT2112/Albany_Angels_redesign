@@ -1,5 +1,32 @@
 [
   {
+    "filename": "girls/melena.html",
+    "name": "Melena",
+    "service": "Full Service",
+    "ethnicity": "Kiwi",
+    "age": "24",
+    "bust": "C Cup",
+    "dressSize": "Size 8",
+    "height": "5'6\"",
+    "heroImage": "../assets/girls/melena/hero.jpg",
+    "aboutText": "Melena is a stunning member of the Albany Angels team. With her warm personality and natural beauty, she provides a premium experience that is both relaxed and deeply engaging. Her attentive nature and elegant presence make every visit truly special.",
+    "moreGirls": [
+      {
+        "name": "Serena",
+        "href": "./serena.html"
+      },
+      {
+        "name": "Arabella",
+        "href": "./arabella.html"
+      },
+      {
+        "name": "Lacie",
+        "href": "./lacie.html"
+      }
+    ],
+    "galleryFiles": []
+  },
+  {
     "filename": "girls/alexa.html",
     "name": "Alexa",
     "service": "Sensual Massage Only",
