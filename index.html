@@ -164,6 +164,144 @@
       }
     }
 
+    /* ─── Services section redesign ─── */
+
+    /* Desktop: image LEFT, text RIGHT, no gap — unified card feel */
+    #services .services-split {
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      align-items: stretch;
+      min-height: 580px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.48);
+    }
+
+    /* Image column — absolute fill, image on the left */
+    #services .services-image-wrap {
+      position: relative;
+      overflow: hidden;
+      order: -1;
+    }
+
+    #services .services-feature-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 15%;
+      border-radius: 0;
+      border: none;
+      box-shadow: none;
+      /* Right-edge fade into the text panel */
+      -webkit-mask-image: linear-gradient(to right, black 65%, transparent 100%);
+      mask-image: linear-gradient(to right, black 65%, transparent 100%);
+    }
+
+    /* Text panel — dark, padded, flex column */
+    #services .services-copy {
+      background: #111009;
+      padding: 72px 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-left: none;
+    }
+
+    #services .services-copy .eyebrow {
+      color: var(--accent, #bf9b60);
+      letter-spacing: 0.3em;
+      font-size: 0.68rem;
+      margin-bottom: 16px;
+    }
+
+    #services .services-copy h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 2.4vw, 2.6rem);
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: #f5f1ea;
+      margin-bottom: 20px;
+      max-width: 18ch;
+    }
+
+    #services .services-copy p {
+      font-size: 0.9rem;
+      line-height: 1.72;
+      color: rgba(245,241,234,0.65);
+      max-width: 38ch;
+      margin-bottom: 40px;
+    }
+
+    #services .services-copy .btn {
+      align-self: flex-start;
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 820px) {
+      #services {
+        padding: 0 !important;
+      }
+
+      #services .services-split {
+        grid-template-columns: 1fr !important;
+        min-height: unset !important;
+        gap: 0 !important;
+        border-radius: var(--radius-lg) !important;
+        margin: 0 16px !important; /* side margins so card has breathing room */
+      }
+
+      /* Image top: aspect ratio locked, no absolute positioning */
+      #services .services-image-wrap {
+        order: -1 !important;
+        position: relative !important;
+        height: 56vw !important;
+        min-height: 200px !important;
+        max-height: 260px !important;
+        overflow: hidden !important;
+        border-radius: 0 !important;
+      }
+
+      #services .services-feature-image {
+        position: absolute !important;
+        inset: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-position: center 18% !important;
+        -webkit-mask-image: none !important;
+        mask-image: none !important;
+      }
+
+      /* Text panel below image */
+      #services .services-copy {
+        padding: 36px 26px 44px !important;
+        border: 1px solid rgba(255,255,255,0.06) !important;
+        border-top: none !important;
+        border-radius: 0 !important;
+      }
+
+      #services .services-copy h2 {
+        font-size: 1.5rem !important;
+        max-width: 100% !important;
+        margin-bottom: 14px !important;
+      }
+
+      #services .services-copy p {
+        font-size: 0.875rem !important;
+        max-width: 100% !important;
+        margin-bottom: 28px !important;
+      }
+
+      #services .services-copy .btn {
+        width: 100% !important;
+        text-align: center !important;
+        justify-content: center !important;
+      }
+    }
+
     /* About section blurred background */
     .about-bg-section::before {
       content: '';
@@ -609,7 +747,7 @@
           <a class="btn btn-secondary" href="./services.html">View Services &amp; Rates</a>
         </div>
         <div class="services-image-wrap">
-          <img class="services-feature-image" src="./assets/girls/arabella/gallery-08.jpg" alt="Albany Angels featured visual" />
+          <img class="services-feature-image" src="./assets/girls/arabella/gallery-08.jpg" alt="Albany Angels — tailored experiences" loading="lazy" />
         </div>
       </div>
     </section>
