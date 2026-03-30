@@ -3217,17 +3217,14 @@ body.nav-open {
 
 @media (min-width: 1101px) {
 
-  /* Hero section padding — tuned for visual symmetry.
-     The scroll wrap starts ~24px into the viewport, so padding-top: 78px
-     would place the carousel 24px below the header (gap_above=24px) while
-     the bottom bleeds below the viewport (gap_below=-4px).
-     Reducing padding-top to 64px and adding 14px to padding-bottom keeps
-     the total padding at 98px (carousel height unchanged) but re-centres
-     the image: 10px gap above the header, 10px gap below the viewport. */
+  /* Hero section padding — equal top and bottom for a balanced frame.
+     Header height is ~79px. We use 79px top (clears the fixed header)
+     and 79px bottom so the image sits perfectly centred in the viewport.
+     Total padding consumed = 158px, so carousel height = 100dvh - 158px. */
   .profile-snap-section.profile-hero-section {
     align-items: center;
-    padding-top: 64px;
-    padding-bottom: 34px;
+    padding-top: 79px;
+    padding-bottom: 79px;
     min-height: 100dvh;
     box-sizing: border-box;
   }
@@ -3249,11 +3246,11 @@ body.nav-open {
   }
 
   /* Hero carousel — height-driven 2:3 portrait, maximised within hero.
-     Height = viewport minus header (78px) minus padding (78+20=98px total).
+     Height = viewport minus equal top+bottom padding (79px × 2 = 158px).
      Width derived from height × (2/3). max-height:none clears the base cap. */
   .hero-carousel {
-    height: calc(100dvh - 98px) !important;
-    width: calc((100dvh - 98px) * 2 / 3) !important;
+    height: calc(100dvh - 158px) !important;
+    width: calc((100dvh - 158px) * 2 / 3) !important;
     max-height: none !important;
     max-width: 100% !important;
     aspect-ratio: 2 / 3 !important;
