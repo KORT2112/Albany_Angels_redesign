@@ -3246,10 +3246,12 @@ body.nav-open {
 
   /* Hero carousel — height-driven 2:3 portrait, maximised within hero.
      Height = viewport minus header (78px) minus 24px breathing (12px each side).
-     Width is derived from height × (2/3) to guarantee the ratio holds. */
+     Width is derived from height × (2/3) to guarantee the ratio holds.
+     max-height: none clears the base rule which would otherwise cap it. */
   .hero-carousel {
     height: calc(100dvh - 78px - 24px) !important;
     width: calc((100dvh - 78px - 24px) * 2 / 3) !important;
+    max-height: none !important;
     max-width: 100% !important;
     aspect-ratio: 2 / 3 !important;
     min-height: 0 !important;
