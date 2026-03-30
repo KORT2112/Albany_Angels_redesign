@@ -472,38 +472,43 @@
     .snap-section.contact-section {
       height: 100dvh;
       overflow: hidden;
+      padding: 79px 0 32px !important;
     }
 
     .snap-section.contact-section .contact-grid {
       grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
+      gap: 20px;
       align-items: stretch;
+      max-height: calc(100dvh - 79px - 32px - 40px); /* viewport minus top/bottom padding and copyright */
+      overflow: hidden;
     }
 
     .snap-section.contact-section .map-panel {
-      min-height: 300px;
+      min-height: 0;
+      flex: 1;
     }
 
     .snap-section.contact-section .contact-lead {
-      font-size: 0.9rem;
-      margin-bottom: 12px;
-    }
-
-    .snap-section.contact-section h2 {
+      font-size: 0.85rem;
       margin-bottom: 8px;
     }
 
+    .snap-section.contact-section h2 {
+      margin-bottom: 6px;
+      font-size: clamp(1.6rem, 3vw, 2rem);
+    }
+
     .snap-section.contact-section .dark-map-meta {
-      padding: 14px 16px;
+      padding: 10px 14px;
     }
 
     .snap-section.contact-section .dark-map-meta h3 {
-      font-size: 1.1rem;
+      font-size: 1rem;
       margin-bottom: 2px;
     }
 
     .snap-section.contact-section .dark-map-meta p {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
     }
 
     /* Cleaner contact items — no boxes */
@@ -511,7 +516,7 @@
       border: none;
       border-radius: 0;
       background: none;
-      padding: 8px 0;
+      padding: 6px 0;
       border-bottom: 1px solid rgba(255,255,255,0.08);
     }
 
@@ -520,7 +525,7 @@
     }
 
     .snap-section.contact-section .hours-list li {
-      padding: 10px 0;
+      padding: 7px 0;
     }
 
     /* Reveal animation */
@@ -782,7 +787,7 @@
       </div>
     </section>
 
-    <section class="section cta-band snap-section" id="contact">
+    <section class="section section-alt steps snap-section">
       <div class="container">
         <div class="section-head left-only">
           <div>
@@ -807,14 +812,17 @@
             <p>Call, text, or WhatsApp us directly. Quick, easy, and confidential.</p>
           </article>
         </div>
-        <div style="margin-top:48px;">
-          <p class="eyebrow">Ready to explore?</p>
-          <h2>Ready to explore the Albany Angels experience?</h2>
-          <p>Browse the roster, review services, and arrange your next booking with confidence, clarity, and ease.</p>
-          <div class="hero-actions center-actions">
-            <a class="btn btn-primary" href="./girls.html">View Ladies</a>
-            <a class="btn btn-secondary" href="./services.html">View Services</a>
-          </div>
+      </div>
+    </section>
+
+    <section class="section cta-band snap-section" id="contact">
+      <div class="container narrow">
+        <p class="eyebrow">Ready to explore?</p>
+        <h2>Ready to explore the Albany Angels experience?</h2>
+        <p>Browse the roster, review services, and arrange your next booking with confidence, clarity, and ease.</p>
+        <div class="hero-actions center-actions">
+          <a class="btn btn-primary" href="./girls.html">View Ladies</a>
+          <a class="btn btn-secondary" href="./services.html">View Services</a>
         </div>
       </div>
     </section>
