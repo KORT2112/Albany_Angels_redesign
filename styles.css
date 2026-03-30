@@ -3217,13 +3217,15 @@ body.nav-open {
 
 @media (min-width: 1101px) {
 
-  /* Give the hero section a comfortable vertical breathing room
-     so the image can stretch near top-to-bottom of the viewport */
+  /* Hero section: offset by header height so centering happens inside
+     the visible area below the header, not across the full 100dvh.
+     12px breathing room top/bottom keeps it feeling premium, not clipped. */
   .profile-snap-section.profile-hero-section {
     align-items: center;
-    padding-top: 0;
+    padding-top: 78px;
     padding-bottom: 0;
-    min-height: calc(100dvh - 78px);
+    min-height: 100dvh;
+    box-sizing: border-box;
   }
 
   /* Widen the image column relative to the text column
@@ -3242,12 +3244,12 @@ body.nav-open {
     justify-content: center;
   }
 
-  /* Hero carousel — height-driven 2:3 portrait.
-     Flex items ignore aspect-ratio when width:auto fills the container,
-     so we explicitly calculate the width from the height. */
+  /* Hero carousel — height-driven 2:3 portrait, maximised within hero.
+     Height = viewport minus header (78px) minus 24px breathing (12px each side).
+     Width is derived from height × (2/3) to guarantee the ratio holds. */
   .hero-carousel {
-    height: calc(100dvh - 78px - 96px) !important;
-    width: calc((100dvh - 78px - 96px) * 2 / 3) !important;
+    height: calc(100dvh - 78px - 24px) !important;
+    width: calc((100dvh - 78px - 24px) * 2 / 3) !important;
     max-width: 100% !important;
     aspect-ratio: 2 / 3 !important;
     min-height: 0 !important;
