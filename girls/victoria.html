@@ -50,7 +50,7 @@
           <!-- Desktop-only buttons — hidden on mobile -->
           <div class="hero-actions profile-hero-actions-left">
             <a class="btn btn-primary" href="../index.html#contact-details">Book Victoria</a>
-            <a class="btn btn-secondary back-to-ladies" href="../girls.html#victoria">Back to Ladies</a>
+            <a class="btn btn-secondary" href="../girls.html">Back to Ladies</a>
           </div>
         </div>
         <!-- Right: photo carousel + buttons below (on both desktop and mobile) -->
@@ -65,13 +65,13 @@
             <img class="carousel-slide real-profile-image" loading="lazy" src="../assets/girls/victoria/gallery-05.jpg" alt="Victoria photo 6" />
             <img class="carousel-slide real-profile-image" loading="lazy" src="../assets/girls/victoria/gallery-06.jpg" alt="Victoria photo 7" />
             </div>
-            <button class="carousel-nav carousel-prev" aria-label="Previous photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
-            <button class="carousel-nav carousel-next" aria-label="Next photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
-          </div>
-          <!-- Mobile-visible buttons — below photo on mobile, right side on desktop -->
-          <div class="hero-actions profile-hero-actions-right">
-            <a class="btn btn-primary" href="../index.html#contact-details">Book Victoria</a>
-            <a class="btn btn-secondary back-to-ladies" href="../girls.html#victoria">Back to Ladies</a>
+            <button class="carousel-arrow carousel-prev" aria-label="Previous photo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <button class="carousel-arrow carousel-next" aria-label="Next photo">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+            </button>
+            <div class="carousel-counter"><span id="carouselCurrent">1</span> / <span id="carouselTotal">7</span></div>
           </div>
           <!-- Mobile-only buttons — hidden on desktop -->
           <div class="hero-actions profile-hero-actions-below">
@@ -165,10 +165,10 @@
           </div>
         </div>
         <div class="profile-grid compact-grid">
-          <article class="profile-card" id="brianna"><a href="./brianna.html"><img class="real-card-image" loading="lazy" src="../assets/girls/brianna/hero.jpg" alt="Brianna" /></a><div class="profile-body"><h3><a href="./brianna.html">Brianna</a></h3></div></article>
-          <article class="profile-card" id="lacie"><a href="./lacie.html"><img class="real-card-image" loading="lazy" src="../assets/girls/lacie/hero.jpeg" alt="Lacie" /></a><div class="profile-body"><h3><a href="./lacie.html">Lacie</a></h3></div></article>
-          <article class="profile-card" id="zara"><a href="./zara.html"><img class="real-card-image" loading="lazy" src="../assets/girls/zara/hero.jpg" alt="Zara" /></a><div class="profile-body"><h3><a href="./zara.html">Zara</a></h3></div></article>
-          <article class="profile-card" id="melena"><a href="./melena.html"><img class="real-card-image" loading="lazy" src="../assets/girls/melena/hero.jpg" alt="Melena" /></a><div class="profile-body"><h3><a href="./melena.html">Melena</a></h3></div></article>
+          <article class="profile-card"><a href="./brianna.html"><img class="real-card-image" loading="lazy" src="../assets/girls/brianna/hero.jpg" alt="Brianna" /></a><div class="profile-body"><h3><a href="./brianna.html">Brianna</a></h3></div></article>
+          <article class="profile-card"><a href="./lacie.html"><img class="real-card-image" loading="lazy" src="../assets/girls/lacie/hero.jpeg" alt="Lacie" /></a><div class="profile-body"><h3><a href="./lacie.html">Lacie</a></h3></div></article>
+          <article class="profile-card"><a href="./zara.html"><img class="real-card-image" loading="lazy" src="../assets/girls/zara/hero.jpg" alt="Zara" /></a><div class="profile-body"><h3><a href="./zara.html">Zara</a></h3></div></article>
+          <article class="profile-card"><a href="./alexa.html"><img class="real-card-image" loading="lazy" src="../assets/girls/alexa/hero.jpg" alt="Alexa" /></a><div class="profile-body"><h3><a href="./alexa.html">Alexa</a></h3></div></article>
         </div>
       </div>
       <p style="text-align:center; color:rgba(255,255,255,0.55); font-size:0.75rem; letter-spacing:0.02em; margin:0 0 0 -2px; padding-top:8px; position:absolute; bottom:15px; left:0; right:0;">&copy; 2026 Albany Angels. All rights reserved.</p>
@@ -464,13 +464,6 @@
         if (e.key === 'Escape') closeLightbox();
         if (e.key === 'ArrowLeft') lbNav(-1);
         if (e.key === 'ArrowRight') lbNav(1);
-      });
-
-      // Handle "Back to Ladies" with session storage fallback
-      document.querySelectorAll('.back-to-ladies').forEach(btn => {
-        btn.addEventListener('click', () => {
-          sessionStorage.setItem('last_girl_viewed', 'victoria');
-        });
       });
     })();
   </script>
