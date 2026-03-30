@@ -240,7 +240,7 @@ ${buildDetailStrip(girl)}
           <!-- Desktop-only buttons — hidden on mobile -->
           <div class="hero-actions profile-hero-actions-left">
             <a class="btn btn-primary" href="../index.html#contact-details">Book ${girl.name}</a>
-            <a class="btn btn-secondary" href="../girls.html">Back to Ladies</a>
+            <a class="btn btn-secondary back-to-ladies" href="../girls.html#${girl.name.toLowerCase()}">Back to Ladies</a>
           </div>
         </div>
         <!-- Right: photo carousel + buttons below (on both desktop and mobile) -->
@@ -260,7 +260,7 @@ ${buildCarouselSlides(girl, heroFile, galleryFiles)}
           <!-- Mobile-only buttons — hidden on desktop -->
           <div class="hero-actions profile-hero-actions-below">
             <a class="btn btn-primary" href="../index.html#contact-details">Book ${girl.name}</a>
-            <a class="btn btn-secondary" href="../girls.html">Back to Ladies</a>
+            <a class="btn btn-secondary back-to-ladies" href="../girls.html#${girl.name.toLowerCase()}">Back to Ladies</a>
           </div>
         </div>
       </div>
@@ -633,6 +633,13 @@ ${buildMoreGirls(getMoreGirls(girl))}
         if (e.key === 'Escape') closeLightbox();
         if (e.key === 'ArrowLeft') lbNav(-1);
         if (e.key === 'ArrowRight') lbNav(1);
+      });
+
+      // Store which girl was viewed so girls.html can restore the row position
+      document.querySelectorAll('.back-to-ladies').forEach(btn => {
+        btn.addEventListener('click', () => {
+          sessionStorage.setItem('last_girl_viewed', '${girl.name.toLowerCase()}');
+        });
       });
     })();
   </script>

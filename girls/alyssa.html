@@ -49,7 +49,7 @@
           <!-- Desktop-only buttons — hidden on mobile -->
           <div class="hero-actions profile-hero-actions-left">
             <a class="btn btn-primary" href="../index.html#contact-details">Book Alyssa</a>
-            <a class="btn btn-secondary" href="../girls.html">Back to Ladies</a>
+            <a class="btn btn-secondary back-to-ladies" href="../girls.html#alyssa">Back to Ladies</a>
           </div>
         </div>
         <!-- Right: photo carousel + buttons below (on both desktop and mobile) -->
@@ -74,7 +74,7 @@
           <!-- Mobile-only buttons — hidden on desktop -->
           <div class="hero-actions profile-hero-actions-below">
             <a class="btn btn-primary" href="../index.html#contact-details">Book Alyssa</a>
-            <a class="btn btn-secondary" href="../girls.html">Back to Ladies</a>
+            <a class="btn btn-secondary back-to-ladies" href="../girls.html#alyssa">Back to Ladies</a>
           </div>
         </div>
       </div>
@@ -165,7 +165,7 @@
           <article class="profile-card"><a href="./caprii.html"><img class="real-card-image" loading="lazy" src="../assets/girls/caprii/hero.jpg" alt="Caprii" /></a><div class="profile-body"><h3><a href="./caprii.html">Caprii</a></h3></div></article>
           <article class="profile-card"><a href="./lilith.html"><img class="real-card-image" loading="lazy" src="../assets/girls/lilith/hero.jpg" alt="Lilith" /></a><div class="profile-body"><h3><a href="./lilith.html">Lilith</a></h3></div></article>
           <article class="profile-card"><a href="./zara.html"><img class="real-card-image" loading="lazy" src="../assets/girls/zara/hero.jpg" alt="Zara" /></a><div class="profile-body"><h3><a href="./zara.html">Zara</a></h3></div></article>
-          <article class="profile-card"><a href="./alexa.html"><img class="real-card-image" loading="lazy" src="../assets/girls/alexa/hero.jpg" alt="Alexa" /></a><div class="profile-body"><h3><a href="./alexa.html">Alexa</a></h3></div></article>
+          <article class="profile-card"><a href="./melena.html"><img class="real-card-image" loading="lazy" src="../assets/girls/melena/hero.jpg" alt="Melena" /></a><div class="profile-body"><h3><a href="./melena.html">Melena</a></h3></div></article>
         </div>
       </div>
       <p style="text-align:center; color:rgba(255,255,255,0.55); font-size:0.75rem; letter-spacing:0.02em; margin:0 0 0 -2px; padding-top:8px; position:absolute; bottom:15px; left:0; right:0;">&copy; 2026 Albany Angels. All rights reserved.</p>
@@ -461,6 +461,13 @@
         if (e.key === 'Escape') closeLightbox();
         if (e.key === 'ArrowLeft') lbNav(-1);
         if (e.key === 'ArrowRight') lbNav(1);
+      });
+
+      // Store which girl was viewed so girls.html can restore the row position
+      document.querySelectorAll('.back-to-ladies').forEach(btn => {
+        btn.addEventListener('click', () => {
+          sessionStorage.setItem('last_girl_viewed', 'alyssa');
+        });
       });
     })();
   </script>
