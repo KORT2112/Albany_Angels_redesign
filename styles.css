@@ -3217,13 +3217,17 @@ body.nav-open {
 
 @media (min-width: 1101px) {
 
-  /* Hero section: pad top by header height so flex centering works
-     in the visible area below the header. Bottom padding gives a small
-     visual buffer so the image doesn't bleed to the viewport edge. */
+  /* Hero section padding — tuned for visual symmetry.
+     The scroll wrap starts ~24px into the viewport, so padding-top: 78px
+     would place the carousel 24px below the header (gap_above=24px) while
+     the bottom bleeds below the viewport (gap_below=-4px).
+     Reducing padding-top to 64px and adding 14px to padding-bottom keeps
+     the total padding at 98px (carousel height unchanged) but re-centres
+     the image: 10px gap above the header, 10px gap below the viewport. */
   .profile-snap-section.profile-hero-section {
     align-items: center;
-    padding-top: 78px;
-    padding-bottom: 20px;
+    padding-top: 64px;
+    padding-bottom: 34px;
     min-height: 100dvh;
     box-sizing: border-box;
   }
