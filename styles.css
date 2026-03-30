@@ -1552,9 +1552,8 @@ body.profile-body .site-header {
 
 .real-profile-image {
   width: 100%;
+  height: 100%;
   aspect-ratio: 2 / 3;
-  height: auto;
-  max-height: calc(100dvh - 200px);
   border-radius: var(--radius-lg);
   object-fit: cover;
   object-position: center top;
@@ -3243,14 +3242,14 @@ body.nav-open {
     justify-content: center;
   }
 
-  /* Hero carousel — strict 2:3 portrait ratio (tall & premium)
-     Remove max-height cap so it breathes to fill the section
-     Use height: 100% so it stretches within the column */
+  /* Hero carousel — height-driven 2:3 portrait
+     Drive by height so aspect-ratio is never overridden by a width cap.
+     Width is derived automatically: height × (2/3). */
   .hero-carousel {
+    height: calc(100dvh - 78px - 96px) !important;
+    width: auto !important;
+    max-width: 100% !important;
     aspect-ratio: 2 / 3 !important;
-    max-height: calc(100dvh - 78px - 96px) !important;
-    height: auto !important;
-    width: 100% !important;
     min-height: 0 !important;
   }
 
