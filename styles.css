@@ -2469,9 +2469,9 @@ img {
     justify-content: unset !important;
   }
 
-  /* Hero section — header ~64px + ~10px gap, shifted up 40px from previous = 34px */
+  /* Hero section — 40px top padding: clean gap below fixed header on mobile */
   .profile-snap-section.profile-hero-section {
-    padding-top: 34px !important;
+    padding-top: 40px !important;
   }
 
   /* Profile hero grid — stack photo below name/info */
