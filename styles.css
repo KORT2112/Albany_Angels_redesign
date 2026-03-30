@@ -2165,6 +2165,7 @@ img {
 
   h2 {
     font-size: clamp(1.8rem, 6vw, 2.6rem);
+    line-height: 1.12;
     max-width: 100%;
   }
 
@@ -2178,8 +2179,10 @@ img {
   }
 
   .section-intro {
-    font-size: 0.95rem;
+    font-size: 0.93rem;
+    line-height: 1.7;
     max-width: 100%;
+    margin-top: 14px;
   }
 
   .eyebrow {
@@ -2194,8 +2197,8 @@ img {
   }
 
   .section-head {
-    margin-bottom: 28px;
-    gap: 16px;
+    margin-bottom: 32px;
+    gap: 14px;
   }
 
   /* Container side padding on very small screens */
@@ -2227,7 +2230,13 @@ img {
   .roster-grid,
   .services-page-grid {
     grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  /* Why section — wider card gap for visual breathing room */
+  .pillar-grid {
     gap: 16px;
+    margin-top: 4px;
   }
 
   /* Index "Meet the Ladies" — 2-column on mobile */
@@ -2251,9 +2260,19 @@ img {
     font-size: 1.3rem !important;
   }
 
-  /* Pillar cards */
+  /* Pillar cards — premium mobile rhythm */
   .pillar-card {
-    padding: 20px;
+    padding: 24px 22px;
+  }
+
+  .pillar-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+  }
+
+  .pillar-card p {
+    font-size: 0.92rem;
+    line-height: 1.65;
   }
 
   /* Steps grid */
