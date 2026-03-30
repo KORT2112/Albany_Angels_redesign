@@ -2462,16 +2462,16 @@ img {
   .profile-snap-section {
     height: auto !important;
     min-height: 0 !important;
-    padding: 88px 0 40px !important;
+    padding: 72px 0 40px !important;
     scroll-snap-align: none !important;
     display: block !important;
     align-items: unset !important;
     justify-content: unset !important;
   }
 
-  /* Hero section — always visible */
+  /* Hero section — tight below header, no extra gap */
   .profile-snap-section.profile-hero-section {
-    padding-top: 80px !important;
+    padding-top: 16px !important;
   }
 
   /* Profile hero grid — stack photo below name/info */
