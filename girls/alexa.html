@@ -49,7 +49,7 @@
           <!-- Desktop-only buttons — hidden on mobile -->
           <div class="hero-actions profile-hero-actions-left">
             <a class="btn btn-primary" href="../index.html#contact-details">Book Alexa</a>
-            <a class="btn btn-secondary" href="../girls.html">Back to Ladies</a>
+            <a class="btn btn-secondary back-to-ladies" href="../girls.html#alexa">Back to Ladies</a>
           </div>
         </div>
         <!-- Right: photo carousel + buttons below (on both desktop and mobile) -->
@@ -58,13 +58,13 @@
             <div class="carousel-track">
             <img class="carousel-slide real-profile-image" src="../assets/girls/alexa/hero.jpg" alt="Alexa photo 1" />
             </div>
-            <button class="carousel-arrow carousel-prev" aria-label="Previous photo">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-            </button>
-            <button class="carousel-arrow carousel-next" aria-label="Next photo">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
-            </button>
-            <div class="carousel-counter"><span id="carouselCurrent">1</span> / <span id="carouselTotal">1</span></div>
+            <button class="carousel-nav carousel-prev" aria-label="Previous photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+            <button class="carousel-nav carousel-next" aria-label="Next photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+          </div>
+          <!-- Mobile-visible buttons — below photo on mobile, right side on desktop -->
+          <div class="hero-actions profile-hero-actions-right">
+            <a class="btn btn-primary" href="../index.html#contact-details">Book Alexa</a>
+            <a class="btn btn-secondary back-to-ladies" href="../girls.html#alexa">Back to Ladies</a>
           </div>
           <!-- Mobile-only buttons — hidden on desktop -->
           <div class="hero-actions profile-hero-actions-below">
@@ -152,10 +152,10 @@
           </div>
         </div>
         <div class="profile-grid compact-grid">
-          <article class="profile-card"><a href="./serena.html"><img class="real-card-image" loading="lazy" src="../assets/girls/serena/hero.jpg" alt="Serena" /></a><div class="profile-body"><h3><a href="./serena.html">Serena</a></h3></div></article>
-          <article class="profile-card"><a href="./aries.html"><img class="real-card-image" loading="lazy" src="../assets/girls/aries/hero.png" alt="Aries" /></a><div class="profile-body"><h3><a href="./aries.html">Aries</a></h3></div></article>
-          <article class="profile-card"><a href="./isabella.html"><img class="real-card-image" loading="lazy" src="../assets/girls/isabella/hero.jpg" alt="Isabella" /></a><div class="profile-body"><h3><a href="./isabella.html">Isabella</a></h3></div></article>
-          <article class="profile-card"><a href="./ally.html"><img class="real-card-image" loading="lazy" src="../assets/girls/ally/hero.jpg" alt="Ally" /></a><div class="profile-body"><h3><a href="./ally.html">Ally</a></h3></div></article>
+          <article class="profile-card" id="serena"><a href="./serena.html"><img class="real-card-image" loading="lazy" src="../assets/girls/serena/hero.jpg" alt="Serena" /></a><div class="profile-body"><h3><a href="./serena.html">Serena</a></h3></div></article>
+          <article class="profile-card" id="aries"><a href="./aries.html"><img class="real-card-image" loading="lazy" src="../assets/girls/aries/hero.png" alt="Aries" /></a><div class="profile-body"><h3><a href="./aries.html">Aries</a></h3></div></article>
+          <article class="profile-card" id="isabella"><a href="./isabella.html"><img class="real-card-image" loading="lazy" src="../assets/girls/isabella/hero.jpg" alt="Isabella" /></a><div class="profile-body"><h3><a href="./isabella.html">Isabella</a></h3></div></article>
+          <article class="profile-card" id="ally"><a href="./ally.html"><img class="real-card-image" loading="lazy" src="../assets/girls/ally/hero.jpg" alt="Ally" /></a><div class="profile-body"><h3><a href="./ally.html">Ally</a></h3></div></article>
         </div>
       </div>
       <p style="text-align:center; color:rgba(255,255,255,0.55); font-size:0.75rem; letter-spacing:0.02em; margin:0 0 0 -2px; padding-top:8px; position:absolute; bottom:15px; left:0; right:0;">&copy; 2026 Albany Angels. All rights reserved.</p>
@@ -451,6 +451,13 @@
         if (e.key === 'Escape') closeLightbox();
         if (e.key === 'ArrowLeft') lbNav(-1);
         if (e.key === 'ArrowRight') lbNav(1);
+      });
+
+      // Handle "Back to Ladies" with session storage fallback
+      document.querySelectorAll('.back-to-ladies').forEach(btn => {
+        btn.addEventListener('click', () => {
+          sessionStorage.setItem('last_girl_viewed', 'alexa');
+        });
       });
     })();
   </script>

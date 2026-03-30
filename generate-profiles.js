@@ -120,7 +120,7 @@ function buildMoreGirls(moreGirls) {
       img = rosterImages[mg.name] || `../assets/girls/${folderName}/hero.jpg`;
     }
     // Card: image links to profile, name links to profile, no 'View profile' text
-    return `          <article class="profile-card"><a href="${mg.href}"><img class="real-card-image" loading="lazy" src="${img}" alt="${mg.name}" /></a><div class="profile-body"><h3><a href="${mg.href}">${mg.name}</a></h3></div></article>`;
+    return `          <article class="profile-card" id="${mg.name.toLowerCase()}"><a href="${mg.href}"><img class="real-card-image" loading="lazy" src="${img}" alt="${mg.name}" /></a><div class="profile-body"><h3><a href="${mg.href}">${mg.name}</a></h3></div></article>`;
   }).join('\n');
 }
 
@@ -240,7 +240,7 @@ ${buildDetailStrip(girl)}
           <!-- Desktop-only buttons — hidden on mobile -->
           <div class="hero-actions profile-hero-actions-left">
             <a class="btn btn-primary" href="../index.html#contact-details">Book ${girl.name}</a>
-            <a class="btn btn-secondary" href="../girls.html">Back to Ladies</a>
+            <a class="btn btn-secondary back-to-ladies" href="../girls.html#${girl.name.toLowerCase()}">Back to Ladies</a>
           </div>
         </div>
         <!-- Right: photo carousel + buttons below (on both desktop and mobile) -->
@@ -249,13 +249,13 @@ ${buildDetailStrip(girl)}
             <div class="carousel-track">
 ${buildCarouselSlides(girl, heroFile, galleryFiles)}
             </div>
-            <button class="carousel-arrow carousel-prev" aria-label="Previous photo">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-            </button>
-            <button class="carousel-arrow carousel-next" aria-label="Next photo">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
-            </button>
-            <div class="carousel-counter"><span id="carouselCurrent">1</span> / <span id="carouselTotal">${totalSlides}</span></div>
+            <button class="carousel-nav carousel-prev" aria-label="Previous photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+            <button class="carousel-nav carousel-next" aria-label="Next photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+          </div>
+          <!-- Mobile-visible buttons — below photo on mobile, right side on desktop -->
+          <div class="hero-actions profile-hero-actions-right">
+            <a class="btn btn-primary" href="../index.html#contact-details">Book ${girl.name}</a>
+            <a class="btn btn-secondary back-to-ladies" href="../girls.html#${girl.name.toLowerCase()}">Back to Ladies</a>
           </div>
           <!-- Mobile-only buttons — hidden on desktop -->
           <div class="hero-actions profile-hero-actions-below">
@@ -633,6 +633,13 @@ ${buildMoreGirls(getMoreGirls(girl))}
         if (e.key === 'Escape') closeLightbox();
         if (e.key === 'ArrowLeft') lbNav(-1);
         if (e.key === 'ArrowRight') lbNav(1);
+      });
+
+      // Handle "Back to Ladies" with session storage fallback
+      document.querySelectorAll('.back-to-ladies').forEach(btn => {
+        btn.addEventListener('click', () => {
+          sessionStorage.setItem('last_girl_viewed', '${girl.name.toLowerCase()}');
+        });
       });
     })();
   </script>
