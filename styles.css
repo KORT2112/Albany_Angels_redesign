@@ -3242,12 +3242,12 @@ body.nav-open {
     justify-content: center;
   }
 
-  /* Hero carousel — height-driven 2:3 portrait
-     Drive by height so aspect-ratio is never overridden by a width cap.
-     Width is derived automatically: height × (2/3). */
+  /* Hero carousel — height-driven 2:3 portrait.
+     Flex items ignore aspect-ratio when width:auto fills the container,
+     so we explicitly calculate the width from the height. */
   .hero-carousel {
     height: calc(100dvh - 78px - 96px) !important;
-    width: auto !important;
+    width: calc((100dvh - 78px - 96px) * 2 / 3) !important;
     max-width: 100% !important;
     aspect-ratio: 2 / 3 !important;
     min-height: 0 !important;
