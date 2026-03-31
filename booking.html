@@ -744,6 +744,34 @@
       box-shadow: 0 0 0 2px rgba(212,147,90,0.12);
     }
 
+    /* ── Step error highlight ───────────── */
+    @keyframes bk-shake {
+      0%, 100% { transform: translateX(0); }
+      20%       { transform: translateX(-6px); }
+      40%       { transform: translateX(6px); }
+      60%       { transform: translateX(-4px); }
+      80%       { transform: translateX(4px); }
+    }
+    .booking-step.step-error {
+      border-color: rgba(212,147,90,0.55) !important;
+      box-shadow: 0 0 0 2px rgba(212,147,90,0.18), 0 4px 24px rgba(0,0,0,0.18);
+      animation: bk-shake 0.4s ease;
+    }
+    .booking-step.step-error .step-num {
+      background: rgba(212,147,90,0.25);
+      border-color: rgba(212,147,90,0.6);
+      color: #E5C67A;
+    }
+    .step-error-msg {
+      display: none;
+      font-size: 0.82rem;
+      color: #d4935a;
+      margin-top: 10px;
+      font-weight: 500;
+    }
+    .booking-step.step-error .step-error-msg {
+      display: block;
+    }
     /* ── Submit area ────────────────────── */
     .submit-card {
       background: var(--bk-card);
@@ -1312,11 +1340,10 @@
                 <h3>Choose a date</h3>
               </div>
               <p class="step-subtext" id="stepCSubtext">Select a day to see which ladies are available.</p>
-              <div class="date-row" id="dateRow" role="group" aria-label="Select date"></div>
-
+               <div class="date-row" id="dateRow" role="group" aria-label="Select date"></div>
+              <span class="step-error-msg" id="errDate">Please select a date to continue.</span>
             </div>
-
-            <!-- STEP 2: Select lady (filtered by chosen day) -->
+            <!-- STEP 2: Select lady (filtered by chosen day) -->>
             <div class="booking-step" id="stepA">
               <div class="step-header">
                 <span class="step-num">2</span>
@@ -1375,6 +1402,7 @@
                   </div>
                 </div>
               </div>
+              <span class="step-error-msg" id="errLady">Please select a lady to continue.</span>
             </div><!-- /stepA -->
 
             <!-- STEP 3: Choose time -->
@@ -1386,6 +1414,7 @@
               <div id="timeContent">
                 <p class="step-subtext">Select your lady and a date first to see available times.</p>
               </div>
+              <span class="step-error-msg" id="errTime">Please select a time to continue.</span>
             </div>
 
             <!-- STEP 4: Choose your service -->
@@ -1469,6 +1498,7 @@
                 <div class="svc-dur-grid" id="svcDurGrid"></div>
               </div>
 
+              <span class="step-error-msg" id="errService">Please select a service and duration to continue.</span>
             </div><!-- /stepSvc -->
 
             <!-- STEP 5: Personal details -->
@@ -1510,6 +1540,7 @@
                   <p class="time-error-msg" id="formBookingErrorMsg"></p>
                 </div>
               </form>
+              <span class="step-error-msg" id="errDetails">Please fill in your name, a valid phone number, and email address.</span>
             </div>
 
             <!-- STEP 6: Review & Confirm (shown only when form is complete) -->
@@ -1573,7 +1604,7 @@
               </div>
             </div>
             <!-- STEP 7: Submit (shown only when form is complete) -->
-            <div class="submit-card" id="stepF" style="display:none;">
+            <div class="submit-card" id="stepF">
               <button class="btn-book" type="button" id="btnSubmit">
                 <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"
                      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -2257,7 +2288,6 @@
       var hintPhone = document.getElementById('hintPhone');
       var hintEmail = document.getElementById('hintEmail');
       var stepReview = document.getElementById('stepReview');
-      var stepF      = document.getElementById('stepF');
 
       // Always update review fields (show current state, even if incomplete)
       var revLady     = document.getElementById('revLady');
@@ -2358,7 +2388,7 @@
       );
 
       if (stepReview) stepReview.style.display = isComplete ? 'block' : 'none';
-      if (stepF)      stepF.style.display      = isComplete ? 'block' : 'none';
+      // stepF (submit button) is always visible; submit click handles validation
     }
 
     /* ── Input event listeners for real-time validation ─────────── */
@@ -2385,10 +2415,78 @@
 
     /* ── Form submit ───────────────────────────────────── */
     document.getElementById('btnSubmit').addEventListener('click', function () {
-      var name  = document.getElementById('bkName').value.trim();
-      var phone = document.getElementById('bkPhone').value.trim();
-      var email = document.getElementById('bkEmail').value.trim();
-      if (!name || !phone || !email) { updateReviewSection(); return; }
+      /* ── Collect current field values ── */
+      var nameEl  = document.getElementById('bkName');
+      var phoneEl = document.getElementById('bkPhone');
+      var emailEl = document.getElementById('bkEmail');
+      var name    = nameEl  ? nameEl.value.trim()  : '';
+      var phone   = phoneEl ? phoneEl.value.trim()  : '';
+      var email   = emailEl ? emailEl.value.trim()  : '';
+
+      /* ── Phone validity (mirrors updateReviewSection logic) ── */
+      var digitsOnly     = phone.replace(/\D/g, '');
+      var phoneValid     = digitsOnly.length >= 7 && digitsOnly.length <= 15;
+      var isRepeated     = digitsOnly.length >= 4 && /(\d)\1{3,}/.test(digitsOnly);
+      var isSequence     = digitsOnly.length >= 6 && '0123456789876543210'.indexOf(digitsOnly.substring(digitsOnly.length - 6)) !== -1;
+      var showPhoneError = isRepeated || isSequence || !phoneValid;
+      var emailRegex     = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      var emailValid     = email.length > 0 && emailRegex.test(email);
+
+      /* ── Helper: flash a step card red and scroll to it ── */
+      function flagStep(stepId, errId) {
+        var step = document.getElementById(stepId);
+        var err  = document.getElementById(errId);
+        if (!step) return;
+        // Remove then re-add class to re-trigger animation
+        step.classList.remove('step-error');
+        void step.offsetWidth; // reflow
+        step.classList.add('step-error');
+        // Auto-remove highlight after 3 s
+        setTimeout(function () { step.classList.remove('step-error'); }, 3000);
+        // Smooth scroll — offset by 80px for the sticky nav
+        var top = step.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
+
+      /* ── Validate in order; stop at first failure ── */
+      if (!state.dayKey) {
+        flagStep('stepC', 'errDate');
+        return;
+      }
+      if (!state.lady) {
+        flagStep('stepA', 'errLady');
+        return;
+      }
+      if (state.timeMins === null) {
+        flagStep('stepD', 'errTime');
+        return;
+      }
+      if (!state.service || !state.duration || !state.price) {
+        flagStep('stepSvc', 'errService');
+        return;
+      }
+      if (!name || showPhoneError || !emailValid) {
+        /* Also trigger blur-based inline errors on the fields */
+        if (nameEl && !name) {
+          var hintName = document.getElementById('hintName');
+          nameEl.classList.add('invalid');
+          if (hintName) hintName.style.display = 'block';
+        }
+        if (phoneEl && showPhoneError) {
+          var hintPhone = document.getElementById('hintPhone');
+          phoneEl.classList.add('invalid');
+          if (hintPhone) { hintPhone.style.display = 'block'; hintPhone.textContent = 'Please enter a valid phone number.'; }
+        }
+        if (emailEl && !emailValid) {
+          var hintEmail = document.getElementById('hintEmail');
+          emailEl.classList.add('invalid');
+          if (hintEmail) hintEmail.style.display = 'block';
+        }
+        flagStep('stepE', 'errDetails');
+        return;
+      }
+
+      /* ── All valid — proceed ── */
       var ladyName = toDisplay(state.lady);
       var dayLabel = roster[state.dayKey].label + ' ' + roster[state.dayKey].date;
       var timeStr  = minsToDisplay(state.timeMins);
