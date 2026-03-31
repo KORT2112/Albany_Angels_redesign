@@ -484,14 +484,11 @@
 
     /* ── Date chips ─────────────────────── */
     .date-row {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
       gap: 10px;
-      overflow-x: auto;
       padding-bottom: 6px;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(201,164,92,0.12) transparent;
       min-height: 76px;
-      align-items: flex-start;
     }
 
     .date-row::-webkit-scrollbar       { height: 4px; }
@@ -499,17 +496,16 @@
     .date-row::-webkit-scrollbar-thumb { background: rgba(201,164,92,0.18); border-radius: 2px; }
 
     .date-chip {
-      flex: 0 0 auto;
       appearance: none;
       border: 1.5px solid rgba(201,164,92,0.18);
       background: #0f0f0f;
       color: var(--bk-text);
       border-radius: 14px;
-      padding: 12px 15px;
+      padding: 14px 8px;
       font: inherit;
       cursor: pointer;
       text-align: center;
-      min-width: 80px;
+      width: 100%;
       transition: border-color 0.2s, background 0.2s;
     }
 
