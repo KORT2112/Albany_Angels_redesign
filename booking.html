@@ -395,6 +395,11 @@
 
 
 
+    /* ── Mobile date label (hidden on desktop, shown on mobile) ── */
+    .date-mobile-label {
+      display: none;
+    }
+
     /* ── Date chips ─────────────────────── */
     .date-row {
       display: flex;
@@ -750,6 +755,29 @@
 
     @media (max-width: 820px) {
       .booking-step { padding: 22px 18px; }
+      .date-row { display: none; }
+      .date-mobile-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 10px;
+        padding: 12px 16px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 12px;
+        color: var(--bk-text);
+        font-size: 1rem;
+      }
+      .date-mobile-label .dml-day {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--bk-gold);
+      }
+      .date-mobile-label .dml-date {
+        color: var(--bk-text-sec);
+        font-size: 0.9rem;
+      }
       .preview-grid { grid-template-columns: 1fr; }
       .preview-img-wrap { border-radius: 18px 18px 0 0; width: 100%; aspect-ratio: 3 / 4; }
       .form-row { grid-template-columns: 1fr; }
@@ -813,6 +841,8 @@
               </div>
               <p class="step-subtext" id="stepCSubtext">Select a day to see which ladies are available.</p>
               <div class="date-row" id="dateRow" role="group" aria-label="Select date"></div>
+              <!-- Mobile-only: shows the currently selected date as plain text -->
+              <div class="date-mobile-label" id="dateMobileLabel"></div>
             </div>
 
             <!-- STEP 2: Select lady (filtered by chosen day) -->
@@ -1056,7 +1086,8 @@
     var previewMainImg = document.getElementById('previewMainImg');
     var previewStats   = document.getElementById('previewStats');
     var previewService = document.getElementById('previewService');
-    var btnViewProfile = document.getElementById('btnViewProfile');
+    var btnViewProfile   = document.getElementById('btnViewProfile');
+    var dateMobileLabel  = document.getElementById('dateMobileLabel');
 
     /* Build profile metadata lookup from profile-data.json embedded inline */
     var profileMeta = {};
@@ -1299,6 +1330,7 @@
               stepASubtext.textContent = count + ' ' + (count === 1 ? 'lady' : 'ladies') + ' available on ' + roster[key].label + '. Choose one below.';
             }
 
+            updateMobileDateLabel();
             rebuildTimeSlots();
           });
         }
@@ -1311,6 +1343,28 @@
         var count = ladiesForDay(state.dayKey).length;
         stepASubtext.textContent = count + ' ' + (count === 1 ? 'lady' : 'ladies') + ' available on ' + roster[state.dayKey].label + '. Choose one below.';
       }
+
+      // Update mobile date label
+      updateMobileDateLabel();
+    }
+
+    function updateMobileDateLabel() {
+      if (!dateMobileLabel) return;
+      if (!state.dayKey || !roster[state.dayKey]) {
+        dateMobileLabel.innerHTML = '';
+        return;
+      }
+      var day = roster[state.dayKey];
+      // Build a friendly string: e.g. "Wednesday · 1 Apr"
+      var cleaned = day.date.replace(/st|nd|rd|th/i, '').trim().split(/\s+/);
+      var num = cleaned[0];
+      var mon = (cleaned[1] || '').slice(0, 3);
+      // Capitalise month
+      mon = mon.charAt(0).toUpperCase() + mon.slice(1).toLowerCase();
+      dateMobileLabel.innerHTML =
+        '<span class="dml-day">' + day.label + '</span>' +
+        '<span class="dml-sep">&middot;</span>' +
+        '<span class="dml-date">' + num + ' ' + mon + '</span>';
     }
 
     /* ── Time section ────────────────────── */
