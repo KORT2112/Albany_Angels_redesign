@@ -1159,33 +1159,108 @@
 
     /* ── Review & Confirm section ────────── */
     .review-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 8px;
     }
-    .review-row {
-      display: flex;
-      align-items: baseline;
-      gap: 12px;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--bk-border);
+    .review-item {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(201,164,92,0.08);
+      border-radius: 12px;
+      padding: 14px 16px;
     }
-    .review-row:last-child { border-bottom: none; }
     .review-label {
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--bk-text-muted);
-      letter-spacing: 0.08em;
+      display: block;
+      font-size: 0.72rem;
       text-transform: uppercase;
-      min-width: 140px;
-      flex-shrink: 0;
+      letter-spacing: 0.06em;
+      color: var(--bk-text-muted);
+      margin-bottom: 4px;
     }
     .review-value {
-      font-size: 0.95rem;
-      color: var(--bk-text);
-      font-weight: 500;
+      display: block;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--bk-gold-hi);
     }
-    .review-value.gold { color: var(--bk-gold); }
+    .review-value.empty {
+      color: var(--bk-text-muted);
+      font-weight: 400;
+      font-style: italic;
+    }
+    /* ── Apple-style Toggle Switches ────── */
+    .confirm-options {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: 10px;
+      max-width: 100%;
+      margin: 20px auto 0;
+      flex-wrap: wrap;
+    }
+    .confirm-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(201,164,92,0.08);
+      border-radius: 14px;
+      padding: 8px 12px;
+      transition: background 0.2s;
+      flex: 0 1 auto;
+    }
+    .confirm-row:hover {
+      background: rgba(255,255,255,0.05);
+    }
+    .confirm-row span {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--bk-text-sec);
+    }
+    .apple-switch {
+      position: relative;
+      display: inline-block;
+      width: 46px;
+      height: 26px;
+    }
+    .apple-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #333;
+      transition: .4s;
+      border-radius: 34px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    input:checked + .slider {
+      background-color: #34C759;
+    }
+    input:focus + .slider {
+      box-shadow: 0 0 1px #34C759;
+    }
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
 
   </style>
 </head>
@@ -1441,33 +1516,59 @@
             <div class="booking-step" id="stepReview" style="display:none;">
               <div class="step-header">
                 <span class="step-num">6</span>
-                <h3>Review &amp; Confirm</h3>
+                <h3>Review your booking</h3>
               </div>
-              <p class="step-subtext">Please review your booking details before submitting.</p>
+              <p class="step-subtext">Please double-check your selection before submitting.</p>
               <div class="review-grid">
-                <div class="review-row">
-                  <span class="review-label">Lady</span>
-                  <span class="review-value" id="revLady">&mdash;</span>
+                <div class="review-item">
+                  <span class="review-label">Companion</span>
+                  <span class="review-value" id="revLady">Not selected</span>
                 </div>
-                <div class="review-row">
-                  <span class="review-label">Date &amp; Time</span>
-                  <span class="review-value" id="revDateTime">&mdash;</span>
+                <div class="review-item">
+                  <span class="review-label">Date</span>
+                  <span class="review-value" id="revDate">Not selected</span>
                 </div>
-                <div class="review-row">
-                  <span class="review-label">Service &amp; Duration</span>
-                  <span class="review-value" id="revServiceDur">&mdash;</span>
+                <div class="review-item">
+                  <span class="review-label">Time</span>
+                  <span class="review-value" id="revTime">Not selected</span>
                 </div>
-                <div class="review-row">
-                  <span class="review-label">Price</span>
-                  <span class="review-value gold" id="revPrice">&mdash;</span>
+                <div class="review-item">
+                  <span class="review-label">Service</span>
+                  <span class="review-value" id="revService">Not selected</span>
                 </div>
-                <div class="review-row">
-                  <span class="review-label">Name</span>
-                  <span class="review-value" id="revName">&mdash;</span>
+                <div class="review-item">
+                  <span class="review-label">Duration</span>
+                  <span class="review-value" id="revDuration">Not selected</span>
                 </div>
-                <div class="review-row">
-                  <span class="review-label">Contact</span>
-                  <span class="review-value" id="revContact">&mdash;</span>
+                <div class="review-item">
+                  <span class="review-label">Total Price</span>
+                  <span class="review-value" id="revPrice">Not selected</span>
+                </div>
+              </div>
+              <div style="margin-top: 24px;">
+                <p class="review-label" style="margin-bottom: 12px; text-align: center;">How should we confirm your booking?</p>
+                <div class="confirm-options">
+                  <div class="confirm-row">
+                    <label class="apple-switch">
+                      <input type="checkbox" id="confirmEmail" checked>
+                      <span class="slider"></span>
+                    </label>
+                    <span>E-mail</span>
+                  </div>
+                  <div class="confirm-row">
+                    <label class="apple-switch">
+                      <input type="checkbox" id="confirmSMS">
+                      <span class="slider"></span>
+                    </label>
+                    <span>SMS</span>
+                  </div>
+                  <div class="confirm-row">
+                    <label class="apple-switch">
+                      <input type="checkbox" id="confirmWhatsApp">
+                      <span class="slider"></span>
+                    </label>
+                    <span>WhatsApp</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2153,11 +2254,43 @@
       var nameEl  = document.getElementById('bkName');
       var phoneEl = document.getElementById('bkPhone');
       var emailEl = document.getElementById('bkEmail');
-      var hintName  = document.getElementById('hintName');
       var hintPhone = document.getElementById('hintPhone');
       var hintEmail = document.getElementById('hintEmail');
       var stepReview = document.getElementById('stepReview');
       var stepF      = document.getElementById('stepF');
+
+      // Always update review fields (show current state, even if incomplete)
+      var revLady     = document.getElementById('revLady');
+      var revDate     = document.getElementById('revDate');
+      var revTime     = document.getElementById('revTime');
+      var revService  = document.getElementById('revService');
+      var revDuration = document.getElementById('revDuration');
+      var revPrice    = document.getElementById('revPrice');
+
+      if (revLady) {
+        revLady.textContent = state.lady ? toDisplay(state.lady) : 'Not selected';
+        revLady.classList.toggle('empty', !state.lady);
+      }
+      if (revDate) {
+        revDate.textContent = state.dayKey ? roster[state.dayKey].label + ', ' + roster[state.dayKey].date : 'Not selected';
+        revDate.classList.toggle('empty', !state.dayKey);
+      }
+      if (revTime) {
+        revTime.textContent = state.timeMins !== null ? minsToDisplay(state.timeMins) : 'Not selected';
+        revTime.classList.toggle('empty', state.timeMins === null);
+      }
+      if (revService) {
+        revService.textContent = state.service || 'Not selected';
+        revService.classList.toggle('empty', !state.service);
+      }
+      if (revDuration) {
+        revDuration.textContent = state.duration ? state.duration + ' mins' : 'Not selected';
+        revDuration.classList.toggle('empty', !state.duration);
+      }
+      if (revPrice) {
+        revPrice.textContent = state.price || 'Not selected';
+        revPrice.classList.toggle('empty', !state.price);
+      }
 
       var name  = nameEl  ? nameEl.value.trim()  : '';
       var phone = phoneEl ? phoneEl.value.trim()  : '';
@@ -2165,39 +2298,51 @@
 
       // Email validation
       var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      var emailValid = emailRegex.test(email);
-      if (emailEl) emailEl.classList.toggle('invalid', email.length > 0 && !emailValid);
-      if (hintEmail) hintEmail.style.display = (email.length > 0 && !emailValid) ? 'block' : 'none';
-
-      // Phone validation (NZ format: starts with 02, 9-15 digits, no spam)
-      var digitsOnly = phone.replace(/\D/g, '');
-      var startsWithNZ = digitsOnly.length >= 2 && digitsOnly.substring(0, 2) === '02';
-      var validLength  = digitsOnly.length >= 9 && digitsOnly.length <= 15;
-      var isRepeated   = digitsOnly.length >= 4 && /^(\d)\1+$/.test(digitsOnly);
-      var isSequence   = false;
-      if (digitsOnly.length >= 6) {
-        var asc  = '01234567890123456789';
-        var desc = '98765432109876543210';
-        isSequence = asc.indexOf(digitsOnly) !== -1 || desc.indexOf(digitsOnly) !== -1;
-      }
-      var phoneValid   = startsWithNZ && validLength && !isRepeated && !isSequence;
-      var showPhoneErr = phone.length > 0 && !phoneValid;
-      if (phoneEl) phoneEl.classList.toggle('invalid', showPhoneErr);
-      if (hintPhone) {
-        hintPhone.style.display = showPhoneErr ? 'block' : 'none';
-        if (showPhoneErr) {
-          if (!startsWithNZ && digitsOnly.length > 0) {
-            hintPhone.textContent = 'Please enter a valid NZ mobile number starting with 02.';
-          } else if (!validLength) {
-            hintPhone.textContent = 'Phone number must be 9–15 digits.';
-          } else {
-            hintPhone.textContent = 'Please enter a valid phone number.';
-          }
+      var emailValid = email.length > 0 && emailRegex.test(email);
+      if (emailEl) {
+        if (emailValid) {
+          emailEl.classList.remove('invalid');
+          if (hintEmail) hintEmail.style.display = 'none';
         }
       }
 
-      // Name validation
-      var nameValid = name.length > 0;
+      // Phone validation: flexible NZ/international (7-15 digits, no spam)
+      var digitsOnly = phone.replace(/\D/g, '');
+      var phoneValid = digitsOnly.length >= 7 && digitsOnly.length <= 15;
+      var isRepeated = digitsOnly.length >= 4 && /(\d)\1{3,}/.test(digitsOnly);
+      var isSequence = digitsOnly.length >= 6 && '0123456789876543210'.indexOf(digitsOnly.substring(digitsOnly.length - 6)) !== -1;
+      var isTooLong  = digitsOnly.length > 15;
+      var showPhoneError = isRepeated || isSequence || isTooLong;
+      if (phoneEl && phoneValid && !showPhoneError) {
+        phoneEl.classList.remove('invalid');
+        if (hintPhone) hintPhone.style.display = 'none';
+      }
+
+      // Attach blur listeners once (for showing errors after user leaves field)
+      if (emailEl && !emailEl.dataset.blurBound) {
+        emailEl.addEventListener('blur', function() {
+          var v = emailEl.value.trim();
+          var ok = v.length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+          emailEl.classList.toggle('invalid', v.length > 0 && !ok);
+          if (hintEmail) hintEmail.style.display = (v.length > 0 && !ok) ? 'block' : 'none';
+        });
+        emailEl.dataset.blurBound = 'true';
+      }
+      if (phoneEl && !phoneEl.dataset.blurBound) {
+        phoneEl.addEventListener('blur', function() {
+          var d = phoneEl.value.trim().replace(/\D/g, '');
+          var ok = d.length >= 7 && d.length <= 15;
+          var rep = d.length >= 4 && /(\d)\1{3,}/.test(d);
+          var seq = d.length >= 6 && '0123456789876543210'.indexOf(d.substring(d.length - 6)) !== -1;
+          var err = !ok || rep || seq;
+          phoneEl.classList.toggle('invalid', phoneEl.value.trim().length > 0 && err);
+          if (hintPhone) {
+            hintPhone.style.display = (phoneEl.value.trim().length > 0 && err) ? 'block' : 'none';
+            hintPhone.textContent = 'Please enter a valid phone number.';
+          }
+        });
+        phoneEl.dataset.blurBound = 'true';
+      }
 
       // isComplete: all required fields filled and valid
       var isComplete = !!(
@@ -2207,36 +2352,13 @@
         state.service &&
         state.duration &&
         state.price &&
-        nameValid &&
-        phoneValid &&
+        name &&
+        phoneValid && !showPhoneError &&
         emailValid
       );
 
-      // Update review section
-      if (stepReview) {
-        if (isComplete) {
-          var ladyDisp = toDisplay(state.lady);
-          var dayData  = roster[state.dayKey];
-          var dateStr  = dayData ? (dayData.label + ' ' + dayData.date) : state.dayKey;
-          var timeStr  = minsToDisplay(state.timeMins);
-          var durLabel = state.duration >= 60
-            ? (state.duration === 60 ? '1 hr' : (state.duration === 90 ? '1.5 hrs' : (state.duration === 120 ? '2 hrs' : state.duration + ' min')))
-            : state.duration + ' min';
-
-          var el;
-          el = document.getElementById('revLady');       if (el) el.textContent = ladyDisp;
-          el = document.getElementById('revDateTime');   if (el) el.textContent = dateStr + ' at ' + timeStr;
-          el = document.getElementById('revServiceDur'); if (el) el.textContent = state.service + ' — ' + durLabel;
-          el = document.getElementById('revPrice');      if (el) el.textContent = state.price;
-          el = document.getElementById('revName');       if (el) el.textContent = name;
-          el = document.getElementById('revContact');    if (el) el.textContent = phone + ' · ' + email;
-
-          stepReview.style.display = 'block';
-        } else {
-          stepReview.style.display = 'none';
-        }
-      }
-      if (stepF) stepF.style.display = isComplete ? 'block' : 'none';
+      if (stepReview) stepReview.style.display = isComplete ? 'block' : 'none';
+      if (stepF)      stepF.style.display      = isComplete ? 'block' : 'none';
     }
 
     /* ── Input event listeners for real-time validation ─────────── */
@@ -2248,6 +2370,18 @@
       if (phoneEl) { phoneEl.addEventListener('input', updateReviewSection); phoneEl.addEventListener('blur', updateReviewSection); }
       if (emailEl) { emailEl.addEventListener('input', updateReviewSection); emailEl.addEventListener('blur', updateReviewSection); }
     })();
+
+    /* ── Confirmation method toggles ────────────────────── */
+    state.confirmMethods = { email: true, sms: false, whatsapp: false };
+    document.getElementById('confirmEmail').addEventListener('change', function(e) {
+      state.confirmMethods.email = e.target.checked;
+    });
+    document.getElementById('confirmSMS').addEventListener('change', function(e) {
+      state.confirmMethods.sms = e.target.checked;
+    });
+    document.getElementById('confirmWhatsApp').addEventListener('change', function(e) {
+      state.confirmMethods.whatsapp = e.target.checked;
+    });
 
     /* ── Form submit ───────────────────────────────────── */
     document.getElementById('btnSubmit').addEventListener('click', function () {
