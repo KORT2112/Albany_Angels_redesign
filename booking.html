@@ -738,6 +738,11 @@
       color: #d4935a;
       margin-top: 4px;
     }
+    .form-field input.invalid,
+    .form-field textarea.invalid {
+      border-color: rgba(212,147,90,0.55) !important;
+      box-shadow: 0 0 0 2px rgba(212,147,90,0.12);
+    }
 
     /* ── Submit area ────────────────────── */
     .submit-card {
@@ -1151,6 +1156,37 @@
       .submit-card { padding: 24px 18px; }
       .btn-book { width: 100%; }
     }
+
+    /* ── Review & Confirm section ────────── */
+    .review-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .review-row {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--bk-border);
+    }
+    .review-row:last-child { border-bottom: none; }
+    .review-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--bk-text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      min-width: 140px;
+      flex-shrink: 0;
+    }
+    .review-value {
+      font-size: 0.95rem;
+      color: var(--bk-text);
+      font-weight: 500;
+    }
+    .review-value.gold { color: var(--bk-gold); }
+
   </style>
 </head>
 <body>
@@ -1401,8 +1437,42 @@
               </form>
             </div>
 
-            <!-- STEP 5: Submit -->
-            <div class="submit-card" id="stepF">
+            <!-- STEP 6: Review & Confirm (shown only when form is complete) -->
+            <div class="booking-step" id="stepReview" style="display:none;">
+              <div class="step-header">
+                <span class="step-num">6</span>
+                <h3>Review &amp; Confirm</h3>
+              </div>
+              <p class="step-subtext">Please review your booking details before submitting.</p>
+              <div class="review-grid">
+                <div class="review-row">
+                  <span class="review-label">Lady</span>
+                  <span class="review-value" id="revLady">&mdash;</span>
+                </div>
+                <div class="review-row">
+                  <span class="review-label">Date &amp; Time</span>
+                  <span class="review-value" id="revDateTime">&mdash;</span>
+                </div>
+                <div class="review-row">
+                  <span class="review-label">Service &amp; Duration</span>
+                  <span class="review-value" id="revServiceDur">&mdash;</span>
+                </div>
+                <div class="review-row">
+                  <span class="review-label">Price</span>
+                  <span class="review-value gold" id="revPrice">&mdash;</span>
+                </div>
+                <div class="review-row">
+                  <span class="review-label">Name</span>
+                  <span class="review-value" id="revName">&mdash;</span>
+                </div>
+                <div class="review-row">
+                  <span class="review-label">Contact</span>
+                  <span class="review-value" id="revContact">&mdash;</span>
+                </div>
+              </div>
+            </div>
+            <!-- STEP 7: Submit (shown only when form is complete) -->
+            <div class="submit-card" id="stepF" style="display:none;">
               <button class="btn-book" type="button" id="btnSubmit">
                 <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"
                      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -1696,6 +1766,7 @@
         c.classList.remove('active');
         c.setAttribute('aria-pressed', 'false');
       });
+      updateReviewSection();
     }
 
     function deselectLady() {
@@ -1935,6 +2006,7 @@
             }
 
             rebuildTimeSlots();
+            updateReviewSection();
           });
         }
 
@@ -2033,6 +2105,7 @@
           var ci = document.getElementById('customTime');
           if (ci) ci.value = '';
           clearTimeError();
+          updateReviewSection();
         });
       });
 
@@ -2054,6 +2127,7 @@
           timeContent.querySelectorAll('.ts').forEach(function (b) {
             b.classList.remove('active'); b.setAttribute('aria-pressed', 'false');
           });
+          updateReviewSection();
         }
       });
     }
@@ -2074,56 +2148,126 @@
       if (wrap) wrap.style.display = 'none';
     }
 
-    /* ── Form submit ─────────────────────── */
+    /* ── Real-time validation & Review section ─────────────────── */
+    function updateReviewSection() {
+      var nameEl  = document.getElementById('bkName');
+      var phoneEl = document.getElementById('bkPhone');
+      var emailEl = document.getElementById('bkEmail');
+      var hintName  = document.getElementById('hintName');
+      var hintPhone = document.getElementById('hintPhone');
+      var hintEmail = document.getElementById('hintEmail');
+      var stepReview = document.getElementById('stepReview');
+      var stepF      = document.getElementById('stepF');
 
+      var name  = nameEl  ? nameEl.value.trim()  : '';
+      var phone = phoneEl ? phoneEl.value.trim()  : '';
+      var email = emailEl ? emailEl.value.trim()  : '';
+
+      // Email validation
+      var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      var emailValid = emailRegex.test(email);
+      if (emailEl) emailEl.classList.toggle('invalid', email.length > 0 && !emailValid);
+      if (hintEmail) hintEmail.style.display = (email.length > 0 && !emailValid) ? 'block' : 'none';
+
+      // Phone validation (NZ format: starts with 02, 9-15 digits, no spam)
+      var digitsOnly = phone.replace(/\D/g, '');
+      var startsWithNZ = digitsOnly.length >= 2 && digitsOnly.substring(0, 2) === '02';
+      var validLength  = digitsOnly.length >= 9 && digitsOnly.length <= 15;
+      var isRepeated   = digitsOnly.length >= 4 && /^(\d)\1+$/.test(digitsOnly);
+      var isSequence   = false;
+      if (digitsOnly.length >= 6) {
+        var asc  = '01234567890123456789';
+        var desc = '98765432109876543210';
+        isSequence = asc.indexOf(digitsOnly) !== -1 || desc.indexOf(digitsOnly) !== -1;
+      }
+      var phoneValid   = startsWithNZ && validLength && !isRepeated && !isSequence;
+      var showPhoneErr = phone.length > 0 && !phoneValid;
+      if (phoneEl) phoneEl.classList.toggle('invalid', showPhoneErr);
+      if (hintPhone) {
+        hintPhone.style.display = showPhoneErr ? 'block' : 'none';
+        if (showPhoneErr) {
+          if (!startsWithNZ && digitsOnly.length > 0) {
+            hintPhone.textContent = 'Please enter a valid NZ mobile number starting with 02.';
+          } else if (!validLength) {
+            hintPhone.textContent = 'Phone number must be 9–15 digits.';
+          } else {
+            hintPhone.textContent = 'Please enter a valid phone number.';
+          }
+        }
+      }
+
+      // Name validation
+      var nameValid = name.length > 0;
+
+      // isComplete: all required fields filled and valid
+      var isComplete = !!(
+        state.lady &&
+        state.dayKey &&
+        state.timeMins !== null &&
+        state.service &&
+        state.duration &&
+        state.price &&
+        nameValid &&
+        phoneValid &&
+        emailValid
+      );
+
+      // Update review section
+      if (stepReview) {
+        if (isComplete) {
+          var ladyDisp = toDisplay(state.lady);
+          var dayData  = roster[state.dayKey];
+          var dateStr  = dayData ? (dayData.label + ' ' + dayData.date) : state.dayKey;
+          var timeStr  = minsToDisplay(state.timeMins);
+          var durLabel = state.duration >= 60
+            ? (state.duration === 60 ? '1 hr' : (state.duration === 90 ? '1.5 hrs' : (state.duration === 120 ? '2 hrs' : state.duration + ' min')))
+            : state.duration + ' min';
+
+          var el;
+          el = document.getElementById('revLady');       if (el) el.textContent = ladyDisp;
+          el = document.getElementById('revDateTime');   if (el) el.textContent = dateStr + ' at ' + timeStr;
+          el = document.getElementById('revServiceDur'); if (el) el.textContent = state.service + ' — ' + durLabel;
+          el = document.getElementById('revPrice');      if (el) el.textContent = state.price;
+          el = document.getElementById('revName');       if (el) el.textContent = name;
+          el = document.getElementById('revContact');    if (el) el.textContent = phone + ' · ' + email;
+
+          stepReview.style.display = 'block';
+        } else {
+          stepReview.style.display = 'none';
+        }
+      }
+      if (stepF) stepF.style.display = isComplete ? 'block' : 'none';
+    }
+
+    /* ── Input event listeners for real-time validation ─────────── */
+    (function attachContactListeners() {
+      var nameEl  = document.getElementById('bkName');
+      var phoneEl = document.getElementById('bkPhone');
+      var emailEl = document.getElementById('bkEmail');
+      if (nameEl)  { nameEl.addEventListener('input',  updateReviewSection); nameEl.addEventListener('blur',  updateReviewSection); }
+      if (phoneEl) { phoneEl.addEventListener('input', updateReviewSection); phoneEl.addEventListener('blur', updateReviewSection); }
+      if (emailEl) { emailEl.addEventListener('input', updateReviewSection); emailEl.addEventListener('blur', updateReviewSection); }
+    })();
+
+    /* ── Form submit ───────────────────────────────────── */
     document.getElementById('btnSubmit').addEventListener('click', function () {
       var name  = document.getElementById('bkName').value.trim();
       var phone = document.getElementById('bkPhone').value.trim();
       var email = document.getElementById('bkEmail').value.trim();
-
-      var hintName  = document.getElementById('hintName');
-      var hintPhone = document.getElementById('hintPhone');
-      var hintEmail = document.getElementById('hintEmail');
-
-      hintName.style.display  = 'none';
-      hintPhone.style.display = 'none';
-      hintEmail.style.display = 'none';
-
-      var valid = true;
-
-      if (!name)  { hintName.style.display  = 'block'; valid = false; }
-      if (!phone) { hintPhone.style.display = 'block'; valid = false; }
-      if (!email || email.indexOf('@') === -1) { hintEmail.style.display = 'block'; valid = false; }
-
-      if (!state.lady) {
-        alert('Please select a lady before submitting.');
-        valid = false;
-      } else if (!state.dayKey) {
-        alert('Please select a date before submitting.');
-        valid = false;
-      } else if (state.timeMins === null) {
-        alert('Please choose a time before submitting.');
-        valid = false;
-      } else if (!state.service || !state.duration) {
-        alert('Please choose a service and duration before submitting.');
-        valid = false;
-      }
-
-      if (valid) {
-        var ladyName = toDisplay(state.lady);
-        var dayLabel = roster[state.dayKey].label + ' ' + roster[state.dayKey].date;
-        var timeStr  = minsToDisplay(state.timeMins);
-        alert(
-          'Thank you, ' + name + '.\n\n' +
-          'Booking request received:\n' +
-          '\u2022 Lady: ' + ladyName + '\n' +
-          '\u2022 Date: ' + dayLabel + '\n' +
-          '\u2022 Time: ' + timeStr + '\n' +
-          '\u2022 Service: ' + state.service + '\n' +
-          '\u2022 Duration: ' + state.duration + ' min (' + state.price + ')\n\n' +
-          'We will be in touch shortly to confirm.'
-        );
-      }
+      if (!name || !phone || !email) { updateReviewSection(); return; }
+      var ladyName = toDisplay(state.lady);
+      var dayLabel = roster[state.dayKey].label + ' ' + roster[state.dayKey].date;
+      var timeStr  = minsToDisplay(state.timeMins);
+      alert(
+        'Thank you, ' + name + '.\n\n' +
+        'Booking request received:\n' +
+        '\u2022 Lady: ' + ladyName + '\n' +
+        '\u2022 Date: ' + dayLabel + '\n' +
+        '\u2022 Time: ' + timeStr + '\n' +
+        '\u2022 Service: ' + state.service + '\n' +
+        '\u2022 Duration: ' + state.duration + ' min (' + state.price + ')\n\n' +
+        'We will be in touch shortly to confirm.'
+      );
     });
 
     /* ── Nav / back-to-top ───────────────── */
@@ -2240,6 +2384,7 @@
           btn.classList.add('active');
           state.duration = parseInt(btn.dataset.mins, 10);
           state.price    = btn.dataset.price;
+          updateReviewSection();
         });
       });
     }
@@ -2257,6 +2402,7 @@
         state.duration = null;
         state.price    = null;
         buildDurationPicker(svcKey);
+        updateReviewSection();
       });
       card.addEventListener('keydown', function(e) {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
