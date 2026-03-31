@@ -1,0 +1,1434 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Albany Angels - Book Now</title>
+  <meta name="description" content="Arrange a premium booking with Albany Angels. Select your preferred companion and schedule your visit." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+  <script src="./roster-data.js"></script>
+  <style>
+    /* ===== BOOKING PAGE ===== */
+
+    :root {
+      --bk-bg:           #0B0B0B;
+      --bk-bg-2:         #121212;
+      --bk-card:         #161616;
+      --bk-gold:         #C9A45C;
+      --bk-gold-hi:      #E5C67A;
+      --bk-gold-deep:    #A8843E;
+      --bk-border:       rgba(201,164,92,0.14);
+      --bk-border-hover: rgba(201,164,92,0.32);
+      --bk-text:         #F5F5F5;
+      --bk-text-sec:     #C8C8C8;
+      --bk-text-muted:   #8A8A8A;
+    }
+
+    body { background: var(--bk-bg); }
+
+    /* ── Layout ─────────────────────────── */
+    .booking-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .booking-main { min-width: 0; }
+
+    .booking-sidebar {
+      position: sticky;
+      top: 96px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ── Step cards ─────────────────────── */
+    .booking-step {
+      background: var(--bk-card);
+      border: 1px solid var(--bk-border);
+      border-radius: 20px;
+      padding: 28px 32px;
+      margin-bottom: 16px;
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .step-num {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(201,164,92,0.10);
+      border: 1px solid rgba(201,164,92,0.28);
+      color: var(--bk-gold);
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      letter-spacing: 0.04em;
+    }
+
+    .step-header h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.45rem;
+      font-weight: 600;
+      color: var(--bk-text);
+      margin: 0;
+    }
+
+    .step-subtext {
+      margin: 0 0 22px;
+      font-size: 0.9rem;
+      color: var(--bk-text-muted);
+      line-height: 1.6;
+    }
+
+    .step-subtext strong { color: var(--bk-text-sec); }
+
+    /* ── Lady picker (custom dropdown) ─── */
+    .lady-picker {
+      position: relative;
+    }
+
+    .picker-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 16px;
+      background: #0f0f0f;
+      border: 1.5px solid rgba(201,164,92,0.22);
+      border-radius: 14px;
+      color: var(--bk-text);
+      font: inherit;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      text-align: left;
+    }
+
+    .picker-btn:hover,
+    .picker-btn[aria-expanded="true"] {
+      border-color: rgba(201,164,92,0.45);
+    }
+
+    .picker-btn[aria-expanded="true"] .picker-arrow {
+      transform: rotate(180deg);
+    }
+
+    .picker-selected {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .picker-selected-img {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center top;
+      flex-shrink: 0;
+      border: 1.5px solid rgba(201,164,92,0.22);
+    }
+
+    .picker-selected-name {
+      font-weight: 600;
+      color: var(--bk-text);
+      font-size: 0.98rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .picker-placeholder {
+      color: var(--bk-text-muted);
+      font-size: 0.95rem;
+    }
+
+    .picker-arrow {
+      flex-shrink: 0;
+      color: var(--bk-text-muted);
+      transition: transform 0.22s;
+    }
+
+    .picker-panel {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      background: #111111;
+      border: 1.5px solid rgba(201,164,92,0.26);
+      border-radius: 14px;
+      z-index: 200;
+      overflow: hidden;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.72);
+    }
+
+    .picker-panel.open { display: block; }
+
+    .picker-search-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(201,164,92,0.10);
+      color: var(--bk-text-muted);
+    }
+
+    .picker-search {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--bk-text);
+      font: inherit;
+      font-size: 0.92rem;
+      outline: none;
+    }
+
+    .picker-search::placeholder { color: var(--bk-text-muted); }
+
+    .picker-list {
+      list-style: none;
+      margin: 0;
+      padding: 6px;
+      max-height: 280px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(201,164,92,0.15) transparent;
+    }
+
+    .picker-list::-webkit-scrollbar        { width: 4px; }
+    .picker-list::-webkit-scrollbar-track  { background: transparent; }
+    .picker-list::-webkit-scrollbar-thumb  { background: rgba(201,164,92,0.18); border-radius: 2px; }
+
+    .picker-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.14s;
+      color: var(--bk-text-sec);
+      font-size: 0.92rem;
+      font-weight: 500;
+    }
+
+    .picker-item:hover   { background: rgba(201,164,92,0.07); }
+    .picker-item.active  { background: rgba(201,164,92,0.13); color: var(--bk-gold-hi); }
+
+    .picker-item-img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center top;
+      flex-shrink: 0;
+      border: 1px solid rgba(201,164,92,0.12);
+      background: #1a1a1a;
+    }
+
+    .picker-item-name { font-weight: 600; }
+
+    .picker-empty {
+      padding: 18px;
+      text-align: center;
+      color: var(--bk-text-muted);
+      font-size: 0.86rem;
+    }
+
+    /* ── Selected lady preview ──────────── */
+    .lady-preview {
+      display: none;
+      margin-top: 20px;
+      background: #0f0f0f;
+      border: 1px solid rgba(201,164,92,0.20);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    .lady-preview.visible {
+      display: block;
+      animation: slideIn 0.26s ease;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+    }
+
+    .preview-main-img {
+      width: 100%;
+      height: 100%;
+      min-height: 280px;
+      display: block;
+      object-fit: cover;
+      object-position: center top;
+      background: #1a1a1a;
+    }
+
+    .preview-info-col {
+      padding: 24px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .preview-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.1rem;
+      font-weight: 600;
+      color: var(--bk-text);
+      margin: 0 0 14px;
+      line-height: 1.05;
+    }
+
+    .preview-carousel-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--bk-text-muted);
+      margin-bottom: 9px;
+    }
+
+    .preview-carousel {
+      display: flex;
+      gap: 7px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(201,164,92,0.12) transparent;
+    }
+
+    .preview-carousel::-webkit-scrollbar       { height: 3px; }
+    .preview-carousel::-webkit-scrollbar-track { background: transparent; }
+    .preview-carousel::-webkit-scrollbar-thumb { background: rgba(201,164,92,0.15); border-radius: 2px; }
+
+    .carousel-thumb {
+      flex: 0 0 66px;
+      height: 84px;
+      border-radius: 10px;
+      border: 1.5px solid rgba(201,164,92,0.12);
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.18s;
+    }
+
+    .carousel-thumb:hover  { border-color: rgba(201,164,92,0.35); }
+    .carousel-thumb.active { border-color: var(--bk-gold); }
+
+    .carousel-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+
+    .preview-dismiss {
+      margin-top: auto;
+      padding-top: 16px;
+    }
+
+    .btn-dismiss {
+      appearance: none;
+      background: transparent;
+      border: 1px solid rgba(201,164,92,0.18);
+      border-radius: 999px;
+      color: var(--bk-text-muted);
+      font: inherit;
+      font-size: 0.84rem;
+      padding: 7px 14px;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .btn-dismiss:hover {
+      border-color: rgba(201,164,92,0.32);
+      color: var(--bk-text-sec);
+    }
+
+    /* ── Date chips ─────────────────────── */
+    .date-row {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(201,164,92,0.12) transparent;
+      min-height: 76px;
+      align-items: flex-start;
+    }
+
+    .date-row::-webkit-scrollbar       { height: 4px; }
+    .date-row::-webkit-scrollbar-track { background: transparent; }
+    .date-row::-webkit-scrollbar-thumb { background: rgba(201,164,92,0.18); border-radius: 2px; }
+
+    .date-chip {
+      flex: 0 0 auto;
+      appearance: none;
+      border: 1.5px solid rgba(201,164,92,0.18);
+      background: #0f0f0f;
+      color: var(--bk-text);
+      border-radius: 14px;
+      padding: 12px 15px;
+      font: inherit;
+      cursor: pointer;
+      text-align: center;
+      min-width: 80px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .date-chip .dc-day  { display: block; font-size: 0.67rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--bk-text-muted); margin-bottom: 4px; }
+    .date-chip .dc-num  { display: block; font-family: 'Cormorant Garamond', serif; font-size: 1.55rem; font-weight: 600; line-height: 1; color: var(--bk-text); }
+    .date-chip .dc-mon  { display: block; font-size: 0.67rem; color: var(--bk-text-muted); margin-top: 4px; letter-spacing: 0.04em; text-transform: uppercase; }
+
+    .date-chip:hover {
+      border-color: rgba(201,164,92,0.34);
+      background: rgba(201,164,92,0.03);
+    }
+
+    .date-chip.active {
+      border-color: var(--bk-gold);
+      background: rgba(201,164,92,0.09);
+    }
+
+    .date-chip.active .dc-day,
+    .date-chip.active .dc-mon { color: rgba(201,164,92,0.65); }
+    .date-chip.active .dc-num { color: var(--bk-gold-hi); }
+
+    .date-chip.today .dc-day::after { content: ' · Today'; }
+
+    /* ── Time slots ─────────────────────── */
+    .time-group-label {
+      font-size: 0.73rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--bk-text-muted);
+      margin: 0 0 9px;
+    }
+
+    .time-slots {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .ts {
+      appearance: none;
+      border: 1.5px solid rgba(201,164,92,0.16);
+      background: #0f0f0f;
+      color: var(--bk-text);
+      border-radius: 11px;
+      padding: 10px 8px;
+      font: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.18s, background 0.18s, color 0.18s;
+    }
+
+    .ts:hover  { border-color: rgba(201,164,92,0.34); background: rgba(201,164,92,0.04); }
+    .ts.active { border-color: var(--bk-gold); background: rgba(201,164,92,0.11); color: var(--bk-gold-hi); }
+
+    .time-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 4px 0 16px;
+      font-size: 0.78rem;
+      color: var(--bk-text-muted);
+    }
+
+    .time-divider::before,
+    .time-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(201,164,92,0.10);
+    }
+
+    .time-custom-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .time-custom-row label {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--bk-text-sec);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .time-input {
+      flex: 1;
+      max-width: 180px;
+      padding: 11px 14px;
+      background: #0f0f0f;
+      border: 1.5px solid rgba(201,164,92,0.18);
+      border-radius: 11px;
+      color: var(--bk-text);
+      font: inherit;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+      color-scheme: dark;
+    }
+
+    .time-input:focus { outline: none; border-color: var(--bk-gold); }
+
+    /* ── Time error ─────────────────────── */
+    .time-error-wrap {
+      margin-top: 14px;
+      padding: 13px 16px;
+      background: rgba(192,133,78,0.08);
+      border: 1px solid rgba(192,133,78,0.28);
+      border-radius: 11px;
+    }
+
+    .time-error-msg {
+      margin: 0;
+      font-size: 0.88rem;
+      color: #d4935a;
+      line-height: 1.55;
+    }
+
+    /* ── Personal details form ──────────── */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 18px;
+    }
+
+    .form-field { margin-bottom: 17px; }
+    .form-field.span2 { grid-column: 1 / -1; }
+
+    .form-field label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.87rem;
+      font-weight: 600;
+      color: var(--bk-text-sec);
+    }
+
+    .form-field label .opt {
+      font-weight: 400;
+      color: var(--bk-text-muted);
+      font-size: 0.78rem;
+    }
+
+    .form-field input,
+    .form-field textarea {
+      width: 100%;
+      padding: 12px 14px;
+      background: #0f0f0f;
+      border: 1.5px solid rgba(201,164,92,0.16);
+      border-radius: 12px;
+      color: var(--bk-text);
+      font: inherit;
+      font-size: 0.97rem;
+      transition: border-color 0.2s;
+    }
+
+    .form-field input:focus,
+    .form-field textarea:focus { outline: none; border-color: var(--bk-gold); }
+
+    .form-field input::placeholder,
+    .form-field textarea::placeholder { color: var(--bk-text-muted); }
+
+    .form-field textarea { min-height: 86px; resize: vertical; }
+
+    .validation-hint {
+      display: none;
+      font-size: 0.79rem;
+      color: #d4935a;
+      margin-top: 4px;
+    }
+
+    /* ── Submit area ────────────────────── */
+    .submit-card {
+      background: var(--bk-card);
+      border: 1px solid var(--bk-border);
+      border-radius: 20px;
+      padding: 32px;
+      text-align: center;
+    }
+
+    .submit-card p {
+      color: var(--bk-text-muted);
+      font-size: 0.87rem;
+      margin: 15px 0 0;
+      line-height: 1.6;
+    }
+
+    .btn-book {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: linear-gradient(135deg, #E5C67A 0%, #C9A45C 40%, #A8843E 100%);
+      color: #0B0B0B;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.02em;
+      min-height: 54px;
+      padding: 0 44px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(201,164,92,0.22);
+    }
+
+    .btn-book:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 28px rgba(201,164,92,0.28);
+    }
+
+    .btn-book svg { width: 18px; height: 18px; }
+
+    /* ── Sidebar cards ──────────────────── */
+    .sb-card {
+      background: var(--bk-card);
+      border: 1px solid var(--bk-border);
+      border-radius: 18px;
+      padding: 24px;
+    }
+
+    .sb-card .eyebrow { margin-bottom: 10px; }
+
+    .sb-card h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--bk-text);
+      margin: 0 0 12px;
+    }
+
+    .sb-card p {
+      color: var(--bk-text-sec);
+      font-size: 0.9rem;
+      line-height: 1.65;
+      margin: 0 0 10px;
+    }
+
+    .sb-card p:last-child { margin: 0; }
+
+    .flow-steps {
+      list-style: none;
+      padding: 0;
+      margin: 14px 0 0;
+    }
+
+    .flow-steps li {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      padding: 9px 0;
+      border-bottom: 1px solid rgba(201,164,92,0.08);
+      font-size: 0.88rem;
+      color: var(--bk-text-sec);
+    }
+
+    .flow-steps li:last-child { border-bottom: none; }
+
+    .fs-num {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(201,164,92,0.08);
+      border: 1px solid rgba(201,164,92,0.22);
+      color: var(--bk-gold);
+      font-size: 0.68rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+
+    .sb-contact {
+      background: rgba(201,164,92,0.05);
+      border: 1px solid rgba(201,164,92,0.18);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .sb-contact p {
+      color: var(--bk-text-sec);
+      font-size: 0.88rem;
+      margin: 0 0 12px;
+    }
+
+    .sb-contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .sb-link {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 13px;
+      background: rgba(0,0,0,0.22);
+      border: 1px solid rgba(201,164,92,0.10);
+      border-radius: 10px;
+      color: var(--bk-text);
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .sb-link:hover { border-color: rgba(201,164,92,0.28); color: var(--bk-gold-hi); }
+    .sb-link svg { width: 15px; height: 15px; color: var(--bk-gold); flex-shrink: 0; }
+
+    /* ── Responsive ─────────────────────── */
+    @media (max-width: 1080px) {
+      .booking-layout { grid-template-columns: 1fr; }
+      .booking-sidebar { position: static; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+      .sb-contact { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 820px) {
+      .booking-step { padding: 22px 18px; }
+      .preview-grid { grid-template-columns: 1fr; }
+      .preview-main-img { min-height: 200px; height: 200px; }
+      .form-row { grid-template-columns: 1fr; }
+      .form-field.span2 { grid-column: auto; }
+      .booking-sidebar { grid-template-columns: 1fr; }
+      .time-slots { grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); }
+    }
+
+    @media (max-width: 540px) {
+      .submit-card { padding: 24px 18px; }
+      .btn-book { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── HEADER ─────────────────────────────── -->
+  <header class="site-header solid-header">
+    <div class="container header-inner">
+      <a class="brand" href="./index.html">Albany Angels</a>
+      <nav class="site-nav" id="mainNav">
+        <a href="./index.html">Home</a>
+        <a href="./girls.html">Girls</a>
+        <a href="./roster.html">Roster</a>
+        <a href="./services.html">Services</a>
+        <a href="./index.html#about">About</a>
+        <a href="./index.html#contact">Contact</a>
+      </nav>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <a class="btn btn-primary" href="./booking.html">Book Now</a>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ─── HERO ───────────────────────────────── -->
+    <section class="page-hero page-hero-services">
+      <div class="page-hero-overlay"></div>
+      <div class="container page-hero-content narrow">
+        <p class="eyebrow">Book Now</p>
+        <h1>Arrange your<br>booking</h1>
+        <p>Select your preferred companion, choose a date she is available, pick a time, and submit your request. We'll confirm everything with you directly.</p>
+      </div>
+    </section>
+
+    <!-- ─── BOOKING SECTION ─────────────────────── -->
+    <section class="section">
+      <div class="container">
+        <div class="booking-layout">
+
+          <!-- ── MAIN COLUMN ─────────────────── -->
+          <div class="booking-main">
+
+            <!-- STEP 1: Choose date -->
+            <div class="booking-step" id="stepC">
+              <div class="step-header">
+                <span class="step-num">1</span>
+                <h3>Choose a date</h3>
+              </div>
+              <p class="step-subtext" id="stepCSubtext">Select a day to see which ladies are available.</p>
+              <div class="date-row" id="dateRow" role="group" aria-label="Select date"></div>
+            </div>
+
+            <!-- STEP 2: Select lady (filtered by chosen day) -->
+            <div class="booking-step" id="stepA">
+              <div class="step-header">
+                <span class="step-num">2</span>
+                <h3>Select your lady</h3>
+              </div>
+              <p class="step-subtext" id="stepASubtext">Choose a date above to see who is available that day.</p>
+
+              <div class="lady-picker" id="ladyPicker">
+                <button class="picker-btn" id="pickerBtn" type="button"
+                        aria-haspopup="listbox" aria-expanded="false" aria-controls="pickerList">
+                  <div class="picker-selected" id="pickerSelected">
+                    <span class="picker-placeholder">Select a lady&hellip;</span>
+                  </div>
+                  <svg class="picker-arrow" width="16" height="16" viewBox="0 0 16 16"
+                       fill="none" stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" aria-hidden="true">
+                    <polyline points="4 6 8 10 12 6"/>
+                  </svg>
+                </button>
+                <div class="picker-panel" id="pickerPanel">
+                  <div class="picker-search-wrap">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                         stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+                      <circle cx="6" cy="6" r="4"/><line x1="9.5" y1="9.5" x2="13" y2="13"/>
+                    </svg>
+                    <input class="picker-search" id="pickerSearch" type="text"
+                           placeholder="Search&hellip;" autocomplete="off" aria-label="Search ladies" />
+                  </div>
+                  <ul class="picker-list" id="pickerList" role="listbox" aria-label="Select a lady"></ul>
+                </div>
+              </div>
+
+              <!-- Preview panel — shown after selection -->
+              <div class="lady-preview" id="ladyPreview" aria-live="polite">
+                <div class="preview-grid">
+                  <div>
+                    <img class="preview-main-img" id="previewMainImg" src="" alt="" />
+                  </div>
+                  <div class="preview-info-col">
+                    <h2 class="preview-name" id="previewName"></h2>
+                    <p class="preview-carousel-label">Gallery</p>
+                    <div class="preview-carousel" id="previewCarousel"></div>
+                    <div class="preview-dismiss">
+                      <button class="btn-dismiss" id="btnDeselect" type="button">Change selection</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div><!-- /stepA -->
+
+            <!-- STEP 3: Choose time -->
+            <div class="booking-step" id="stepD">
+              <div class="step-header">
+                <span class="step-num">3</span>
+                <h3>Choose a time</h3>
+              </div>
+              <div id="timeContent">
+                <p class="step-subtext">Select your lady and a date first to see available times.</p>
+              </div>
+            </div>
+
+            <!-- STEP 4: Personal details -->
+            <div class="booking-step" id="stepE">
+              <div class="step-header">
+                <span class="step-num">4</span>
+                <h3>Your details</h3>
+              </div>
+              <p class="step-subtext">We only need the essentials. Your information is kept completely confidential.</p>
+
+              <form id="bookingForm" onsubmit="return false;" novalidate>
+                <div class="form-row">
+                  <div class="form-field">
+                    <label for="bkName">Name <span aria-hidden="true">*</span></label>
+                    <input type="text" id="bkName" name="name" placeholder="Your preferred name" required autocomplete="name" />
+                    <span class="validation-hint" id="hintName">Please enter your name.</span>
+                  </div>
+                  <div class="form-field">
+                    <label for="bkPhone">Phone <span aria-hidden="true">*</span></label>
+                    <input type="tel" id="bkPhone" name="phone" placeholder="021 000 0000" required autocomplete="tel" />
+                    <span class="validation-hint" id="hintPhone">Please enter a contact number.</span>
+                  </div>
+                  <div class="form-field">
+                    <label for="bkEmail">Email <span aria-hidden="true">*</span></label>
+                    <input type="email" id="bkEmail" name="email" placeholder="your@email.com" required autocomplete="email" />
+                    <span class="validation-hint" id="hintEmail">Please enter a valid email address.</span>
+                  </div>
+                  <div class="form-field">
+                    <label for="bkAge">Age <span class="opt">(optional)</span></label>
+                    <input type="number" id="bkAge" name="age" placeholder="18+" min="18" max="99" autocomplete="off" />
+                  </div>
+                  <div class="form-field span2">
+                    <label for="bkNote">Additional note <span class="opt">(optional)</span></label>
+                    <textarea id="bkNote" name="note" placeholder="Anything specific you'd like us to know about your booking&hellip;"></textarea>
+                  </div>
+                </div>
+
+                <div id="formBookingError" style="display:none; margin-bottom:16px;">
+                  <p class="time-error-msg" id="formBookingErrorMsg"></p>
+                </div>
+              </form>
+            </div>
+
+            <!-- STEP 5: Submit -->
+            <div class="submit-card" id="stepF">
+              <button class="btn-book" type="button" id="btnSubmit">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M17 10H3M10 3l7 7-7 7"/>
+                </svg>
+                Submit booking request
+              </button>
+              <p>By submitting, you confirm you are 18 or older. We'll be in touch to confirm availability and finalise your booking. All enquiries are handled with complete discretion.</p>
+            </div>
+
+          </div><!-- /booking-main -->
+
+          <!-- ── SIDEBAR ──────────────────────── -->
+          <aside class="booking-sidebar" aria-label="Booking information">
+
+            <div class="sb-card">
+              <p class="eyebrow">Discreet &amp; professional</p>
+              <h4>How it works</h4>
+              <p>Submit your request and we'll review your preferred lady's availability, then confirm your booking via phone or email.</p>
+              <ul class="flow-steps">
+                <li><span class="fs-num">1</span>Choose a date you'd like to visit</li>
+                <li><span class="fs-num">2</span>Select a lady available that day</li>
+                <li><span class="fs-num">3</span>Pick a time within her hours</li>
+                <li><span class="fs-num">4</span>Enter your contact details</li>
+                <li><span class="fs-num">5</span>Submit — we'll confirm promptly</li>
+              </ul>
+            </div>
+
+            <div class="sb-card">
+              <p class="eyebrow">Availability</p>
+              <h4>Weekly roster</h4>
+              <p>The selector shows only ladies rostered this week. Dates and times shown are derived from their actual schedule — no guesswork.</p>
+              <p>If your first choice isn't free, we'll suggest alternatives when we confirm.</p>
+            </div>
+
+            <div class="sb-contact">
+              <p class="eyebrow" style="color:var(--bk-gold);font-size:0.7rem;letter-spacing:0.14em;">Prefer to call?</p>
+              <p>Reach us directly for a faster response.</p>
+              <div class="sb-contact-links">
+                <a href="tel:+64211321932" class="sb-link">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"
+                       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M6.5 3h-2a1 1 0 0 0-1 1v2.5c0 6.351 5.149 11.5 11.5 11.5H17a1 1 0 0 0 1-1v-2a1 1 0 0 0-.724-.962l-2.5-.75a1 1 0 0 0-1.116.414l-.755 1.133A11.02 11.02 0 0 1 8.164 8.095l1.133-.755A1 1 0 0 0 9.711 6.224l-.75-2.5A1 1 0 0 0 8 3H6.5z"/>
+                  </svg>
+                  021 132 1932
+                </a>
+                <a href="mailto:thealbanyangels@gmail.com" class="sb-link">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"
+                       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="2" y="4" width="16" height="12" rx="2"/>
+                    <polyline points="2,4 10,11 18,4"/>
+                  </svg>
+                  Email us
+                </a>
+              </div>
+            </div>
+
+          </aside>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-bottom">&copy; Albany Angels. All rights reserved.</div>
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+         stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+  </button>
+
+  <script>
+  (function () {
+    'use strict';
+
+    var RD            = window.RosterData;
+    var roster        = RD.roster;
+    var imageMap      = RD.imageMap;
+    var parseEntry    = RD.parseRosterEntry;
+    var formatRange   = RD.formatTimeRange;
+    var genSlots      = RD.generateSlots;
+    var minsToDisplay = RD.minsToDisplay;
+
+    /* ── Roster utilities ────────────────── */
+
+    var DAY_ORDER = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
+
+    /* Ladies available on a given day key, alphabetical */
+    function ladiesForDay(dayKey) {
+      if (!dayKey || !roster[dayKey]) return [];
+      return roster[dayKey].girls.map(function (e) { return e[0]; }).sort();
+    }
+
+    /* Known gallery images per lady (hero + extras) */
+    var galleryMap = {
+      ALLY:      ['./assets/girls/ally/hero.jpg','./assets/girls/ally/gallery-01.jpg','./assets/girls/ally/gallery-02.png'],
+      ANNA:      ['./assets/girls/anna/hero.png','./assets/girls/anna/gallery-02.jpg','./assets/girls/anna/gallery-03.jpg','./assets/girls/anna/gallery-04.jpg'],
+      ARI:       ['./assets/girls/ari/hero.jpeg'],
+      ARIA:      ['./assets/girls/aria/hero.jpg','./assets/girls/aria/gallery-01.jpg'],
+      ALYSSA:    ['./assets/girls/alyssa/hero.jpeg'],
+      BIANCA:    ['./assets/girls/bianca/hero.jpg'],
+      EMMA:      ['./assets/girls/emma/hero.jpg'],
+      ISABELLA:  ['./assets/girls/isabella/hero.jpg','./assets/girls/isabella/gallery-01.jpg','./assets/girls/isabella/gallery-02.jpg'],
+      ISLA:      ['./assets/girls/isla/hero.jpg'],
+      JADE:      ['./assets/girls/jade/hero.jpg','./assets/girls/jade/gallery-01.jpg','./assets/girls/jade/gallery-03.jpg'],
+      JASMINE:   ['./assets/girls/jasmine/hero.jpg'],
+      LILITH:    ['./assets/girls/lilith/hero.jpg'],
+      LOLA:      ['./assets/girls/lola/hero.jpg'],
+      PEACHES:   ['./assets/girls/peaches/hero.jpg'],
+      SERENA:    ['./assets/girls/serena/hero.jpg']
+    };
+
+    function toDisplay(name) {
+      return name.charAt(0) + name.slice(1).toLowerCase();
+    }
+
+    /* ── State ───────────────────── */
+    var state = { dayKey: null, lady: null, timeMins: null };
+
+    /* ── DOM refs ────────────────────────── */
+    var pickerBtn      = document.getElementById('pickerBtn');
+    var pickerPanel    = document.getElementById('pickerPanel');
+    var pickerSearch   = document.getElementById('pickerSearch');
+    var pickerList     = document.getElementById('pickerList');
+    var pickerSelected = document.getElementById('pickerSelected');
+    var ladyPreview    = document.getElementById('ladyPreview');
+    var previewName    = document.getElementById('previewName');
+    var previewMainImg = document.getElementById('previewMainImg');
+    var previewCarousel= document.getElementById('previewCarousel');
+    var btnDeselect    = document.getElementById('btnDeselect');
+    var dateRow        = document.getElementById('dateRow');
+    var stepCSubtext   = document.getElementById('stepCSubtext');
+    var stepASubtext   = document.getElementById('stepASubtext');
+    var timeContent    = document.getElementById('timeContent');
+
+    /* ── Lady picker ─────────────────────── */
+
+    function buildPickerList(filter) {
+      var q = (filter || '').trim().toLowerCase();
+
+      // If no day selected yet, show a prompt instead of a list
+      if (!state.dayKey) {
+        pickerList.innerHTML = '<li class="picker-empty">Please choose a date first.</li>';
+        return;
+      }
+
+      var dayLadies = ladiesForDay(state.dayKey);
+      var filtered = dayLadies.filter(function (name) {
+        return !q || name.toLowerCase().indexOf(q) !== -1;
+      });
+
+      if (filtered.length === 0) {
+        pickerList.innerHTML = '<li class="picker-empty">No results found.</li>';
+        return;
+      }
+
+      pickerList.innerHTML = filtered.map(function (name) {
+        var img  = imageMap[name] || './assets/roster/shadow.jpg';
+        var disp = toDisplay(name);
+        var sel  = state.lady === name;
+        return '<li class="picker-item' + (sel ? ' active' : '') + '"' +
+               ' data-name="' + name + '" role="option" aria-selected="' + sel + '">' +
+               '<img class="picker-item-img" src="' + img + '" alt="' + disp + '" loading="lazy" />' +
+               '<span class="picker-item-name">' + disp + '</span>' +
+               '</li>';
+      }).join('');
+
+      pickerList.querySelectorAll('.picker-item').forEach(function (item) {
+        item.addEventListener('click', function () {
+          selectLady(item.dataset.name);
+          closePicker();
+        });
+      });
+    }
+
+    function openPicker() {
+      pickerPanel.classList.add('open');
+      pickerBtn.setAttribute('aria-expanded', 'true');
+      pickerSearch.value = '';
+      buildPickerList('');
+      pickerSearch.focus();
+    }
+
+    function closePicker() {
+      pickerPanel.classList.remove('open');
+      pickerBtn.setAttribute('aria-expanded', 'false');
+    }
+
+    pickerBtn.addEventListener('click', function () {
+      pickerPanel.classList.contains('open') ? closePicker() : openPicker();
+    });
+
+    pickerSearch.addEventListener('input', function () {
+      buildPickerList(pickerSearch.value);
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!document.getElementById('ladyPicker').contains(e.target)) closePicker();
+    });
+
+    /* ── Lady selection ──────────────────── */
+
+    function selectLady(name) {
+      if (state.lady === name) return;
+      state.lady     = name;
+      // dayKey is already set (chosen first) — do NOT reset it
+      state.timeMins = null;
+
+      // Update picker button
+      var img  = imageMap[name] || './assets/roster/shadow.jpg';
+      var disp = toDisplay(name);
+      pickerSelected.innerHTML =
+        '<img class="picker-selected-img" src="' + img + '" alt="' + disp + '" />' +
+        '<span class="picker-selected-name">' + disp + '</span>';
+
+      if (stepASubtext) stepASubtext.textContent = 'You selected ' + disp + '.';
+
+      updatePreview(name);
+      rebuildTimeSlots();
+    }
+
+    function deselectLady() {
+      state.lady     = null;
+      state.timeMins = null;
+
+      pickerSelected.innerHTML = '<span class="picker-placeholder">Select a lady…</span>';
+      ladyPreview.classList.remove('visible');
+      if (stepASubtext) {
+        stepASubtext.textContent = state.dayKey
+          ? 'Choose a lady available on ' + roster[state.dayKey].label + '.'
+          : 'Choose a date above to see who is available that day.';
+      }
+      rebuildTimeSlots();
+    }
+
+    /* ── Preview panel ───────────────────── */
+
+    function updatePreview(name) {
+      var img  = imageMap[name] || './assets/roster/shadow.jpg';
+      var disp = toDisplay(name);
+
+      previewName.textContent = disp;
+      previewMainImg.src      = img;
+      previewMainImg.alt      = disp;
+
+      // Carousel
+      var images = galleryMap[name] || [img];
+      previewCarousel.innerHTML = '';
+      images.forEach(function (src, i) {
+        var thumb = document.createElement('div');
+        thumb.className = 'carousel-thumb' + (i === 0 ? ' active' : '');
+        var tImg = document.createElement('img');
+        tImg.src     = src;
+        tImg.alt     = disp + ' photo ' + (i + 1);
+        tImg.loading = 'lazy';
+        thumb.appendChild(tImg);
+        thumb.addEventListener('click', function () {
+          previewMainImg.src = src;
+          previewCarousel.querySelectorAll('.carousel-thumb')
+            .forEach(function (t) { t.classList.remove('active'); });
+          thumb.classList.add('active');
+        });
+        previewCarousel.appendChild(thumb);
+      });
+
+      ladyPreview.classList.add('visible');
+      setTimeout(function () {
+        ladyPreview.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 80);
+    }
+
+    btnDeselect.addEventListener('click', deselectLady);
+
+    /* ── Date section ────────────────────── */
+
+    function rebuildDates() {
+      dateRow.innerHTML = '';
+
+      // Show all days that have any ladies rostered (Mon → Sun)
+      var availDays = DAY_ORDER.filter(function (key) {
+        return roster[key] && roster[key].girls.length > 0;
+      });
+
+      if (availDays.length === 0) {
+        stepCSubtext.textContent = 'No roster dates available this week.';
+        return;
+      }
+
+      stepCSubtext.textContent = 'Select a day to see which ladies are available.';
+
+      var today = new Date().toISOString().slice(0, 10);
+
+      availDays.forEach(function (key, i) {
+        var day     = roster[key];
+        var isToday = day.isoDate === today;
+        var isActive = state.dayKey ? (state.dayKey === key) : (i === 0);
+
+        // Parse date label → number + month abbrev
+        var cleaned  = day.date.replace(/st|nd|rd|th/i, '').trim().split(/\s+/);
+        var num      = cleaned[0];
+        var mon      = (cleaned[1] || '').slice(0, 3).toUpperCase();
+        var dayAbbr  = day.label.slice(0, 3).toUpperCase();
+
+        var btn = document.createElement('button');
+        btn.className  = 'date-chip' + (isActive ? ' active' : '') + (isToday ? ' today' : '');
+        btn.type       = 'button';
+        btn.dataset.day = key;
+        btn.setAttribute('aria-pressed', String(isActive));
+        btn.innerHTML =
+          '<span class="dc-day">' + dayAbbr + '</span>' +
+          '<span class="dc-num">'  + num    + '</span>' +
+          '<span class="dc-mon">'  + mon    + '</span>';
+
+        btn.addEventListener('click', function () {
+          dateRow.querySelectorAll('.date-chip').forEach(function (c) {
+            c.classList.remove('active');
+            c.setAttribute('aria-pressed', 'false');
+          });
+          btn.classList.add('active');
+          btn.setAttribute('aria-pressed', 'true');
+
+          // Switching day resets lady and time selections
+          if (state.dayKey !== key) {
+            state.dayKey   = key;
+            state.lady     = null;
+            state.timeMins = null;
+            pickerSelected.innerHTML = '<span class="picker-placeholder">Select a lady…</span>';
+            ladyPreview.classList.remove('visible');
+          }
+
+          // Update lady-step subtext
+          if (stepASubtext) {
+            var count = ladiesForDay(key).length;
+            stepASubtext.textContent = count + ' ' + (count === 1 ? 'lady' : 'ladies') + ' available on ' + roster[key].label + '. Choose one below.';
+          }
+
+          rebuildTimeSlots();
+        });
+
+        dateRow.appendChild(btn);
+      });
+
+      // Auto-select first day on initial load
+      if (!state.dayKey) {
+        state.dayKey = availDays[0];
+      }
+
+      // Update lady-step subtext for the initially active day
+      if (stepASubtext && state.dayKey) {
+        var count = ladiesForDay(state.dayKey).length;
+        stepASubtext.textContent = count + ' ' + (count === 1 ? 'lady' : 'ladies') + ' available on ' + roster[state.dayKey].label + '. Choose one below.';
+      }
+    }
+
+    /* ── Time section ────────────────────── */
+
+    function getRosterTimeStr(name, dayKey) {
+      if (!name || !dayKey || !roster[dayKey]) return null;
+      var entry = roster[dayKey].girls.find(function (e) { return e[0] === name; });
+      return entry ? entry[1] : null;
+    }
+
+    function padHHMM(mins) {
+      var h = Math.floor(mins / 60);
+      var m = mins % 60;
+      return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
+    }
+
+    function rebuildTimeSlots() {
+      if (!state.lady || !state.dayKey) {
+        timeContent.innerHTML = '<p class="step-subtext">Select your lady and a date first to see available times.</p>';
+        return;
+      }
+
+      var timeStr = getRosterTimeStr(state.lady, state.dayKey);
+      if (!timeStr) {
+        timeContent.innerHTML = '<p class="step-subtext">No availability found for this selection.</p>';
+        return;
+      }
+
+      var parsed    = parseEntry(timeStr);
+      var startMins = parsed.startMins;
+      var endMins   = parsed.endMins;
+      var disp      = toDisplay(state.lady);
+      var slots     = genSlots(startMins, endMins, 30);
+
+      var slotsHTML = slots.map(function (m) {
+        return '<button class="ts" type="button" data-mins="' + m + '" aria-pressed="false">' +
+               minsToDisplay(m) + '</button>';
+      }).join('');
+
+      timeContent.innerHTML =
+        '<p class="step-subtext"><strong>' + disp + '</strong> is available ' +
+        formatRange(timeStr) + '. Select a time below.</p>' +
+        '<div class="time-slots" id="timeSlotsGrid">' + slotsHTML + '</div>' +
+        '<div class="time-divider">or enter a custom time</div>' +
+        '<div class="time-custom-row">' +
+          '<label for="customTime">Custom time</label>' +
+          '<input type="time" id="customTime" name="customTime" class="time-input"' +
+          ' min="' + padHHMM(startMins) + '" max="' + padHHMM(endMins - 1) + '" />' +
+        '</div>' +
+        '<div class="time-error-wrap" id="timeErrorWrap" style="display:none;">' +
+          '<p class="time-error-msg" id="timeErrorMsg"></p>' +
+        '</div>';
+
+      // Slot click handlers
+      timeContent.querySelectorAll('.ts').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          timeContent.querySelectorAll('.ts').forEach(function (b) {
+            b.classList.remove('active'); b.setAttribute('aria-pressed', 'false');
+          });
+          btn.classList.add('active');
+          btn.setAttribute('aria-pressed', 'true');
+          state.timeMins = parseInt(btn.dataset.mins, 10);
+          var ci = document.getElementById('customTime');
+          if (ci) ci.value = '';
+          clearTimeError();
+        });
+      });
+
+      // Custom time validation
+      var customInput = document.getElementById('customTime');
+      customInput.addEventListener('change', function () {
+        var val = customInput.value;
+        if (!val) { clearTimeError(); return; }
+        var parts    = val.split(':');
+        var inputMin = parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+
+        if (inputMin < startMins || inputMin >= endMins) {
+          showTimeError(disp, startMins, endMins);
+          state.timeMins = null;
+        } else {
+          clearTimeError();
+          state.timeMins = inputMin;
+          // Deselect slot buttons
+          timeContent.querySelectorAll('.ts').forEach(function (b) {
+            b.classList.remove('active'); b.setAttribute('aria-pressed', 'false');
+          });
+        }
+      });
+    }
+
+    function showTimeError(name, startMins, endMins) {
+      var wrap = document.getElementById('timeErrorWrap');
+      var msg  = document.getElementById('timeErrorMsg');
+      if (!wrap || !msg) return;
+      msg.textContent =
+        'Unfortunately, you are not able to book at this time as ' + name +
+        ' is not available. She is available ' +
+        minsToDisplay(startMins) + ' \u2013 ' + minsToDisplay(endMins) + '.';
+      wrap.style.display = 'block';
+    }
+
+    function clearTimeError() {
+      var wrap = document.getElementById('timeErrorWrap');
+      if (wrap) wrap.style.display = 'none';
+    }
+
+    /* ── Form submit ─────────────────────── */
+
+    document.getElementById('btnSubmit').addEventListener('click', function () {
+      var name  = document.getElementById('bkName').value.trim();
+      var phone = document.getElementById('bkPhone').value.trim();
+      var email = document.getElementById('bkEmail').value.trim();
+
+      var hintName  = document.getElementById('hintName');
+      var hintPhone = document.getElementById('hintPhone');
+      var hintEmail = document.getElementById('hintEmail');
+
+      hintName.style.display  = 'none';
+      hintPhone.style.display = 'none';
+      hintEmail.style.display = 'none';
+
+      var valid = true;
+
+      if (!name)  { hintName.style.display  = 'block'; valid = false; }
+      if (!phone) { hintPhone.style.display = 'block'; valid = false; }
+      if (!email || email.indexOf('@') === -1) { hintEmail.style.display = 'block'; valid = false; }
+
+      if (!state.lady) {
+        alert('Please select a lady before submitting.');
+        valid = false;
+      } else if (!state.dayKey) {
+        alert('Please select a date before submitting.');
+        valid = false;
+      } else if (state.timeMins === null) {
+        alert('Please choose a time before submitting.');
+        valid = false;
+      }
+
+      if (valid) {
+        var ladyName = toDisplay(state.lady);
+        var dayLabel = roster[state.dayKey].label + ' ' + roster[state.dayKey].date;
+        var timeStr  = minsToDisplay(state.timeMins);
+        alert(
+          'Thank you, ' + name + '.\n\n' +
+          'Booking request received:\n' +
+          '\u2022 Lady: ' + ladyName + '\n' +
+          '\u2022 Date: ' + dayLabel + '\n' +
+          '\u2022 Time: ' + timeStr + '\n\n' +
+          'We will be in touch shortly to confirm.'
+        );
+      }
+    });
+
+    /* ── Nav / back-to-top ───────────────── */
+
+    var toggle = document.getElementById('menuToggle');
+    var nav    = document.getElementById('mainNav');
+    toggle.addEventListener('click', function () {
+      toggle.classList.toggle('active');
+      nav.classList.toggle('open');
+    });
+    nav.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        toggle.classList.remove('active');
+        nav.classList.remove('open');
+      });
+    });
+
+    var btt = document.getElementById('backToTop');
+    window.addEventListener('scroll', function () {
+      btt.classList.toggle('visible', window.scrollY > 400);
+    });
+    btt.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+     /* ── Initial state ────────────────── */
+    // Date must be built first so dayKey is set before the picker list renders
+    rebuildDates();
+    buildPickerList('');
+    rebuildTimeSlots();
+
+  }());
+  </script>
+</body>
+</html>
