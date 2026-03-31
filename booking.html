@@ -166,7 +166,6 @@
     }
 
     .picker-panel {
-      display: none;
       position: absolute;
       top: calc(100% + 8px);
       left: 0;
@@ -177,9 +176,13 @@
       z-index: 200;
       overflow: hidden;
       box-shadow: 0 16px 48px rgba(0,0,0,0.72);
+      display: none;
+      flex-direction: column;
+      /* search bar ~45px + 7 items × 52px + list padding 12px = 421px */
+      max-height: 421px;
     }
 
-    .picker-panel.open { display: block; }
+    .picker-panel.open { display: flex; }
 
     .picker-search-wrap {
       display: flex;
@@ -206,7 +209,8 @@
       list-style: none;
       margin: 0;
       padding: 6px;
-      max-height: 280px;
+      /* fills remaining space inside the panel after the search bar */
+      max-height: 364px;
       overflow-y: auto;
       scrollbar-width: thin;
       scrollbar-color: rgba(201,164,92,0.15) transparent;
@@ -274,30 +278,113 @@
 
     .preview-grid {
       display: grid;
-      grid-template-columns: 220px 1fr;
+      grid-template-columns: 320px 1fr;
+      border-radius: 18px;
+      overflow: hidden;
+      background: var(--bk-card);
     }
 
     .preview-img-wrap {
-      border-radius: 18px;
       overflow: hidden;
-      align-self: stretch;
       background: #1a1a1a;
-      /* Force 3:4 aspect ratio */
-      aspect-ratio: 3 / 4;
-      width: 220px;
+      border-radius: 18px 0 0 18px;
+      align-self: stretch;
     }
 
     .preview-main-img {
       width: 100%;
       height: 100%;
       display: block;
-      object-fit: contain;
-      object-position: center center;
+      object-fit: cover;
+      object-position: center top;
       background: #1a1a1a;
     }
 
+    /* On desktop, override styles.css hero-carousel sizing for the preview card */
+    .preview-grid .preview-img-wrap.hero-carousel,
+    .preview-grid .hero-carousel {
+      width: 320px !important;
+      min-width: 320px !important;
+      max-width: 320px !important;
+      aspect-ratio: 2 / 3 !important;
+      height: auto !important;
+      align-self: start !important;
+      border-radius: 18px 0 0 18px !important;
+    }
+    .preview-img-wrap .carousel-track {
+      height: 100%;
+    }
+    .preview-img-wrap .carousel-slide {
+      height: 100%;
+    }
+    .preview-img-wrap .carousel-slide img,
+    .preview-img-wrap .real-profile-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+    }
+
+    /* ── Preview carousel ─────────────────── */
+    .preview-carousel-track {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      transition: transform 0.38s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .preview-carousel-slide {
+      min-width: 100%;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      flex-shrink: 0;
+      display: block;
+    }
+    .preview-carousel-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(0,0,0,0.48);
+      backdrop-filter: blur(6px);
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 4;
+      transition: background 0.18s;
+    }
+    .preview-carousel-arrow:hover { background: rgba(0,0,0,0.72); }
+    .preview-carousel-prev { left: 10px; }
+    .preview-carousel-next { right: 10px; }
+    .preview-carousel-counter {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.48);
+      backdrop-filter: blur(6px);
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 3px 11px;
+      border-radius: 999px;
+      z-index: 4;
+      white-space: nowrap;
+    }
+    /* Hide carousel counter on the booking preview card entirely */
+    .preview-img-wrap .carousel-counter { display: none !important; }
+    /* Hide arrows/counter when only 1 slide */
+    .preview-carousel-arrow.hidden,
+    .preview-carousel-counter.hidden { display: none; }
+
     .preview-info-col {
-      padding: 26px 28px;
+      padding: 26px 28px 30px;
       display: flex;
       flex-direction: column;
       gap: 0;
@@ -348,20 +435,20 @@
       color: var(--bk-text-sec);
     }
 
-    /* Services pill — sits inline next to the name */
+    /* Services pill — bold gold at 75% opacity */
     .preview-service {
       display: inline-block;
-      background: rgba(201,164,92,0.10);
-      border: 1px solid rgba(201,164,92,0.22);
+      background: linear-gradient(135deg, rgba(229,198,122,0.75) 0%, rgba(201,164,92,0.75) 40%, rgba(168,132,62,0.75) 100%);
+      border: none;
       border-radius: 999px;
-      color: rgba(201,164,92,0.85);
-      font-size: 0.75rem;
-      font-weight: 600;
+      color: #0B0B0B;
+      font-size: 0.72rem;
+      font-weight: 700;
       letter-spacing: 0.04em;
-      padding: 5px 13px;
-      /* align vertically to sit on the cap-height of the name */
+      padding: 5px 14px;
       align-self: center;
       white-space: nowrap;
+      box-shadow: 0 2px 10px rgba(201,164,92,0.20);
     }
 
     .preview-actions {
@@ -515,6 +602,7 @@
     .time-input {
       flex: 1;
       max-width: 180px;
+      width: auto;
       padding: 11px 14px;
       background: #0f0f0f;
       border: 1.5px solid rgba(201,164,92,0.18);
@@ -527,6 +615,61 @@
     }
 
     .time-input:focus { outline: none; border-color: var(--bk-gold); }
+
+    /* 12-hour custom time picker */
+    .time-12hr-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .time-12hr-field {
+      width: 56px;
+      padding: 11px 10px;
+      background: #0f0f0f;
+      border: 1.5px solid rgba(201,164,92,0.18);
+      border-radius: 11px;
+      color: var(--bk-text);
+      font: inherit;
+      font-size: 1rem;
+      text-align: center;
+      transition: border-color 0.2s;
+      -moz-appearance: textfield;
+    }
+    .time-12hr-field::-webkit-outer-spin-button,
+    .time-12hr-field::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .time-12hr-field:focus { outline: none; border-color: var(--bk-gold); }
+    .time-12hr-sep {
+      color: var(--bk-text-sec);
+      font-size: 1.1rem;
+      font-weight: 600;
+      line-height: 1;
+      margin: 0 -2px;
+    }
+    .time-12hr-ampm {
+      display: flex;
+      border: 1.5px solid rgba(201,164,92,0.18);
+      border-radius: 11px;
+      overflow: hidden;
+    }
+    .time-12hr-ampm button {
+      padding: 10px 12px;
+      background: transparent;
+      border: none;
+      color: var(--bk-text-sec);
+      font: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s;
+      line-height: 1;
+    }
+    .time-12hr-ampm button.active {
+      background: rgba(201,164,92,0.15);
+      color: #C9A45C;
+    }
+    .time-12hr-ampm button:first-child {
+      border-right: 1px solid rgba(201,164,92,0.18);
+    }
 
     /* ── Time error ─────────────────────── */
     .time-error-wrap {
@@ -737,6 +880,146 @@
     .sb-link:hover { border-color: rgba(201,164,92,0.28); color: var(--bk-gold-hi); }
     .sb-link svg { width: 15px; height: 15px; color: var(--bk-gold); flex-shrink: 0; }
 
+    /* ── Service picker step ────────────── */
+    .svc-pick-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 0;
+    }
+
+    .svc-pick-card {
+      background: #161616;
+      border: 1px solid rgba(201,164,92,0.14);
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.22s, box-shadow 0.22s, background 0.22s;
+      outline: none;
+      user-select: none;
+    }
+    .svc-pick-card:hover {
+      border-color: rgba(201,164,92,0.35);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+    }
+    .svc-pick-card:focus-visible {
+      box-shadow: 0 0 0 2px rgba(201,164,92,0.5);
+    }
+    .svc-pick-card.active {
+      border-color: rgba(201,164,92,0.7);
+      background: #1c1810;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(201,164,92,0.18);
+    }
+    .svc-pick-card--featured {
+      background: #1a1510;
+      border-color: rgba(201,164,92,0.28);
+    }
+    .svc-pick-card--featured.active {
+      border-color: rgba(201,164,92,0.8);
+      background: #211a0c;
+    }
+
+    .svc-pick-header {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid rgba(201,164,92,0.08);
+    }
+    .svc-pick-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 5px;
+    }
+    .svc-pick-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #F5F5F5;
+      line-height: 1.2;
+    }
+    .svc-pick-desc {
+      color: #8A8A8A;
+      font-size: 0.84rem;
+      line-height: 1.5;
+      margin: 0;
+    }
+    .svc-pick-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 9px;
+      border-radius: 999px;
+      background: rgba(201,164,92,0.12);
+      border: 1px solid rgba(201,164,92,0.25);
+      color: #C9A45C;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .svc-pick-badge--popular {
+      background: rgba(201,164,92,0.18);
+      border-color: rgba(201,164,92,0.4);
+    }
+    .svc-pick-from {
+      padding: 10px 20px 12px;
+      color: #8A8A8A;
+      font-size: 0.84rem;
+    }
+    .svc-pick-from strong {
+      color: #C9A45C;
+      font-size: 0.95rem;
+    }
+
+    /* Duration picker */
+    .svc-dur-wrap {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(201,164,92,0.1);
+    }
+    .svc-dur-label {
+      color: var(--bk-text-sec);
+      font-size: 0.88rem;
+      margin: 0 0 12px;
+    }
+    .svc-dur-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 8px;
+    }
+    .svc-dur-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 10px 18px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,164,92,0.16);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      outline: none;
+      color: var(--bk-text);
+    }
+    .svc-dur-btn:hover {
+      border-color: rgba(201,164,92,0.38);
+      background: rgba(201,164,92,0.06);
+    }
+    .svc-dur-btn.active {
+      border-color: rgba(201,164,92,0.7);
+      background: rgba(201,164,92,0.1);
+    }
+    .svc-dur-btn__time {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #F5F5F5;
+    }
+    .svc-dur-btn__price {
+      font-size: 0.82rem;
+      color: #C9A45C;
+      font-weight: 600;
+    }
+
     /* ── Responsive ─────────────────────── */
     @media (max-width: 1080px) {
       .booking-layout { grid-template-columns: 1fr; }
@@ -745,13 +1028,123 @@
     }
 
     @media (max-width: 820px) {
-      .booking-step { padding: 22px 18px; }
-      .preview-grid { grid-template-columns: 1fr; }
-      .preview-img-wrap { border-radius: 18px 18px 0 0; width: 100%; aspect-ratio: 3 / 4; }
+      .booking-step {
+        padding: 16px 14px 20px;
+        margin-bottom: 10px;
+      }
+
+      /* Tighten step header + subtext spacing */
+      .step-header {
+        margin-bottom: 8px;
+        gap: 10px;
+      }
+      .step-subtext {
+        margin: 0 0 10px;
+        font-size: 0.82rem;
+      }
+      /* Full-width portrait card on mobile — image fills card, info overlaid at bottom */
+      .preview-grid {
+        display: block !important;
+        position: relative;
+        grid-template-columns: none !important;
+      }
+      .preview-img-wrap {
+        border-radius: 14px;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        height: unset;
+        aspect-ratio: 2 / 3;
+        position: relative;
+        overflow: hidden;
+      }
+      .preview-main-img {
+        border-radius: 0;
+      }
+      /* Override hero-carousel to be full-width on mobile booking page */
+      .preview-grid .preview-img-wrap.hero-carousel,
+      .preview-grid .hero-carousel {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        max-height: none !important;
+        aspect-ratio: 2 / 3 !important;
+        height: auto !important;
+        align-self: auto !important;
+        border-radius: 14px !important;
+      }
+      /* Overlay gradient + info at bottom of image */
+      .preview-grid {
+        position: relative;
+      }
+      .preview-info-col {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        /* Push content to the very bottom */
+        padding: 80px 17px 16px;
+        background: linear-gradient(to top, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.80) 30px, rgba(0,0,0,0.55) 55%, transparent);
+        border-radius: 0 0 14px 14px;
+        gap: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        box-sizing: border-box;
+      }
+      /* Name becomes a tappable gold link on mobile */
+      .preview-name {
+        font-size: 2.2rem;
+        color: #fff;
+      }
+      .preview-name-link {
+        color: inherit;
+        text-decoration: none;
+        display: inline-block;
+        transition: color 0.22s, text-shadow 0.22s;
+      }
+      .preview-name-link:active {
+        color: #C9A45C;
+        text-shadow: 0 0 18px rgba(201,164,92,0.7);
+      }
+      .preview-name-row {
+        margin-bottom: 4px;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: flex-end;
+      }
+      .preview-service {
+        font-size: 0.68rem;
+        padding: 3px 10px;
+      }
+      .preview-stats {
+        gap: 4px 14px;
+        margin-bottom: 0;
+      }
+      .preview-stat-label { font-size: 0.58rem; }
+      .preview-stat-value { font-size: 0.82rem; color: rgba(255,255,255,0.85); }
+      /* Hide View profile button entirely on mobile */
+      .preview-actions { display: none; }
+
+      /* Ensure carousel fills wrap perfectly — no inner radius, wrap clips to 14px */
+      .preview-img-wrap.hero-carousel .carousel-track,
+      .preview-img-wrap .carousel-track { overflow: visible; border-radius: 0; }
+      .preview-img-wrap .carousel-slide,
+      .preview-img-wrap .real-profile-image {
+        border-radius: 0 !important;
+        /* Slightly oversize to prevent sub-pixel gaps at edges */
+        margin-bottom: -2px;
+      }
+      /* Info overlay must also clip to card corners */
+      .preview-info-col { overflow: hidden; }
       .form-row { grid-template-columns: 1fr; }
       .form-field.span2 { grid-column: auto; }
       .booking-sidebar { grid-template-columns: 1fr; }
       .time-slots { grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); }
+      .svc-pick-grid { grid-template-columns: 1fr; gap: 10px; }
+      .svc-pick-title { font-size: 1.05rem; }
+      .time-input { max-width: 160px; flex: 0 0 auto; }
     }
 
     @media (max-width: 540px) {
@@ -848,12 +1241,20 @@
               <!-- Preview panel — shown after selection -->
               <div class="lady-preview" id="ladyPreview" aria-live="polite">
                 <div class="preview-grid">
-                  <div class="preview-img-wrap">
-                    <img class="preview-main-img" id="previewMainImg" src="" alt="" />
+                  <!-- Carousel image wrap — same structure as girls profile -->
+                  <div class="hero-carousel preview-img-wrap" id="previewCarousel">
+                    <div class="carousel-track" id="previewCarouselTrack"></div>
+                    <button class="carousel-arrow carousel-prev" id="previewCarouselPrev" aria-label="Previous photo">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    </button>
+                    <button class="carousel-arrow carousel-next" id="previewCarouselNext" aria-label="Next photo">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"></polyline></svg>
+                    </button>
+                    <div class="carousel-counter" id="previewCarouselCounter"><span id="previewCarouselCurrent">1</span> / <span id="previewCarouselTotal">1</span></div>
                   </div>
                   <div class="preview-info-col">
                     <div class="preview-name-row">
-                      <h2 class="preview-name" id="previewName"></h2>
+                      <a class="preview-name-link" id="previewNameLink" href="#" target="_blank"><h2 class="preview-name" id="previewName"></h2></a>
                       <div class="preview-service" id="previewService"></div>
                     </div>
                     <div class="preview-stats" id="previewStats"></div>
@@ -876,10 +1277,93 @@
               </div>
             </div>
 
-            <!-- STEP 4: Personal details -->
-            <div class="booking-step" id="stepE">
+            <!-- STEP 4: Choose your service -->
+            <div class="booking-step" id="stepSvc">
               <div class="step-header">
                 <span class="step-num">4</span>
+                <h3>Choose your service</h3>
+              </div>
+              <p class="step-subtext" id="svcSubtext">Select a lady first to see available services.</p>
+
+              <!-- Service cards grid -->
+              <div class="svc-pick-grid" id="svcPickGrid" style="display:none;">
+
+                <div class="svc-pick-card" data-svc="sensual-massage" tabindex="0" role="button" aria-pressed="false">
+                  <div class="svc-pick-header">
+                    <div class="svc-pick-title-row">
+                      <span class="svc-pick-title">Sensual Massage</span>
+                    </div>
+                    <p class="svc-pick-desc">A relaxing, intimate massage experience.</p>
+                  </div>
+                  <div class="svc-pick-from">From <strong>$140</strong></div>
+                </div>
+
+                <div class="svc-pick-card" data-svc="sensual-massage-double" tabindex="0" role="button" aria-pressed="false">
+                  <div class="svc-pick-header">
+                    <div class="svc-pick-title-row">
+                      <span class="svc-pick-title">Sensual Massage Double</span>
+                      <span class="svc-pick-badge">2 Girls</span>
+                    </div>
+                    <p class="svc-pick-desc">Double the relaxation with two masseuses.</p>
+                  </div>
+                  <div class="svc-pick-from">From <strong>$270</strong></div>
+                </div>
+
+                <div class="svc-pick-card" data-svc="standard-full-service" tabindex="0" role="button" aria-pressed="false">
+                  <div class="svc-pick-header">
+                    <div class="svc-pick-title-row">
+                      <span class="svc-pick-title">Standard Full Service</span>
+                    </div>
+                    <p class="svc-pick-desc">The classic Albany Angels experience.</p>
+                  </div>
+                  <div class="svc-pick-from">From <strong>$120</strong></div>
+                </div>
+
+                <div class="svc-pick-card" data-svc="premium-full-service" tabindex="0" role="button" aria-pressed="false">
+                  <div class="svc-pick-header">
+                    <div class="svc-pick-title-row">
+                      <span class="svc-pick-title">Premium Full Service</span>
+                    </div>
+                    <p class="svc-pick-desc">An elevated, more intimate experience.</p>
+                  </div>
+                  <div class="svc-pick-from">From <strong>$200</strong></div>
+                </div>
+
+                <div class="svc-pick-card" data-svc="lite-gfe" tabindex="0" role="button" aria-pressed="false">
+                  <div class="svc-pick-header">
+                    <div class="svc-pick-title-row">
+                      <span class="svc-pick-title">Lite GFE</span>
+                    </div>
+                    <p class="svc-pick-desc">A light girlfriend experience — kissing, oral &amp; more.</p>
+                  </div>
+                  <div class="svc-pick-from">From <strong>$150</strong></div>
+                </div>
+
+                <div class="svc-pick-card svc-pick-card--featured" data-svc="ultimate-gfe" tabindex="0" role="button" aria-pressed="false">
+                  <div class="svc-pick-header">
+                    <div class="svc-pick-title-row">
+                      <span class="svc-pick-title">Ultimate GFE</span>
+                      <span class="svc-pick-badge svc-pick-badge--popular">Popular</span>
+                    </div>
+                    <p class="svc-pick-desc">French kissing, mutual oral, multi shots &amp; massage.</p>
+                  </div>
+                  <div class="svc-pick-from">From <strong>$200</strong></div>
+                </div>
+
+              </div><!-- /svc-pick-grid -->
+
+              <!-- Duration picker (shown after service selected) -->
+              <div class="svc-dur-wrap" id="svcDurWrap" style="display:none;">
+                <p class="svc-dur-label">Choose a duration:</p>
+                <div class="svc-dur-grid" id="svcDurGrid"></div>
+              </div>
+
+            </div><!-- /stepSvc -->
+
+            <!-- STEP 5: Personal details -->
+            <div class="booking-step" id="stepE">
+              <div class="step-header">
+                <span class="step-num">5</span>
                 <h3>Your details</h3>
               </div>
               <p class="step-subtext">We only need the essentials. Your information is kept completely confidential.</p>
@@ -942,8 +1426,9 @@
                 <li><span class="fs-num">1</span>Choose a date you'd like to visit</li>
                 <li><span class="fs-num">2</span>Select a lady available that day</li>
                 <li><span class="fs-num">3</span>Pick a time within her hours</li>
-                <li><span class="fs-num">4</span>Enter your contact details</li>
-                <li><span class="fs-num">5</span>Submit — we'll confirm promptly</li>
+                <li><span class="fs-num">4</span>Choose your service &amp; duration</li>
+                <li><span class="fs-num">5</span>Enter your contact details</li>
+                <li><span class="fs-num">6</span>Submit — we'll confirm promptly</li>
               </ul>
             </div>
 
@@ -1016,31 +1501,15 @@
       return roster[dayKey].girls.map(function (e) { return e[0]; }).sort();
     }
 
-    /* Known gallery images per lady (hero + extras) */
-    var galleryMap = {
-      ALLY:      ['./assets/girls/ally/hero.jpg','./assets/girls/ally/gallery-01.jpg','./assets/girls/ally/gallery-02.png'],
-      ANNA:      ['./assets/girls/anna/hero.png','./assets/girls/anna/gallery-02.jpg','./assets/girls/anna/gallery-03.jpg','./assets/girls/anna/gallery-04.jpg'],
-      ARI:       ['./assets/girls/ari/hero.jpeg'],
-      ARIA:      ['./assets/girls/aria/hero.jpg','./assets/girls/aria/gallery-01.jpg'],
-      ALYSSA:    ['./assets/girls/alyssa/hero.jpeg'],
-      BIANCA:    ['./assets/girls/bianca/hero.jpg'],
-      EMMA:      ['./assets/girls/emma/hero.jpg'],
-      ISABELLA:  ['./assets/girls/isabella/hero.jpg','./assets/girls/isabella/gallery-01.jpg','./assets/girls/isabella/gallery-02.jpg'],
-      ISLA:      ['./assets/girls/isla/hero.jpg'],
-      JADE:      ['./assets/girls/jade/hero.jpg','./assets/girls/jade/gallery-01.jpg','./assets/girls/jade/gallery-03.jpg'],
-      JASMINE:   ['./assets/girls/jasmine/hero.jpg'],
-      LILITH:    ['./assets/girls/lilith/hero.jpg'],
-      LOLA:      ['./assets/girls/lola/hero.jpg'],
-      PEACHES:   ['./assets/girls/peaches/hero.jpg'],
-      SERENA:    ['./assets/girls/serena/hero.jpg']
-    };
+    /* Gallery images per lady — sourced from RosterData.galleryMap */
+    var galleryMap = RD.galleryMap || {};
 
     function toDisplay(name) {
       return name.charAt(0) + name.slice(1).toLowerCase();
     }
 
     /* ── State ───────────────────── */
-    var state = { dayKey: null, lady: null, timeMins: null };
+    var state = { dayKey: null, lady: null, timeMins: null, service: null, duration: null, price: null };
 
     /* ── DOM refs ────────────────────────── */
     var pickerBtn      = document.getElementById('pickerBtn');
@@ -1111,7 +1580,7 @@
       pickerBtn.setAttribute('aria-expanded', 'true');
       pickerSearch.value = '';
       buildPickerList('');
-      pickerSearch.focus();
+      // Do not auto-focus the search input — prevents mobile keyboard from opening automatically
     }
 
     function closePicker() {
@@ -1133,11 +1602,80 @@
 
     /* ── Lady selection ──────────────────── */
 
+    /* ── Service availability per lady ────── */
+    function getServicesForLady(name) {
+      var meta = profileMeta[name];
+      var svc  = meta ? (meta.service || '').toLowerCase() : '';
+
+      var massageOnly = /massage only|mastered.*massage/.test(svc);
+      var hasFullSvc  = /full service/.test(svc);
+      var hasGFE      = /gfe/.test(svc);
+
+      if (massageOnly) {
+        return ['sensual-massage', 'sensual-massage-double'];
+      }
+      if (hasGFE && !hasFullSvc) {
+        // GFE-only girls (e.g. Miley: "GFE Service & Sensual Massage")
+        return ['sensual-massage', 'sensual-massage-double', 'lite-gfe', 'ultimate-gfe'];
+      }
+      if (hasFullSvc && hasGFE) {
+        // Full service + GFE (e.g. "Full Service (All) & Sensual Massage Expert" — treat as all)
+        return ['sensual-massage', 'sensual-massage-double', 'standard-full-service', 'premium-full-service', 'lite-gfe', 'ultimate-gfe'];
+      }
+      if (hasFullSvc) {
+        return ['sensual-massage', 'sensual-massage-double', 'standard-full-service', 'premium-full-service'];
+      }
+      // Fallback — show all
+      return ['sensual-massage', 'sensual-massage-double', 'standard-full-service', 'premium-full-service', 'lite-gfe', 'ultimate-gfe'];
+    }
+
+    function rebuildServiceCards(name) {
+      var grid    = document.getElementById('svcPickGrid');
+      var allowed = name ? getServicesForLady(name) : null;
+
+      if (name) {
+        grid.style.display = '';
+      } else {
+        grid.style.display = 'none';
+      }
+
+      var cards = document.querySelectorAll('.svc-pick-card');
+      cards.forEach(function(card) {
+        var key = card.dataset.svc;
+        if (!allowed || allowed.indexOf(key) !== -1) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+          // Deselect if hidden
+          if (card.classList.contains('active')) {
+            card.classList.remove('active');
+            card.setAttribute('aria-pressed', 'false');
+            state.service  = null;
+            state.duration = null;
+            state.price    = null;
+            if (svcDurWrap) svcDurWrap.style.display = 'none';
+          }
+        }
+      });
+
+      var svcSubtext = document.getElementById('svcSubtext');
+      if (svcSubtext) {
+        if (name) {
+          svcSubtext.textContent = 'Select the experience you’d like with ' + toDisplay(name) + ', then choose a duration.';
+        } else {
+          svcSubtext.textContent = 'Select a lady first to see available services.';
+        }
+      }
+    }
+
     function selectLady(name) {
       if (state.lady === name) return;
       state.lady     = name;
       // dayKey is already set (chosen first) — do NOT reset it
       state.timeMins = null;
+      state.service  = null;
+      state.duration = null;
+      state.price    = null;
 
       // Update picker button
       var img  = imageMap[name] || './assets/roster/shadow.jpg';
@@ -1150,11 +1688,22 @@
 
       updatePreview(name);
       rebuildTimeSlots();
+      rebuildServiceCards(name);
+
+      // Reset duration picker
+      if (svcDurWrap) svcDurWrap.style.display = 'none';
+      document.querySelectorAll('.svc-pick-card').forEach(function(c) {
+        c.classList.remove('active');
+        c.setAttribute('aria-pressed', 'false');
+      });
     }
 
     function deselectLady() {
       state.lady     = null;
       state.timeMins = null;
+      state.service  = null;
+      state.duration = null;
+      state.price    = null;
 
       pickerSelected.innerHTML = '<span class="picker-placeholder">Select a lady…</span>';
       ladyPreview.classList.remove('visible');
@@ -1164,18 +1713,104 @@
           : 'Choose a date above to see who is available that day.';
       }
       rebuildTimeSlots();
+      rebuildServiceCards(null);
     }
 
-       /* ── Preview panel ───────────────── */
+       /* ── Preview carousel state ──────────── */
+    var carouselIndex  = 0;
+    var carouselImages = [];
+
+    var carouselTrack   = document.getElementById('previewCarouselTrack');
+    var carouselPrev    = document.getElementById('previewCarouselPrev');
+    var carouselNext    = document.getElementById('previewCarouselNext');
+    var carouselCurrent = document.getElementById('previewCarouselCurrent');
+    var carouselTotal   = document.getElementById('previewCarouselTotal');
+    var carouselCounter = document.getElementById('previewCarouselCounter');
+
+    // Carousel JS — exact same pattern as girls profile pages
+    (function () {
+      var carousel = document.getElementById('previewCarousel');
+      if (!carousel) return;
+
+      function refreshCarousel() {
+        var track    = document.getElementById('previewCarouselTrack');
+        var prevBtn  = document.getElementById('previewCarouselPrev');
+        var nextBtn  = document.getElementById('previewCarouselNext');
+        var currentEl = document.getElementById('previewCarouselCurrent');
+        var totalEl   = document.getElementById('previewCarouselTotal');
+        var counter   = document.getElementById('previewCarouselCounter');
+        if (!track) return;
+
+        var slides = track.querySelectorAll('.carousel-slide');
+        var total  = slides.length;
+        var current = 0;
+
+        if (totalEl) totalEl.textContent = total;
+        var multi = total > 1;
+        if (prevBtn) prevBtn.style.display = multi ? '' : 'none';
+        if (nextBtn) nextBtn.style.display = multi ? '' : 'none';
+        if (counter) counter.style.display = multi ? '' : 'none';
+
+        function goTo(index) {
+          if (index < 0) index = total - 1;
+          if (index >= total) index = 0;
+          current = index;
+          track.style.transform = 'translateX(-' + (current * 100) + '%)';
+          if (currentEl) currentEl.textContent = current + 1;
+        }
+
+        if (prevBtn) prevBtn.onclick = function (e) { e.stopPropagation(); goTo(current - 1); };
+        if (nextBtn) nextBtn.onclick = function (e) { e.stopPropagation(); goTo(current + 1); };
+
+        // Swipe support
+        var startX = 0;
+        carousel.addEventListener('touchstart', function (e) { startX = e.touches[0].clientX; }, { passive: true });
+        carousel.addEventListener('touchend', function (e) {
+          var diff = startX - e.changedTouches[0].clientX;
+          if (Math.abs(diff) > 40) { diff > 0 ? goTo(current + 1) : goTo(current - 1); }
+        }, { passive: true });
+      }
+
+      // Expose so updatePreview can call it after rebuilding slides
+      window._refreshPreviewCarousel = refreshCarousel;
+    })();
+
+       /* ── Preview panel ─────────────────── */
 
     function updatePreview(name) {
-      var img  = imageMap[name] || './assets/roster/shadow.jpg';
-      var disp = toDisplay(name);
-      var meta = profileMeta[name] || {};
+      var heroImg = imageMap[name] || './assets/roster/shadow.jpg';
+      var disp    = toDisplay(name);
+      var meta    = profileMeta[name] || {};
+      var folder  = name.toLowerCase();
+      var galleryFiles = galleryMap[name] || [];
+
+      // Build full image list: hero first, then gallery images
+      carouselImages = [heroImg];
+      galleryFiles.forEach(function (f) {
+        carouselImages.push('./assets/girls/' + folder + '/' + f);
+      });
+
+      // Build carousel slides — same classes as girls profile carousel
+      carouselTrack.innerHTML = carouselImages.map(function (src, i) {
+        return '<img class="carousel-slide real-profile-image" src="' + src + '" alt="' + disp + ' photo ' + (i+1) + '"' +
+               (i === 0 ? '' : ' loading="lazy"') + ' />';
+      }).join('');
+
+      // Reset to first slide
+      carouselIndex = 0;
+      carouselTrack.style.transform = 'translateX(0)';
+      // Re-init carousel with the new slides (same pattern as girls profile)
+      if (window._refreshPreviewCarousel) window._refreshPreviewCarousel();
+
+      // Show/hide arrows and counter
+      var multi = carouselImages.length > 1;
+      carouselPrev.classList.toggle('hidden', !multi);
+      carouselNext.classList.toggle('hidden', !multi);
+      carouselCounter.classList.toggle('hidden', !multi);
+      if (carouselTotal)   carouselTotal.textContent   = carouselImages.length;
+      if (carouselCurrent) carouselCurrent.textContent = 1;
 
       previewName.textContent = disp;
-      previewMainImg.src      = img;
-      previewMainImg.alt      = disp;
 
       // Stats grid
       var stats = [
@@ -1195,23 +1830,26 @@
       previewService.textContent = meta.service || '';
       previewService.style.display = meta.service ? '' : 'none';
 
-      // View profile link
+      // View profile link (desktop button + mobile name tap)
+      var previewNameLink = document.getElementById('previewNameLink');
+      var profileHref = '#';
       if (meta.file) {
-        btnViewProfile.href = './' + meta.file;
+        profileHref = './' + meta.file;
+        btnViewProfile.href = profileHref;
         btnViewProfile.style.display = '';
       } else {
         var profileFile = RD.profileMap[name];
-        btnViewProfile.href = profileFile ? './girls/' + profileFile : '#';
+        profileHref = profileFile ? './girls/' + profileFile : '#';
+        btnViewProfile.href = profileHref;
         btnViewProfile.style.display = profileFile ? '' : 'none';
       }
+      if (previewNameLink) previewNameLink.href = profileHref;
 
       ladyPreview.classList.add('visible');
       setTimeout(function () {
         ladyPreview.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }, 80);
-    }
-
-    /* ── Date section ────────────────────── */
+    }    /* ── Date section ────────────────────── */
 
     function rebuildDates() {
       dateRow.innerHTML = '';
@@ -1350,15 +1988,29 @@
       var disp      = toDisplay(state.lady);
       var slots     = genSlots(startMins, endMins, 30);
 
-      var slotsHTML = slots.map(function (m) {
-        return '<button class="ts" type="button" data-mins="' + m + '" aria-pressed="false">' +
-               minsToDisplay(m) + '</button>';
-      }).join('');
+      // Group slots into Morning (<720), Afternoon (720-1079), Evening (>=1080)
+      var groups = [
+        { label: 'Morning',   min: 0,    max: 720  },
+        { label: 'Afternoon', min: 720,  max: 1080 },
+        { label: 'Evening',   min: 1080, max: 9999 }
+      ];
+
+      var groupedHTML = '';
+      groups.forEach(function (g) {
+        var groupSlots = slots.filter(function (m) { return m >= g.min && m < g.max; });
+        if (!groupSlots.length) return;
+        var btns = groupSlots.map(function (m) {
+          return '<button class="ts" type="button" data-mins="' + m + '" aria-pressed="false">' +
+                 minsToDisplay(m) + '</button>';
+        }).join('');
+        groupedHTML += '<p class="time-group-label">' + g.label + '</p>' +
+                       '<div class="time-slots">' + btns + '</div>';
+      });
 
       timeContent.innerHTML =
         '<p class="step-subtext"><strong>' + disp + '</strong> is available ' +
         formatRange(timeStr) + '. Select a time below.</p>' +
-        '<div class="time-slots" id="timeSlotsGrid">' + slotsHTML + '</div>' +
+        groupedHTML +
         '<div class="time-divider">or enter a custom time</div>' +
         '<div class="time-custom-row">' +
           '<label for="customTime">Custom time</label>' +
@@ -1369,7 +2021,7 @@
           '<p class="time-error-msg" id="timeErrorMsg"></p>' +
         '</div>';
 
-      // Slot click handlers
+      // Slot click handlers — works across all groups
       timeContent.querySelectorAll('.ts').forEach(function (btn) {
         btn.addEventListener('click', function () {
           timeContent.querySelectorAll('.ts').forEach(function (b) {
@@ -1452,6 +2104,9 @@
       } else if (state.timeMins === null) {
         alert('Please choose a time before submitting.');
         valid = false;
+      } else if (!state.service || !state.duration) {
+        alert('Please choose a service and duration before submitting.');
+        valid = false;
       }
 
       if (valid) {
@@ -1463,7 +2118,9 @@
           'Booking request received:\n' +
           '\u2022 Lady: ' + ladyName + '\n' +
           '\u2022 Date: ' + dayLabel + '\n' +
-          '\u2022 Time: ' + timeStr + '\n\n' +
+          '\u2022 Time: ' + timeStr + '\n' +
+          '\u2022 Service: ' + state.service + '\n' +
+          '\u2022 Duration: ' + state.duration + ' min (' + state.price + ')\n\n' +
           'We will be in touch shortly to confirm.'
         );
       }
@@ -1490,6 +2147,120 @@
     });
     btt.addEventListener('click', function () {
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    /* ── Service picker ────────────────── */
+
+    var SERVICES = {
+      'sensual-massage': {
+        name: 'Sensual Massage',
+        durations: [
+          { mins: 30, price: '$140' },
+          { mins: 45, price: '$180' },
+          { mins: 60, price: '$210' },
+          { mins: 75, price: '$250' },
+          { mins: 90, price: '$350' },
+          { mins: 120, price: '$420' }
+        ]
+      },
+      'sensual-massage-double': {
+        name: 'Sensual Massage Double',
+        durations: [
+          { mins: 30, price: '$270' },
+          { mins: 45, price: '$320' },
+          { mins: 60, price: '$380' },
+          { mins: 75, price: '$440' },
+          { mins: 90, price: '$600' },
+          { mins: 120, price: '$720' }
+        ]
+      },
+      'standard-full-service': {
+        name: 'Standard Full Service',
+        durations: [
+          { mins: 15, price: '$120' },
+          { mins: 30, price: '$180' },
+          { mins: 45, price: '$210' },
+          { mins: 60, price: '$230' }
+        ]
+      },
+      'premium-full-service': {
+        name: 'Premium Full Service',
+        durations: [
+          { mins: 30, price: '$200' },
+          { mins: 45, price: '$250' },
+          { mins: 60, price: '$300' },
+          { mins: 75, price: '$350' },
+          { mins: 90, price: '$450' }
+        ]
+      },
+      'lite-gfe': {
+        name: 'Lite GFE',
+        durations: [
+          { mins: 20, price: '$150' },
+          { mins: 30, price: '$200' },
+          { mins: 45, price: '$250' },
+          { mins: 60, price: '$300' }
+        ]
+      },
+      'ultimate-gfe': {
+        name: 'Ultimate GFE',
+        durations: [
+          { mins: 20, price: '$200' },
+          { mins: 30, price: '$250' },
+          { mins: 45, price: '$300' },
+          { mins: 60, price: '$350' },
+          { mins: 75, price: '$440' },
+          { mins: 90, price: '$590' }
+        ]
+      }
+    };
+
+    var svcDurWrap = document.getElementById('svcDurWrap');
+    var svcDurGrid = document.getElementById('svcDurGrid');
+
+    function buildDurationPicker(svcKey) {
+      var svc = SERVICES[svcKey];
+      if (!svc) return;
+      svcDurGrid.innerHTML = svc.durations.map(function(d) {
+        var label = d.mins >= 60
+          ? (d.mins === 60 ? '1 hr' : (d.mins === 90 ? '1.5 hrs' : (d.mins === 120 ? '2 hrs' : d.mins + ' min')))
+          : d.mins + ' min';
+        return '<button class="svc-dur-btn" type="button" data-mins="' + d.mins + '" data-price="' + d.price + '">' +
+               '<span class="svc-dur-btn__time">' + label + '</span>' +
+               '<span class="svc-dur-btn__price">' + d.price + '</span>' +
+               '</button>';
+      }).join('');
+      svcDurWrap.style.display = 'block';
+
+      svcDurGrid.querySelectorAll('.svc-dur-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          svcDurGrid.querySelectorAll('.svc-dur-btn').forEach(function(b) {
+            b.classList.remove('active');
+          });
+          btn.classList.add('active');
+          state.duration = parseInt(btn.dataset.mins, 10);
+          state.price    = btn.dataset.price;
+        });
+      });
+    }
+
+    document.querySelectorAll('.svc-pick-card').forEach(function(card) {
+      card.addEventListener('click', function() {
+        document.querySelectorAll('.svc-pick-card').forEach(function(c) {
+          c.classList.remove('active');
+          c.setAttribute('aria-pressed', 'false');
+        });
+        card.classList.add('active');
+        card.setAttribute('aria-pressed', 'true');
+        var svcKey = card.dataset.svc;
+        state.service  = SERVICES[svcKey] ? SERVICES[svcKey].name : svcKey;
+        state.duration = null;
+        state.price    = null;
+        buildDurationPicker(svcKey);
+      });
+      card.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+      });
     });
 
      /* ── Initial state ────────────────── */

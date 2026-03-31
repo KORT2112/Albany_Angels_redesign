@@ -211,7 +211,7 @@
         <a href="./index.html#about">About</a>
         <a href="./index.html#contact-details">Contact</a>
         <a href="./join.html">Join Us</a>
-        <a href="./index.html#contact-details" class="nav-book-now btn btn-primary">Book Now</a>
+        <a href="./booking.html" class="nav-book-now btn btn-primary">Book Now</a>
       </nav>
       <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
         <svg class="ham-icon" width="55" height="55" viewBox="0 0 100 100" aria-hidden="true">
@@ -220,7 +220,7 @@
           <path class="ham-line ham-bottom" d="m 70,67 h -40 c 0,0 -7.5,-0.802118 -7.5,-8.365747 0,-7.563629 7.5,-8.634253 7.5,-8.634253 h 20" />
         </svg>
       </button>
-      <a class="btn btn-primary" href="./index.html#contact-details">Book Now</a>
+      <a class="btn btn-primary" href="./booking.html">Book Now</a>
     </div>
   </header>
 
@@ -393,6 +393,7 @@
       monday: {
         label: 'Monday',
         date: '30th March',
+        isoDate: '2026-03-30',
         girls: [
           ['IRIS','10-2'], ['ALLY','10-3'], ['ISLA','10-4'], ['ANNA','10-6'], ['BECKY','11-2'], ['ANGEL','11-5'], ['ARI','11-6.30'], ['ARIES','12-9'], ['YUZUKI','2-10'], ['ZOE','4-9'], ['HANNAH','4-10'], ['BIANCA','5-10']
         ]
@@ -400,6 +401,7 @@
       tuesday: {
         label: 'Tuesday',
         date: '31st March',
+        isoDate: '2026-03-31',
         girls: [
           ['IRIS','10-4'], ['ISLA','10-4'], ['LILITH','10-4'], ['ANNA','10-6'], ['JADE','10-6'], ['VICTORIA','10-6'], ['COURTNEY','10-6'], ['MARIE','11-3'], ['ANGEL','11-5'], ['JASMINE','11-6'], ['ARI','11-6.30'], ['BIANCA','11-10'], ['ARIA','11.30-5'], ['MELENA','12-6'], ['PEACHES','12-5'], ['ARIES','12.30-9'], ['ALYSSA','2-9'], ['CHANTELLE','3-8'], ['YUZUKI','5-10'], ['AMORA','6-10']
         ]
@@ -407,6 +409,7 @@
       wednesday: {
         label: 'Wednesday',
         date: '1st April',
+        isoDate: '2026-04-01',
         girls: [
           ['IRIS','10-2'], ['COURTNEY','10-2'], ['BIBI','10-2'], ['LILITH','10-4'], ['LOLA','10-8'], ['ARIA','11-5'], ['ARI','11-6.30'], ['BIANCA','11-10'], ['JADE','12-4'], ['PEACHES','12-5'], ['ALYSSA','12-8'], ['EMMA','1.30-6'], ['SERENA','4-10'], ['HANNAH','4-10'], ['MEGAN','6-10']
         ]
@@ -414,6 +417,7 @@
       thursday: {
         label: 'Thursday',
         date: '2nd April',
+        isoDate: '2026-04-02',
         girls: [
           ['BIBI','10-2'], ['JADE','10-4'], ['VICTORIA','10-4'], ['LILITH','10-4'], ['LOLA','10-8'], ['ANGEL','11-5'], ['JASMINE','11-6'], ['ARIA','11-6.30'], ['ARI','11-6.30'], ['PEACHES','12-5'], ['ARIES','12.30-9'], ['CHANTELLE','3-8'], ['HANNAH','4-10'], ['BIANCA','5-10'], ['YUZUKI','5-10']
         ]
@@ -421,6 +425,7 @@
       friday: {
         label: 'Friday',
         date: '3rd April',
+        isoDate: '2026-04-03',
         girls: [
           ['BIBI','10-2'], ['JADE','10-8'], ['LOLA','10-8'], ['ARIA','11.30-5'], ['PEACHES','12-5'], ['DAME','12-5.30'], ['YUZUKI','2-8'], ['EMMA','2-7'], ['GIA','2-10'], ['ALYSSA','3-9'], ['VICTORIA','3-9'], ['ELSA','4-10']
         ]
@@ -428,6 +433,7 @@
       saturday: {
         label: 'Saturday',
         date: '4th April',
+        isoDate: '2026-04-04',
         girls: [
           ['ISLA','10-1'], ['GIA','10-3'], ['ALYSSA','10-4'], ['VICTORIA','10-8'], ['ANGEL','11-5'], ['LILITH','12-8'], ['FRANCIS','12-6'], ['SERENA','4-10']
         ]
@@ -435,6 +441,7 @@
       sunday: {
         label: 'Sunday',
         date: '5th April',
+        isoDate: '2026-04-05',
         girls: [
           ['FRANCIS','12-6'], ['ZOE','1-7'], ['CHANTELLE','3-8'], ['VICTORIA','3-9']
         ]
@@ -538,6 +545,7 @@
 
     // Determine current day first so event handlers can reference it
     const now = new Date();
+    const today = now.toLocaleDateString('en-CA', { timeZone: 'Pacific/Auckland' }); // YYYY-MM-DD in NZ time
     const weekdayMap = {
       0: 'sunday',
       1: 'monday',
@@ -547,9 +555,25 @@
       5: 'friday',
       6: 'saturday'
     };
-    let activeDayKey = weekdayMap[now.getDay()] || 'monday';
 
-    // Day pill click — update activeDayKey and re-render
+    // Mark past day pills as greyed out
+    buttons.forEach(btn => {
+      const key = btn.dataset.day;
+      const isPast = roster[key] && roster[key].isoDate < today;
+      if (isPast) {
+        btn.classList.add('past');
+        btn.setAttribute('aria-disabled', 'true');
+      }
+    });
+
+    // Auto-select today, or first non-past day if today isn't in the roster
+    let activeDayKey = weekdayMap[now.getDay()] || 'monday';
+    if (!roster[activeDayKey] || roster[activeDayKey].isoDate < today) {
+      const DAY_ORDER = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
+      activeDayKey = DAY_ORDER.find(k => roster[k] && roster[k].isoDate >= today) || activeDayKey;
+    }
+
+    // Day pill click — update activeDayKey and re-render (past pills are pointer-events:none so won't fire)
     buttons.forEach(btn => btn.addEventListener('click', () => {
       activeDayKey = btn.dataset.day;
       renderDay(activeDayKey);

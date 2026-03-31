@@ -298,9 +298,33 @@
     return slots;
   }
 
+  /* ── Gallery images per girl ─────────────── */
+  var galleryMap = {
+    ALYSSA:  ['gallery-01.jpeg','gallery-02.jpeg','gallery-03.jpeg','gallery-04.jpg','gallery-06.jpeg'],
+    ARI:     ['gallery-01.jpeg','gallery-03.jpeg','gallery-04.jpeg','gallery-05.jpeg','gallery-06.jpeg'],
+    ARIA:    ['gallery-01.jpg'],
+    BIBI:    ['gallery-01.jpg','gallery-02.jpg'],
+    ELSA:    ['gallery-01.jpg','gallery-02.jpg','gallery-03.jpg','gallery-04.jpg','gallery-05.jpg','gallery-06.jpg','gallery-07.jpg'],
+    HANNAH:  ['gallery-01.jpg','gallery-02.jpg','gallery-03.jpg'],
+    IRIS:    ['gallery-01.jpg'],
+    JADE:    ['gallery-01.jpg','gallery-03.jpg'],
+    LILITH:  ['gallery-01.jpg','gallery-02.jpg','gallery-03.jpg','gallery-05.jpg','gallery-06.jpg','gallery-07.jpg','gallery-08.jpg','gallery-09.jpg'],
+    MEGAN:   ['gallery-01.jpg'],
+    MELISSA: ['gallery-01.jpg','gallery-02.jpg','gallery-03.jpg','gallery-05.jpg'],
+    MILEY:   ['gallery-01.png','gallery-02.png','gallery-03.png','gallery-04.jpeg','gallery-05.webp'],
+    NATALYA: ['gallery-01.jpg','gallery-02.jpg','gallery-03.jpg','gallery-04.jpg','gallery-05.jpg','gallery-06.jpg','gallery-07.jpg','gallery-08.jpg'],
+    PEACHES: ['gallery-01.jpg','gallery-02.jpg'],
+    SERENA:  ['gallery-01.jpg','gallery-02.jpg','gallery-04.jpg','gallery-05.jpg','gallery-06.jpg','gallery-09.jpg','gallery-10.jpg','gallery-11.jpg','gallery-12.jpg','gallery-13.jpg'],
+    VICTORIA:['gallery-01.jpg','gallery-02.jpg','gallery-03.jpg','gallery-04.jpg','gallery-05.jpg','gallery-06.jpg'],
+    YUZUKI:  ['gallery-01.jpeg','gallery-02.jpeg','gallery-03.jpeg','gallery-04.jpeg'],
+    ZARA:    ['gallery-01.jpg','gallery-02.jpg','gallery-03.jpg','gallery-05.jpg','gallery-4.jpg'],
+    ZOE:     ['gallery-01.png','gallery-02.png','gallery-03.jpg','gallery-04.png','gallery-05.png','gallery-06.png','gallery-07.jpg','gallery-08.jpg','gallery-09.jpg']
+  };
+
   /* ── Export ────────────────────────────────── */
   root.RosterData = {
     imageMap:         imageMap,
+    galleryMap:       galleryMap,
     profileMap:       profileMap,
     sensualOnly:      sensualOnly,
     roster:           roster,
