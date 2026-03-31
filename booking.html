@@ -1253,10 +1253,6 @@
       availDays.forEach(function (key) {
         var day      = roster[key];
         var isPast   = day.isoDate < today;
-
-        // Skip past days entirely — don't render them at all
-        if (isPast) return;
-
         var isActive = (state.dayKey === key);
 
         // Parse date label → number + month abbrev
@@ -1266,16 +1262,17 @@
         var dayAbbr  = day.label.slice(0, 3).toUpperCase();
 
         var btn = document.createElement('button');
-        btn.className  = 'date-chip' + (isActive ? ' active' : '');
+        btn.className  = 'date-chip' + (isActive ? ' active' : '') + (isPast ? ' disabled' : '');
         btn.type       = 'button';
         btn.dataset.day = key;
         btn.setAttribute('aria-pressed', String(isActive));
+        if (isPast) btn.setAttribute('aria-disabled', 'true');
         btn.innerHTML =
           '<span class="dc-day">' + dayAbbr + '</span>' +
           '<span class="dc-num">'  + num    + '</span>' +
           '<span class="dc-mon">'  + mon    + '</span>';
 
-        {
+        if (!isPast) {
           btn.addEventListener('click', function () {
             dateRow.querySelectorAll('.date-chip').forEach(function (c) {
               c.classList.remove('active');
@@ -1312,6 +1309,13 @@
         stepASubtext.textContent = count + ' ' + (count === 1 ? 'lady' : 'ladies') + ' available on ' + roster[state.dayKey].label + '. Choose one below.';
       }
 
+      // Auto-scroll the row so today's chip (first non-past chip) is flush at the left edge
+      requestAnimationFrame(function () {
+        var todayChip = dateRow.querySelector('.date-chip:not(.disabled)');
+        if (todayChip) {
+          dateRow.scrollLeft = todayChip.offsetLeft - dateRow.offsetLeft;
+        }
+      });
     }
 
     /* ── Time section ────────────────────── */
