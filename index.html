@@ -467,11 +467,12 @@
       padding: 0 !important;
     }
 
-    /* Contact section - 3-column fit to viewport */
+    /* Contact section - snap to bottom of page, not top of section */
     .snap-section.contact-section {
       height: 100dvh;
       overflow: hidden;
-      padding-bottom: 79px !important; /* match nav padding-top so flex centering is symmetric */
+      padding-bottom: 79px !important;
+      scroll-snap-align: end;
     }
 
     .snap-section.contact-section .contact-grid {
