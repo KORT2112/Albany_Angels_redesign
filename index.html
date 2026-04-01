@@ -26,41 +26,48 @@
       z-index: 2;
       display: flex;
       flex-direction: column;
-      /* Desktop: anchor to top-left */
-      justify-content: flex-start;
-      padding: clamp(170px, 15vh + 60px, 220px) 8vw 80px;
-      align-items: flex-start;
-      text-align: left;
+      justify-content: center;       /* desktop: text vertically centred */
+      padding: 0 8vw;
     }
 
-    /* Text column — flex column so CTA can be pushed to bottom via margin-top:auto */
+    /* Text column — constrained so copy never runs too wide on big screens */
     .hero-text-inner {
-      max-width: 720px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      flex: 1;
+      max-width: 580px;
     }
 
-    /* ── Overline — hidden on desktop, already hidden on mobile ── */
+    /* ── Overline ── */
     .hero-overline {
-      display: none;
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.36em;
+      text-transform: uppercase;
+      color: var(--accent, #bf9b60);
+      margin-bottom: 14px;
+    }
+
+    /* ── Gold rule — editorial accent above headline ── */
+    .hero-headline::before {
+      content: '';
+      display: block;
+      width: 36px;
+      height: 1px;
+      background: var(--accent, #bf9b60);
+      margin-bottom: 22px;
     }
 
     /* ── Headline ── */
     .hero-headline {
       font-family: 'Cormorant Garamond', serif;
-      /* 3.8vw reaches 44.8px min at ≤1180px — keeps both "Where Elegance"
-         and "Meets Discretion" on one line each before the explicit <br>.
-         nowrap prevents any mid-phrase wrapping; mobile override cancels it. */
-      font-size: clamp(2.8rem, 3.8vw, 4rem);
+      font-size: clamp(2.8rem, 4.2vw, 4.4rem);
       font-weight: 600;
       line-height: 1.07;
       letter-spacing: -0.015em;
-      white-space: nowrap;
-      color: #F5F5F5;
-      margin: 0 0 20px 0;
+      color: #f5f1ea;
+      margin: 0 0 22px 0;
       text-shadow: 0 2px 48px rgba(0,0,0,0.42);
+      white-space: normal;
     }
 
     /* ── Subheading ── */
@@ -70,9 +77,9 @@
       font-weight: 400;
       line-height: 1.72;
       letter-spacing: 0.025em;
-      color: rgba(245, 245, 245, 0.72);
-      max-width: 800px;
-      margin: 0;
+      color: rgba(245, 241, 234, 0.72);
+      max-width: 360px;
+      margin: 0 0 34px 0;
       text-shadow: 0 1px 18px rgba(0,0,0,0.52);
     }
 
@@ -84,16 +91,7 @@
 
     /* Desktop shows inline CTA; mobile CTA is a separate bottom element */
     .hero-cta-mobile  { display: none; }
-    .hero-cta-desktop {
-      display: flex;
-      justify-content: center;
-      position: absolute;
-      bottom: 55px;
-      left: 50%;
-      transform: translateX(-50%);
-      margin: 0;
-      width: auto;
-    }
+    .hero-cta-desktop { display: flex; }
 
     /* ─── Mobile (≤ 820 px) ──────────────────────────────────
        Cinematic poster layout:
@@ -103,24 +101,16 @@
        ───────────────────────────────────────────────────────── */
     @media (max-width: 820px) {
 
-      /* Text at top-left (in the natural negative space above the model),
-         buttons pinned to the bottom via space-between */
+      /* Anchor the whole text-wrap to the bottom of the frame */
       .hero-text-wrap {
-        justify-content: space-between !important;
-        padding: 0 26px 52px !important;
-        align-items: flex-start !important;
+        justify-content: flex-end !important;
+        padding: 0 !important;
+        align-items: stretch !important;
       }
 
-      /* Push text block down just enough to clear the fixed header,
-         keeping it well inside the dark upper-left negative space.
-         flex:none cancels the desktop flex:1 so mobile space-between works. */
+      /* Text block — left-padded, sits just above CTAs */
       .hero-text-inner {
-        flex: none !important;
-        display: block !important;
-        padding-top: clamp(88px, 20svh, 130px) !important;
-        padding-right: 0 !important;
-        padding-bottom: 0 !important;
-        padding-left: 0 !important;
+        padding: 0 26px 6px !important;
         max-width: 100% !important;
         flex-shrink: 0 !important;
         background: none !important;
@@ -149,7 +139,7 @@
         margin-bottom: 0 !important;
         line-height: 1.62 !important;
         letter-spacing: 0.02em !important;
-        color: rgba(245, 245, 245, 0.68) !important;
+        color: rgba(245, 241, 234, 0.68) !important;
         text-shadow: 0 1px 12px rgba(0,0,0,0.7) !important;
       }
       /* Remove the desktop <br> on mobile — let it wrap naturally */
@@ -158,156 +148,21 @@
       /* Hide desktop CTA (inside text block) */
       .hero-cta-desktop { display: none !important; }
 
-      /* Mobile CTA — full-width stacked, pinned to bottom by space-between */
+      /* Mobile CTA — full-width stacked buttons, extra gradient backing
+         so the buttons sit on a smooth dark surface regardless of image */
       .hero-cta-mobile {
         display: flex !important;
         flex-direction: column;
         gap: 10px;
         width: 100%;
+        padding: 24px 26px 52px;
+        background: linear-gradient(to top, rgba(11,9,7,0.62) 0%, transparent 100%);
         flex-shrink: 0;
       }
       .hero-cta-mobile .btn {
         width: 100%;
         text-align: center;
         justify-content: center;
-      }
-    }
-
-    /* ─── Services section redesign ─── */
-
-    /* Desktop: image LEFT, text RIGHT, no gap — unified card feel */
-    #services .services-split {
-      grid-template-columns: 1fr 1fr;
-      gap: 0;
-      align-items: stretch;
-      min-height: 580px;
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      box-shadow: 0 24px 80px rgba(0,0,0,0.48);
-    }
-
-    /* Image column — absolute fill, image on the left */
-    #services .services-image-wrap {
-      position: relative;
-      overflow: hidden;
-      order: -1;
-    }
-
-    #services .services-feature-image {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center 15%;
-      border-radius: 0;
-      border: none;
-      box-shadow: none;
-      /* Right-edge fade into the text panel */
-      -webkit-mask-image: linear-gradient(to right, black 65%, transparent 100%);
-      mask-image: linear-gradient(to right, black 65%, transparent 100%);
-    }
-
-    /* Text panel — dark, padded, flex column */
-    #services .services-copy {
-      background: #111009;
-      padding: 72px 56px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      border: 1px solid rgba(255,255,255,0.06);
-      border-left: none;
-    }
-
-    #services .services-copy .eyebrow {
-      color: var(--accent, #bf9b60);
-      letter-spacing: 0.3em;
-      font-size: 0.68rem;
-      margin-bottom: 16px;
-    }
-
-    #services .services-copy h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.8rem, 2.4vw, 2.6rem);
-      font-weight: 600;
-      line-height: 1.15;
-      letter-spacing: -0.01em;
-      color: #F5F5F5;
-      margin-bottom: 20px;
-      max-width: 18ch;
-    }
-
-    #services .services-copy p {
-      font-size: 0.9rem;
-      line-height: 1.72;
-      color: rgba(245, 245, 245,0.65);
-      max-width: 38ch;
-      margin-bottom: 40px;
-    }
-
-    #services .services-copy .btn {
-      align-self: flex-start;
-    }
-
-    /* ── Mobile ── */
-    @media (max-width: 820px) {
-      #services {
-        padding: 0 !important;
-      }
-
-      #services .services-split {
-        grid-template-columns: 1fr !important;
-        min-height: unset !important;
-        gap: 0 !important;
-        border-radius: var(--radius-lg) !important;
-        margin: 0 16px !important; /* side margins so card has breathing room */
-      }
-
-      /* Image top: aspect ratio locked, no absolute positioning */
-      #services .services-image-wrap {
-        order: -1 !important;
-        position: relative !important;
-        height: 56vw !important;
-        min-height: 200px !important;
-        max-height: 260px !important;
-        overflow: hidden !important;
-        border-radius: 0 !important;
-      }
-
-      #services .services-feature-image {
-        position: absolute !important;
-        inset: 0 !important;
-        width: 100% !important;
-        height: 100% !important;
-        object-position: center 18% !important;
-        -webkit-mask-image: none !important;
-        mask-image: none !important;
-      }
-
-      /* Text panel below image */
-      #services .services-copy {
-        padding: 36px 26px 44px !important;
-        border: 1px solid rgba(255,255,255,0.06) !important;
-        border-top: none !important;
-        border-radius: 0 !important;
-      }
-
-      #services .services-copy h2 {
-        font-size: 1.5rem !important;
-        max-width: 100% !important;
-        margin-bottom: 14px !important;
-      }
-
-      #services .services-copy p {
-        font-size: 0.875rem !important;
-        max-width: 100% !important;
-        margin-bottom: 28px !important;
-      }
-
-      #services .services-copy .btn {
-        width: 100% !important;
-        text-align: center !important;
-        justify-content: center !important;
       }
     }
 
@@ -332,94 +187,134 @@
       z-index: 2;
     }
 
-    /* --- About section — mobile refinement --- */
-    @media (max-width: 820px) {
-
-      /* The snap-section mobile rule sets overflow:visible, which lets the
-         blurred ::before bleed outside the section and look muddy.
-         ID specificity beats the class !important and restores the clip. */
-      #about {
-        overflow: hidden !important;
-        padding: 80px 0 !important;
-      }
-
-      /* Better portrait crop + stronger blur for a dreamier, more intentional
-         background — the extra blur also makes the lighter overlay work better */
-      .about-bg-section::before {
-        background-position: center 25%;
-        filter: blur(10px);
-      }
-
-      .about-bg-section::after {
-        background: rgba(0,0,0,0.62);
-      }
+    /* Roster section fit to viewport */
+    #roster .profile-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+    #roster .profile-card {
+      overflow: hidden;
+    }
+    #roster .real-card-image {
+      aspect-ratio: 3 / 4 !important;
+      max-height: calc(100dvh - 300px);
+      object-fit: cover;
+      width: 100%;
+    }
+    #roster .profile-body {
+      padding: 14px 18px 16px;
+    }
+    #roster .profile-body h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      letter-spacing: 0.01em;
+    }
+    #roster .profile-body p {
+      font-size: 0.78rem;
+      line-height: 1.4;
+      margin: 0;
+      color: var(--text-secondary);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    #roster .text-link {
+      margin-top: 6px;
+      font-size: 0.8rem;
+    }
+    #roster .section-head {
+      margin-bottom: 16px;
+    }
+    #roster .profile-card {
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+    #roster .profile-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    }
+    #roster .real-card-image {
+      transition: transform 0.5s ease;
+    }
+    #roster .profile-card:hover .real-card-image {
+      transform: scale(1.03);
     }
 
-    /* --- Snap scroll container + sections --------------------------- */
+    /* Scroll-snap index page */
     body.snap-body {
       overflow: hidden;
-      height: 100vh;
       height: 100dvh;
     }
 
+    /* Force header fixed so scroll wrap fills full viewport */
+    body.snap-body .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+    }
+
     .index-scroll-wrap {
-      height: 100%;
+      height: 100dvh;
       overflow-y: scroll;
       scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
     }
 
     .snap-section {
       scroll-snap-align: start;
-      scroll-snap-stop: always;
-      height: 100vh;
       height: 100dvh;
-      min-height: 680px;
       overflow: hidden;
-      position: relative;
       display: flex;
       align-items: center;
-      padding: 80px 0;
+      justify-content: center;
+      padding: 79px 0 0 0 !important;
+      box-sizing: border-box;
+      position: relative;
     }
 
-    /* Hero is always full-height */
+    /* Hero doesn't need top padding */
     .snap-section.real-hero {
-      min-height: 0;
-      padding: 0;
+      padding: 0 !important;
     }
 
-    /* Contact section — shorter, bottom-aligned */
+    /* Contact section - 3-column fit to viewport */
     .snap-section.contact-section {
-      align-items: flex-end;
-      padding-bottom: 48px;
-      min-height: 0;
-      height: auto;
+      height: 100dvh;
+      overflow: hidden;
     }
 
     .snap-section.contact-section .contact-grid {
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 20px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      align-items: stretch;
     }
 
-    .snap-section.contact-section .contact-panel {
-      padding: 24px;
+    .snap-section.contact-section .map-panel {
+      min-height: 300px;
+    }
+
+    .snap-section.contact-section .contact-lead {
+      font-size: 0.9rem;
+      margin-bottom: 12px;
     }
 
     .snap-section.contact-section h2 {
-      margin-bottom: 6px;
-      font-size: clamp(1.6rem, 3vw, 2rem);
+      margin-bottom: 8px;
     }
 
     .snap-section.contact-section .dark-map-meta {
-      padding: 10px 14px;
+      padding: 14px 16px;
     }
 
     .snap-section.contact-section .dark-map-meta h3 {
-      font-size: 1rem;
+      font-size: 1.1rem;
       margin-bottom: 2px;
     }
 
     .snap-section.contact-section .dark-map-meta p {
-      font-size: 0.82rem;
+      font-size: 0.85rem;
     }
 
     /* Cleaner contact items — no boxes */
@@ -427,7 +322,7 @@
       border: none;
       border-radius: 0;
       background: none;
-      padding: 6px 0;
+      padding: 8px 0;
       border-bottom: 1px solid rgba(255,255,255,0.08);
     }
 
@@ -436,7 +331,7 @@
     }
 
     .snap-section.contact-section .hours-list li {
-      padding: 7px 0;
+      padding: 10px 0;
     }
 
     /* Reveal animation */
@@ -490,7 +385,7 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.25);
+      background: rgba(245, 241, 234, 0.15);
       transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       cursor: pointer;
       border: none;
@@ -498,9 +393,9 @@
     }
 
     .index-dot.active {
-      background: #C9A45C;
+      background: var(--accent);
       transform: scale(1.5);
-      box-shadow: 0 0 10px rgba(201, 164, 92, 0.3);
+      box-shadow: 0 0 12px rgba(191, 155, 96, 0.4);
     }
 
     @media (max-width: 820px) {
@@ -570,7 +465,7 @@
         <a href="#about">About</a>
         <a href="#contact-details">Contact</a>
         <a href="./join.html">Join Us</a>
-        <a href="./booking.html" class="nav-book-now btn btn-primary">Book Now</a>
+        <a href="#contact-details" class="nav-book-now btn btn-primary">Book Now</a>
       </nav>
       <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
         <svg class="ham-icon" width="55" height="55" viewBox="0 0 100 100" aria-hidden="true">
@@ -579,7 +474,7 @@
           <path class="ham-line ham-bottom" d="m 70,67 h -40 c 0,0 -7.5,-0.802118 -7.5,-8.365747 0,-7.563629 7.5,-8.634253 7.5,-8.634253 h 20" />
         </svg>
       </button>
-      <a class="btn btn-primary" href="./booking.html">Book Now</a>
+      <a class="btn btn-primary" href="#contact-details">Book Now</a>
     </div>
   </header>
 
@@ -590,8 +485,8 @@
       <div class="hero-text-wrap">
         <div class="hero-text-inner">
           <span class="hero-overline">Albany Angels</span>
-          <h1 class="hero-headline">Sensual Massage &<br>Premium Companionship</h1>
-          <p class="hero-sub">Auckland’s refined escort agency. Discreet, luxurious, and crafted entirely around your comfort.</p>
+          <h1 class="hero-headline">Where Elegance<br>Meets Discretion</h1>
+          <p class="hero-sub">Auckland's most discreet, premium companionship —<br>crafted entirely around your comfort.</p>
           <!-- Desktop: buttons inside text block -->
           <div class="hero-actions hero-cta-row hero-cta-desktop">
             <a class="btn btn-primary" href="./girls.html">View Ladies</a>
@@ -606,7 +501,7 @@
       </div>
     </section>
 
-    <section class="section intro snap-section about-bg-section" id="about" style="color: #F5F5F5; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+    <section class="section intro snap-section about-bg-section" id="about" style="color: #f5f1ea; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
       <div class="container narrow" style="max-width: 720px; text-align: left;">
         <h2 style="color: #fff;">Welcome to Albany Angels</h2>
         <p style="color: rgba(255,255,255,0.9); font-size: 1.02rem; line-height: 1.75;">Located in the heart of Auckland's North Shore, Albany Angels represents the pinnacle of boutique companionship. Born from the successful merger of two established agencies five years ago, we bring almost a decade of insight into what makes a session truly unforgettable.</p>
@@ -657,42 +552,42 @@
     <section class="section section-alt snap-section" id="services">
       <div class="container services-split">
         <div class="services-copy">
-          <p class="eyebrow">CURATED EXPERIENCES</p>
-          <h2>Indulge in absolute pleasure and unwavering discretion.</h2>
-          <p>Whether you desire the deep relaxation of a sensual massage or the immersive intimacy of our premium companion experiences, Albany Angels caters to your most refined desires. Every encounter is a private sanctuary crafted entirely around you.</p>
-          <a class="btn btn-secondary" href="./services.html">View Services &amp; Rates</a>
+          <p class="eyebrow">Tailored experiences</p>
+          <h2>Services designed around comfort, discretion, and choice</h2>
+          <p>From sensual massage to premium full service and Ultimate GFE, every experience at Albany Angels is designed to feel calm, considered, and easy to navigate. No surcharge on card payments.</p>
+          <a class="btn btn-secondary" href="./services.html">View Services & Rates</a>
         </div>
         <div class="services-image-wrap">
-          <img class="services-feature-image" src="./assets/girls/arabella/gallery-08.jpg" alt="Albany Angels — tailored experiences" loading="lazy" />
+          <img class="services-feature-image" src="./assets/images/fb1a64_49f45b8436d2491cadca2857158261d4~mv2.jpg" alt="Albany Angels featured visual" />
         </div>
       </div>
     </section>
 
-    <section class="section snap-section" id="why" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('./assets/girls/yuzuki/gallery-02.jpeg') center center/cover no-repeat; min-height: 100vh; display: flex; align-items: center; color: #F5F5F5; padding-top: 40px; padding-bottom: 80px;">
+    <section class="section snap-section" id="why">
       <div class="container">
-        <div class="section-head left-only" style="transform: translateY(-10px);">
+        <div class="section-head left-only">
           <div>
-            <p class="eyebrow" style="color: var(--accent, #bf9b60);">THE ALBANY ANGELS STANDARD</p>
-            <h2 style="color: #F5F5F5; margin-bottom: 5px;">Redefining Auckland's companionship experience.</h2>
-            <p class="section-intro" style="color: rgba(245, 245, 245, 0.9);">No rushed encounters. No compromised privacy. Just a carefully designed environment where discerning gentlemen can experience true relaxation.</p>
+            <p class="eyebrow">Why clients choose Albany Angels</p>
+            <h2>Designed to feel calm, polished, and trustworthy</h2>
+            <p class="section-intro">From first impression to final booking, Albany Angels is built around comfort, discretion, and a more elevated standard of presentation.</p>
           </div>
         </div>
         <div class="pillar-grid">
-          <article class="pillar-card" style="background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); padding: 24px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); min-height: 240px; display: flex; flex-direction: column; justify-content: flex-start;">
-            <h3 style="color: #F5F5F5; min-height: 2.2em; margin-bottom: 4px;">Unseen<br>Arrivals</h3>
-            <p style="color: rgba(245, 245, 245, 0.85);">Located in quiet Rosedale with private, off-street parking. We protect your privacy as fiercely as you do.</p>
+          <article class="pillar-card">
+            <h3>Discreet by design</h3>
+            <p>Your comfort, privacy, and ease come first. Located at 10F Ride Way, Rosedale with free on-site and off-street parking.</p>
           </article>
-          <article class="pillar-card" style="background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); padding: 24px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); min-height: 240px; display: flex; flex-direction: column; justify-content: flex-start;">
-            <h3 style="color: #F5F5F5; min-height: 2.2em; margin-bottom: 4px;">Curated<br>Companions</h3>
-            <p style="color: rgba(245, 245, 245, 0.85);">More than just a beautiful face. Our ladies are chosen for their elegance, intelligence, and genuine desire to please.</p>
+          <article class="pillar-card">
+            <h3>Curated ladies</h3>
+            <p>A carefully selected roster of friendly, professional, and beautiful women presented with clarity.</p>
           </article>
-          <article class="pillar-card" style="background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); padding: 24px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); min-height: 240px; display: flex; flex-direction: column; justify-content: flex-start;">
-            <h3 style="color: #F5F5F5; min-height: 2.2em; margin-bottom: 4px;">The<br>Sanctuary</h3>
-            <p style="color: rgba(245, 245, 245, 0.85);">Spotless, high-end, and inviting. We've designed our spaces to feel like a luxury retreat, far removed from the everyday.</p>
+          <article class="pillar-card">
+            <h3>Premium atmosphere</h3>
+            <p>Elegant surroundings and a refined standard throughout. Clean, modern, and welcoming.</p>
           </article>
-          <article class="pillar-card" style="background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); padding: 24px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); min-height: 240px; display: flex; flex-direction: column; justify-content: flex-start;">
-            <h3 style="color: #F5F5F5; min-height: 2.2em; margin-bottom: 4px;">Effortless<br>Bookings</h3>
-            <p style="color: rgba(245, 245, 245, 0.85);">No complex hoops or hidden fees. Just direct, simple communication and discreet payment options, including surcharge-free card facilities.</p>
+          <article class="pillar-card">
+            <h3>Easy booking</h3>
+            <p>Call, text, or WhatsApp. Free EFTPOS with no surcharge. Simple, straightforward, and discreet.</p>
           </article>
         </div>
       </div>
@@ -702,31 +597,38 @@
       <div class="container">
         <div class="section-head left-only">
           <div>
-            <p class="eyebrow">THE PROCESS</p>
-            <h2>Seamless arrangements, start to finish.</h2>
+            <p class="eyebrow">New here?</p>
+            <h2>Start with these simple steps</h2>
           </div>
         </div>
         <div class="steps-grid">
           <article>
             <span>01</span>
-            <h3>Select Your Companion</h3>
-            <p>Browse our gallery to find the perfect match for your desires. Each profile reflects the genuine beauty and personality of our ladies.</p>
+            <h3>Browse the ladies</h3>
+            <p>Explore profiles and find the right fit for the experience you want.</p>
           </article>
           <article>
             <span>02</span>
-            <h3>Verify<br>Availability</h3>
-            <p>Consult our weekly roster to see who is currently available, or check specific dates to plan your upcoming visit.</p>
+            <h3>Review services</h3>
+            <p>Check our transparent pricing and choose the service that suits you.</p>
           </article>
           <article>
             <span>03</span>
-            <h3>Choose Your Experience</h3>
-            <p>Review our comprehensive services and transparent pricing to tailor the encounter exactly to your preferences.</p>
+            <h3>Book or enquire</h3>
+            <p>Call, text, or WhatsApp us directly. Quick, easy, and confidential.</p>
           </article>
-          <article>
-            <span>04</span>
-            <h3>Secure<br>Your Time</h3>
-            <p>Book online or reach out via phone, text, or WhatsApp to confirm your booking. Our team ensures a discreet, effortless reservation.</p>
-          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta-band snap-section" id="contact">
+      <div class="container narrow">
+        <p class="eyebrow">Ready to explore?</p>
+        <h2>Ready to explore the Albany Angels experience?</h2>
+        <p>Browse the roster, review services, and arrange your next booking with confidence, clarity, and ease.</p>
+        <div class="hero-actions center-actions">
+          <a class="btn btn-primary" href="./girls.html">View Ladies</a>
+          <a class="btn btn-secondary" href="./services.html">View Services</a>
         </div>
       </div>
     </section>
@@ -776,7 +678,7 @@
           </div>
         </div>
       </div>
-      <p style="text-align:center; color:rgba(255,255,255,0.55); font-size:0.75rem; letter-spacing:0.02em; margin:0; padding-top:8px; position:absolute; bottom:12px; left:0; right:0;">&copy; 2026 Albany Angels. All rights reserved.</p>
+      <p style="text-align:center; color:rgba(255,255,255,0.55); font-size:0.75rem; letter-spacing:0.02em; margin:0 0 0 -1px; padding-top:8px; position:absolute; bottom:16px; left:0; right:0;">&copy; 2026 Albany Angels. All rights reserved.</p>
     </section>
   </main>
   </div><!-- /index-scroll-wrap -->
@@ -787,8 +689,6 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
   </button>
 
-  <script src="./assets/js/displacement-utils.js"></script>
-  <script src="./assets/js/glass-element.js"></script>
   <script>
     const toggle = document.getElementById('menuToggle');
     const nav = document.getElementById('mainNav');
