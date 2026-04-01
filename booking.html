@@ -125,15 +125,6 @@
       border-color: rgba(201,164,92,0.45);
     }
 
-    /* When the profile card is open (.card-open toggled by JS), square the
-     * picker button's bottom corners so the curved cutout no longer exposes
-     * the dark background above the card's top-left and top-right corners. */
-    .picker-btn.card-open {
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-      border-bottom-color: transparent; /* merge visually with card top border */
-    }
-
     .picker-btn[aria-expanded="true"] .picker-arrow {
       transform: rotate(180deg);
     }
@@ -277,14 +268,9 @@
       overflow: hidden;
     }
 
-    /* When the card is open, collapse the gap and square the top corners so
-     * the card sits flush under the picker button, forming one unified block. */
     .lady-preview.visible {
       display: block;
       animation: slideIn 0.26s ease;
-      margin-top: -1px;           /* overlap the picker button's bottom border by 1px */
-      border-top-left-radius: 0;  /* picker btn already has square bottom corners */
-      border-top-right-radius: 0;
     }
 
     @keyframes slideIn {
@@ -303,11 +289,8 @@
     .preview-img-wrap {
       overflow: hidden;
       background: #1a1a1a;
-      /* All corners square — the outer .preview-grid (overflow:hidden +
-         border-radius:18px) handles all card corner clipping. Any radius
-         on this element creates visible dark gaps at the corners. */
-      border-radius: 0;
-      align-self: stretch;  /* stretch to full card height */
+      border-radius: 18px 0 0 18px;
+      align-self: stretch;
     }
 
     .preview-main-img {
@@ -319,20 +302,26 @@
       background: #1a1a1a;
     }
 
-    /* On desktop, override styles.css hero-carousel sizing for the preview card.
-       IMPORTANT: border-radius MUST be 0 here. The .hero-carousel base rule in
-       styles.css sets border-radius: var(--radius-lg) = 24px. That radius, when
-       combined with the grid layout, creates dark gaps at all four corners of the
-       image. The outer .preview-grid clips to 18px already via overflow:hidden. */
+    /* On desktop, override styles.css hero-carousel sizing for the preview card */
     .preview-grid .preview-img-wrap.hero-carousel,
     .preview-grid .hero-carousel {
       width: 320px !important;
       min-width: 320px !important;
       max-width: 320px !important;
-      aspect-ratio: unset !important;   /* let it stretch to full card height */
-      height: 100% !important;
-      align-self: stretch !important;   /* fill the grid row completely */
-      border-radius: 0 !important;      /* outer card clips corners — no inner radius needed */
+      aspect-ratio: 2 / 3 !important;
+      height: auto !important;
+      align-self: start !important;
+      /* styles.css sets border-radius: var(--radius-lg) = 24px on .hero-carousel.
+       * That 24px conflicts with the wrapper's 18px and causes a visible gap at
+       * the top-left corner. Override to match the wrapper exactly. */
+      border-radius: 18px 0 0 18px !important;
+    }
+    /* Prevent the inherited 24px radius from flashing during carousel slide
+     * transitions — the wrapper's overflow:hidden + 18px radius handles clipping. */
+    .preview-grid .carousel-track,
+    .preview-grid .carousel-slide,
+    .preview-grid .carousel-slide img {
+      border-radius: 0 !important;
     }
     .preview-img-wrap .carousel-track {
       height: 100%;
@@ -1109,8 +1098,7 @@
         grid-template-columns: none !important;
       }
       .preview-img-wrap {
-        /* All corners square — outer .preview-grid handles clipping */
-        border-radius: 0;
+        border-radius: 14px;
         width: 100% !important;
         min-width: 0 !important;
         max-width: 100% !important;
@@ -1132,10 +1120,7 @@
         aspect-ratio: 2 / 3 !important;
         height: auto !important;
         align-self: auto !important;
-        /* All corners square — outer .preview-grid handles clipping */
-        border-radius: 0 !important;
-        height: auto !important;
-        aspect-ratio: 2 / 3 !important;
+        border-radius: 14px !important;
       }
       /* Overlay gradient + info at bottom of image */
       .preview-grid {
@@ -2047,7 +2032,6 @@
 
       pickerSelected.innerHTML = '<span class="picker-placeholder">Select a lady…</span>';
       ladyPreview.classList.remove('visible');
-      pickerBtn.classList.remove('card-open'); // restore rounded bottom corners
       if (stepASubtext) {
         stepASubtext.textContent = state.dayKey
           ? 'Choose a lady available on ' + roster[state.dayKey].label + '.'
@@ -2187,7 +2171,6 @@
       if (previewNameLink) previewNameLink.href = profileHref;
 
       ladyPreview.classList.add('visible');
-      pickerBtn.classList.add('card-open'); // square bottom corners to meet card top
       setTimeout(function () {
         ladyPreview.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }, 80);
@@ -2309,7 +2292,6 @@
                 state.timeMins = null;
                 pickerSelected.innerHTML = '<span class="picker-placeholder">Select a lady…</span>';
                 ladyPreview.classList.remove('visible');
-                pickerBtn.classList.remove('card-open'); // restore rounded bottom corners
                 rebuildServiceCards(null);
                 if (stepASubtext) {
                   var count = ladiesForDay(key).length;
