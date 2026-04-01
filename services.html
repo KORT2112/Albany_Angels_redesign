@@ -25,14 +25,22 @@
       position: absolute;
       inset: 0;
       background: url('./assets/girls/arabella/hero.jpg') center top / cover no-repeat;
-      opacity: 0.22;
+      /* Raised from 0.22 — matches the image visibility on index and booking pages */
+      opacity: 0.55;
       z-index: 0;
     }
     .svc-hero::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(to bottom, rgba(11,11,11,0.55) 0%, rgba(11,11,11,0.72) 60%, #0B0B0B 100%);
+      /* Directional overlay matching the booking page page-hero-overlay aesthetic:
+       * - Bottom-up fade anchors the composition and keeps text readable
+       * - Light top vignette keeps the nav area readable
+       * - Lighter than the old flat gradient so the image shows through clearly */
+      background:
+        linear-gradient(to top,    rgba(11,11,11,0.92) 0%, rgba(11,11,11,0.50) 35%, transparent 65%),
+        linear-gradient(to bottom, rgba(11,11,11,0.40) 0%, transparent 25%),
+        linear-gradient(to right,  rgba(11,11,11,0.30) 0%, transparent 60%);
       z-index: 1;
     }
     .svc-hero .container {
