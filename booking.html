@@ -2083,6 +2083,20 @@
       }, 80);
     }    /* ── Date section ────────────────────── */
 
+    /* ── Roster availability helper ─────────────────────────────────────────
+     * Returns true if the given lady (UPPERCASE name) is rostered on dayKey.
+     * Used by rebuildDates() to apply the compounded AND condition:
+     *   (date is today or future)  AND  (lady is rostered that day)
+     * When no lady is pre-selected from the URL the function returns true so
+     * that all non-past days remain clickable as normal.
+     * ─────────────────────────────────────────────────────────────────────── */
+    function isLadyRosteredOnDay(ladyName, dayKey) {
+      if (!ladyName || !dayKey || !roster[dayKey]) return true; // no filter active
+      return roster[dayKey].girls.some(function (entry) {
+        return entry[0] === ladyName;
+      });
+    }
+
     function rebuildDates() {
       dateRow.innerHTML = '';
 
@@ -2121,9 +2135,22 @@
       }
 
       availDays.forEach(function (key) {
-        var day      = roster[key];
-        var isPast   = day.isoDate < today;
-        var isActive = (state.dayKey === key);
+        var day    = roster[key];
+
+        /* PRIMARY CHECK (existing logic — never modified):
+         * A date is disabled if its isoDate is strictly before today in NZ time. */
+        var isPast = day.isoDate < today;
+
+        /* SECONDARY CHECK (new roster-filter logic):
+         * When a lady was pre-selected via ?lady= URL param, additionally
+         * disable any day she is NOT rostered on.
+         * IMPORTANT: isPast always wins — even if she works that day-of-week,
+         * a past date must remain greyed out. */
+        var notRostered = !isPast && !isLadyRosteredOnDay(state.lady, key);
+
+        /* Combined disabled state: past OR (lady selected but not rostered). */
+        var isDisabled = isPast || notRostered;
+        var isActive   = (state.dayKey === key);
 
         // Parse date label → number + month abbrev
         var cleaned  = day.date.replace(/st|nd|rd|th/i, '').trim().split(/\s+/);
@@ -2132,17 +2159,17 @@
         var dayAbbr  = day.label.slice(0, 3).toUpperCase();
 
         var btn = document.createElement('button');
-        btn.className  = 'date-chip' + (isActive ? ' active' : '') + (isPast ? ' disabled' : '');
+        btn.className  = 'date-chip' + (isActive ? ' active' : '') + (isDisabled ? ' disabled' : '');
         btn.type       = 'button';
         btn.dataset.day = key;
         btn.setAttribute('aria-pressed', String(isActive));
-        if (isPast) btn.setAttribute('aria-disabled', 'true');
+        if (isDisabled) btn.setAttribute('aria-disabled', 'true');
         btn.innerHTML =
           '<span class="dc-day">' + dayAbbr + '</span>' +
           '<span class="dc-num">'  + num    + '</span>' +
           '<span class="dc-mon">'  + mon    + '</span>';
 
-        if (!isPast) {
+        if (!isDisabled) {
           btn.addEventListener('click', function () {
             dateRow.querySelectorAll('.date-chip').forEach(function (c) {
               c.classList.remove('active');
@@ -2675,6 +2702,51 @@
     rebuildDates();
     buildPickerList('');
     rebuildTimeSlots();
+
+    /* ── URL parameter: auto-select lady ─────────────────────────────────────
+     *
+     * When a profile page links here with ?lady=yuzuki, this block:
+     *   1. Reads the "lady" query parameter and normalises it to UPPERCASE
+     *      (matching the keys used throughout RosterData).
+     *   2. Verifies the name exists in the imageMap so we never try to select
+     *      a lady who is not in the system.
+     *   3. Calls selectLady() — the same function the picker dropdown uses —
+     *      so all downstream side-effects (preview card, time slots, service
+     *      cards, review section) fire exactly as if the user clicked manually.
+     *
+     * NOTE: rebuildDates() above has already run, which means state.dayKey is
+     * already set to today (or the first available future day). selectLady()
+     * deliberately does NOT reset state.dayKey, so the date selection is
+     * preserved when we auto-select the lady.
+     * ─────────────────────────────────────────────────────────────────────── */
+    (function autoSelectFromURL() {
+      var params   = new URLSearchParams(window.location.search);
+      var ladySlug = (params.get('lady') || '').trim().toUpperCase();
+
+      if (!ladySlug) return; // No ?lady= param — nothing to do.
+
+      // Confirm this lady exists in the roster image map.
+      if (!imageMap[ladySlug]) {
+        console.warn('[Albany Angels] URL param ?lady=' + ladySlug.toLowerCase() + ' not found in imageMap. Auto-selection skipped.');
+        return;
+      }
+
+      // Select her — this triggers the preview card, time slots, and service cards.
+      selectLady(ladySlug);
+
+      // Re-render the date chips now that state.lady is set, so the roster
+      // filter (isLadyRosteredOnDay) is applied and only her working days
+      // remain clickable. Past dates continue to be greyed out regardless.
+      rebuildDates();
+
+      // Scroll the booking section into view so the user lands on Step 1.
+      var bookingSection = document.querySelector('.booking-layout');
+      if (bookingSection) {
+        setTimeout(function () {
+          bookingSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 120);
+      }
+    }());
 
   }());
   </script>
