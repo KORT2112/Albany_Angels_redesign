@@ -437,6 +437,11 @@ h3 { font-size: 1.9rem; }
 
 .steps-grid article h3 {
   min-height: 3em;
+  margin-bottom: 6px;
+}
+
+.steps-grid article p {
+  margin-top: 0;
 }
 
 .steps-grid span {
