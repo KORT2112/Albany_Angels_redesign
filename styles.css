@@ -431,6 +431,12 @@ h3 { font-size: 1.9rem; }
   background: var(--bg-panel);
   border: 1px solid var(--border);
   padding: 28px;
+  display: flex;
+  flex-direction: column;
+}
+
+.steps-grid article h3 {
+  min-height: 3em;
 }
 
 .steps-grid span {
