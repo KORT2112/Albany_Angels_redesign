@@ -332,7 +332,7 @@
       z-index: 2;
     }
 
-    /* ─── About section — mobile refinement ─── */
+    /* --- About section — mobile refinement --- */
     @media (max-width: 820px) {
 
       /* The snap-section mobile rule sets overflow:visible, which lets the
@@ -350,153 +350,58 @@
         filter: blur(10px);
       }
 
-      /* Lighten overlay so background texture shows through rather than going
-         almost completely black (0.78 at mobile compression looks very flat) */
       .about-bg-section::after {
-        background: linear-gradient(
-          to bottom,
-          rgba(0,0,0,0.72) 0%,
-          rgba(0,0,0,0.62) 50%,
-          rgba(0,0,0,0.76) 100%
-        );
-      }
-
-      /* Heading — tighter and better proportioned for mobile */
-      #about h2 {
-        font-size: 1.85rem !important;
-        line-height: 1.18 !important;
-        letter-spacing: -0.01em !important;
-        margin-bottom: 20px !important;
-      }
-
-      /* Body copy — reduce density without losing readability.
-         !important needed to override the inline font-size/line-height. */
-      #about p {
-        font-size: 0.915rem !important;
-        line-height: 1.72 !important;
-        margin-bottom: 20px !important;
-      }
-
-      /* Closing italic — slightly smaller, no extra bottom gap */
-      #about p:last-child {
-        font-size: 0.875rem !important;
-        margin-top: 8px !important;
-        margin-bottom: 0 !important;
+        background: rgba(0,0,0,0.62);
       }
     }
 
-    /* Roster section fit to viewport */
-    #roster .profile-grid {
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-    }
-    #roster .profile-card {
-      overflow: hidden;
-    }
-    #roster .real-card-image {
-      aspect-ratio: 3 / 4 !important;
-      max-height: calc(100dvh - 300px);
-      object-fit: cover;
-      width: 100%;
-    }
-    #roster .profile-body {
-      padding: 14px 18px 16px;
-    }
-    #roster .profile-body h3 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.6rem;
-      font-weight: 600;
-      margin-bottom: 4px;
-      letter-spacing: 0.01em;
-    }
-    #roster .profile-body p {
-      font-size: 0.78rem;
-      line-height: 1.4;
-      margin: 0;
-      color: var(--text-secondary);
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-    #roster .text-link {
-      margin-top: 6px;
-      font-size: 0.8rem;
-    }
-    #roster .section-head {
-      margin-bottom: 16px;
-    }
-    #roster .profile-card {
-      transition: transform 0.35s ease, box-shadow 0.35s ease;
-    }
-    #roster .profile-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
-    }
-    #roster .real-card-image {
-      transition: transform 0.5s ease;
-    }
-    #roster .profile-card:hover .real-card-image {
-      transform: scale(1.03);
-    }
-
-    /* Scroll-snap index page */
+    /* --- Snap scroll container + sections --------------------------- */
     body.snap-body {
       overflow: hidden;
+      height: 100vh;
       height: 100dvh;
-    }
-
-    /* Force header fixed so scroll wrap fills full viewport */
-    body.snap-body .site-header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
     }
 
     .index-scroll-wrap {
-      height: 100dvh;
+      height: 100%;
       overflow-y: scroll;
       scroll-snap-type: y mandatory;
     }
 
     .snap-section {
       scroll-snap-align: start;
+      scroll-snap-stop: always;
+      height: 100vh;
       height: 100dvh;
+      min-height: 680px;
       overflow: hidden;
+      position: relative;
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 79px 0 0 0 !important;
-      box-sizing: border-box;
-      position: relative;
+      padding: 80px 0;
     }
 
-    /* Hero doesn't need top padding */
+    /* Hero is always full-height */
     .snap-section.real-hero {
-      padding: 0 !important;
+      min-height: 0;
+      padding: 0;
     }
 
-    /* Contact section - snap to bottom of page, not top of section */
+    /* Contact section — shorter, bottom-aligned */
     .snap-section.contact-section {
-      height: 100dvh;
-      overflow: hidden;
-      padding-bottom: 79px !important;
-      scroll-snap-align: end;
+      align-items: flex-end;
+      padding-bottom: 48px;
+      min-height: 0;
+      height: auto;
     }
 
     .snap-section.contact-section .contact-grid {
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      align-items: stretch;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
     }
 
-    .snap-section.contact-section .map-panel {
-      height: 100%;
-    }
-
-    .snap-section.contact-section .contact-lead {
-      font-size: 0.85rem;
-      margin-bottom: 8px;
+    .snap-section.contact-section .contact-panel {
+      padding: 24px;
     }
 
     .snap-section.contact-section h2 {
@@ -804,18 +709,23 @@
         <div class="steps-grid">
           <article>
             <span>01</span>
-            <h3>Browse the ladies</h3>
-            <p>Explore profiles and find the right fit for the experience you want.</p>
+            <h3>Browse Our Ladies</h3>
+            <p>Explore profiles and find the right fit for your experience, the experience you want. Check the roster.</p>
           </article>
           <article>
             <span>02</span>
-            <h3>Review services</h3>
-            <p>Check our transparent pricing and choose the service that suits you.</p>
+            <h3>Check the Roster</h3>
+            <p>See which ladies are available this week.</p>
           </article>
           <article>
             <span>03</span>
-            <h3>Book or enquire</h3>
-            <p>Call, text, or WhatsApp us directly. Quick, easy, and confidential.</p>
+            <h3>Review Services</h3>
+            <p>Check out services and transparent pricing that suits you.</p>
+          </article>
+          <article>
+            <span>04</span>
+            <h3>Book or Inquire</h3>
+            <p>Book online, call, text or whatsapp us directly, quick, easy and confidential.</p>
           </article>
         </div>
       </div>
