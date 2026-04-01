@@ -28,15 +28,18 @@
       flex-direction: column;
       /* Desktop: anchor to top-left, bottom padding reserves space for buttons */
       justify-content: flex-start;
-      padding: clamp(110px, 15vh, 160px) 8vw 80px;
+      padding: clamp(140px, 15vh + 30px, 190px) 8vw 40px;
+      align-items: center;
+      text-align: center;
     }
 
     /* Text column — flex column so CTA can be pushed to bottom via margin-top:auto */
     .hero-text-inner {
-      max-width: 580px;
+      max-width: 720px;
       display: flex;
       flex-direction: column;
-      flex: 1;   /* fills remaining height so margin-top:auto on CTA has room to work */
+      align-items: center;
+      flex: 1;
     }
 
     /* ── Overline — hidden on desktop, already hidden on mobile ── */
@@ -68,7 +71,7 @@
       line-height: 1.72;
       letter-spacing: 0.025em;
       color: rgba(245, 245, 245, 0.72);
-      max-width: 360px;
+      max-width: 480px;
       margin: 0;
       text-shadow: 0 1px 18px rgba(0,0,0,0.52);
     }
@@ -83,7 +86,9 @@
     .hero-cta-mobile  { display: none; }
     .hero-cta-desktop {
       display: flex;
-      margin-top: auto;   /* pushes buttons to the bottom of the flex text-inner */
+      justify-content: center;
+      margin-top: auto;
+      margin-bottom: 20px;
     }
 
     /* ─── Mobile (≤ 820 px) ──────────────────────────────────
