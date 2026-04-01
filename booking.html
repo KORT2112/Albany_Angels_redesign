@@ -289,7 +289,8 @@
     .preview-img-wrap {
       overflow: hidden;
       background: #1a1a1a;
-      border-radius: 18px 0 0 18px;
+      /* Top corners square, bottom-left follows card radius */
+      border-radius: 0 0 0 18px;
       align-self: stretch;
     }
 
@@ -311,7 +312,8 @@
       aspect-ratio: 2 / 3 !important;
       height: auto !important;
       align-self: start !important;
-      border-radius: 18px 0 0 18px !important;
+      /* Top corners square, bottom-left follows card radius */
+      border-radius: 0 0 0 18px !important;
     }
     .preview-img-wrap .carousel-track {
       height: 100%;
@@ -1088,7 +1090,8 @@
         grid-template-columns: none !important;
       }
       .preview-img-wrap {
-        border-radius: 14px;
+        /* Top corners square on mobile too */
+        border-radius: 0 0 14px 14px;
         width: 100% !important;
         min-width: 0 !important;
         max-width: 100% !important;
@@ -1110,7 +1113,8 @@
         aspect-ratio: 2 / 3 !important;
         height: auto !important;
         align-self: auto !important;
-        border-radius: 14px !important;
+        /* Top corners square on mobile too */
+        border-radius: 0 0 14px 14px !important;
       }
       /* Overlay gradient + info at bottom of image */
       .preview-grid {
