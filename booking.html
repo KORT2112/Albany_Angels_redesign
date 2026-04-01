@@ -1296,6 +1296,56 @@
       transform: translateX(20px);
     }
 
+
+    /* ── Roster warning banner ──────────────────────────────────────────────
+     * Shown when the ?lady= URL param is not rostered this week.
+     * ─────────────────────────────────────────────────────────────────────── */
+    .roster-warning {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: rgba(220, 160, 40, 0.12);
+      border: 1px solid rgba(220, 160, 40, 0.45);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      color: #c8960a;
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+    .roster-warning svg {
+      flex-shrink: 0;
+      margin-top: 2px;
+      color: #c8960a;
+    }
+
+    /* ── Clear-selection button ──────────────────────────────────────────────
+     * Appears inside the picker-selected area when a lady is active.
+     * ─────────────────────────────────────────────────────────────────────── */
+    .picker-clear-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: auto;
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255,255,255,0.15);
+      color: inherit;
+      cursor: pointer;
+      padding: 0;
+      line-height: 1;
+      transition: background 0.15s;
+    }
+    .picker-clear-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+    .picker-clear-btn svg {
+      pointer-events: none;
+    }
+
   </style>
 </head>
 <body>
@@ -1346,6 +1396,11 @@
                 <h3>Choose a date</h3>
               </div>
               <p class="step-subtext" id="stepCSubtext">Select a day to see which ladies are available.</p>
+              <!-- Inline warning — shown when URL lady is not on this week's roster -->
+              <div class="roster-warning" id="rosterWarning" role="alert" aria-live="assertive" style="display:none;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                <span id="rosterWarningText">Unfortunately, the lady you have chosen is not available this week. Please check the roster to see who is available this week, or check back next week.</span>
+              </div>
                <div class="date-row" id="dateRow" role="group" aria-label="Select date"></div>
               <span class="step-error-msg" id="errDate">Please select a date to continue.</span>
             </div>
@@ -1908,18 +1963,46 @@
       state.duration = null;
       state.price    = null;
 
-      // Update picker button
+      // Update picker button — include the clear (×) button
       var img  = imageMap[name] || './assets/roster/shadow.jpg';
       var disp = toDisplay(name);
       pickerSelected.innerHTML =
         '<img class="picker-selected-img" src="' + img + '" alt="' + disp + '" />' +
-        '<span class="picker-selected-name">' + disp + '</span>';
+        '<span class="picker-selected-name">' + disp + '</span>' +
+        '<button class="picker-clear-btn" id="pickerClearBtn" type="button" aria-label="Clear selection">' +
+          '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="1" y1="1" x2="11" y2="11"/><line x1="11" y1="1" x2="1" y2="11"/></svg>' +
+        '</button>';
+
+      /* ENHANCEMENT — Clear-selection capability:
+       * Wire the × button injected above. We use event delegation on
+       * pickerSelected rather than a direct ref because the button is
+       * re-created each time selectLady() is called. Clicking the ×:
+       *   1. Stops the click from bubbling to pickerBtn (which would
+       *      re-open the dropdown).
+       *   2. Calls deselectLady() to clear state and collapse the card.
+       *   3. Calls rebuildDates() to restore all future days to clickable. */
+      var clearBtn = document.getElementById('pickerClearBtn');
+      if (clearBtn) {
+        clearBtn.addEventListener('click', function (e) {
+          e.stopPropagation(); // prevent pickerBtn toggle
+          deselectLady();
+          rebuildDates();     // restore all future dates
+        });
+      }
 
       if (stepASubtext) stepASubtext.textContent = 'You selected ' + disp + '.';
 
       updatePreview(name);
       rebuildTimeSlots();
       rebuildServiceCards(name);
+
+      /* BUG FIX — Dynamic calendar update on manual selection:
+       * Previously selectLady() never called rebuildDates(), so the date
+       * chips did not update when the user picked a different lady from
+       * the dropdown. Now we rebuild the chips here so the calendar
+       * immediately reflects the newly selected lady's roster, while
+       * still respecting the isPast primary check. */
+      rebuildDates();
 
       // Reset duration picker
       if (svcDurWrap) svcDurWrap.style.display = 'none';
@@ -2178,19 +2261,33 @@
             btn.classList.add('active');
             btn.setAttribute('aria-pressed', 'true');
 
-            // Switching day resets lady and time selections
             if (state.dayKey !== key) {
               state.dayKey   = key;
-              state.lady     = null;
-              state.timeMins = null;
-              pickerSelected.innerHTML = '<span class="picker-placeholder">Select a lady…</span>';
-              ladyPreview.classList.remove('visible');
-            }
 
-            // Update lady-step subtext
-            if (stepASubtext) {
-              var count = ladiesForDay(key).length;
-              stepASubtext.textContent = count + ' ' + (count === 1 ? 'lady' : 'ladies') + ' available on ' + roster[key].label + '. Choose one below.';
+              /* BUG FIX — Persist selected lady on date change:
+               * Previously this block cleared state.lady and collapsed the
+               * preview card whenever the user clicked a different date.
+               * Now we check whether a lady is currently selected:
+               *   • If she IS rostered on the new day — keep her selected,
+               *     rebuild time slots for the new day, and leave the card open.
+               *   • If she is NOT rostered on the new day — clear the selection
+               *     so the user is not shown stale/invalid time slots. */
+              if (state.lady && isLadyRosteredOnDay(state.lady, key)) {
+                // Lady works this day too — preserve selection, just refresh slots.
+                state.timeMins = null;
+                if (stepASubtext) stepASubtext.textContent = 'You selected ' + toDisplay(state.lady) + '.';
+              } else {
+                // Lady not working this day (or no lady selected) — clear.
+                state.lady     = null;
+                state.timeMins = null;
+                pickerSelected.innerHTML = '<span class="picker-placeholder">Select a lady…</span>';
+                ladyPreview.classList.remove('visible');
+                rebuildServiceCards(null);
+                if (stepASubtext) {
+                  var count = ladiesForDay(key).length;
+                  stepASubtext.textContent = count + ' ' + (count === 1 ? 'lady' : 'ladies') + ' available on ' + roster[key].label + '. Choose one below.';
+                }
+              }
             }
 
             rebuildTimeSlots();
@@ -2725,19 +2822,50 @@
 
       if (!ladySlug) return; // No ?lady= param — nothing to do.
 
-      // Confirm this lady exists in the roster image map.
+      // Confirm this lady exists in the system at all (imageMap covers all ladies).
       if (!imageMap[ladySlug]) {
         console.warn('[Albany Angels] URL param ?lady=' + ladySlug.toLowerCase() + ' not found in imageMap. Auto-selection skipped.');
         return;
       }
 
-      // Select her — this triggers the preview card, time slots, and service cards.
-      selectLady(ladySlug);
+      /* ENHANCEMENT — Non-rostered warning message:
+       * Before attempting to auto-select, check whether this lady appears
+       * on ANY day in this week's roster. This is a different check from
+       * imageMap (which only confirms she exists in the system).
+       * If she is not rostered at all this week:
+       *   • Do NOT call selectLady() — leave the calendar in its default state.
+       *   • Show the #rosterWarning banner above the date chips.
+       * If she IS rostered this week, proceed with auto-selection as before. */
+      var isOnRosterThisWeek = DAY_ORDER.some(function (key) {
+        return roster[key] && roster[key].girls.some(function (entry) {
+          return entry[0] === ladySlug;
+        });
+      });
 
-      // Re-render the date chips now that state.lady is set, so the roster
-      // filter (isLadyRosteredOnDay) is applied and only her working days
-      // remain clickable. Past dates continue to be greyed out regardless.
-      rebuildDates();
+      var warningEl = document.getElementById('rosterWarning');
+
+      if (!isOnRosterThisWeek) {
+        // Show the warning banner with the lady's display name for clarity.
+        if (warningEl) {
+          var warningText = document.getElementById('rosterWarningText');
+          if (warningText) {
+            warningText.textContent =
+              'Unfortunately, ' + toDisplay(ladySlug) + ' is not available this week. ' +
+              'Please check the roster to see who is available, or check back next week.';
+          }
+          warningEl.style.display = 'flex';
+        }
+        console.info('[Albany Angels] ' + ladySlug + ' is not on the roster this week. Warning shown.');
+        return; // Do not auto-select or filter the calendar.
+      }
+
+      // Lady is on the roster this week — hide any stale warning and proceed.
+      if (warningEl) warningEl.style.display = 'none';
+
+      // Select her — this triggers the preview card, time slots, service cards,
+      // AND (via the rebuildDates() call now inside selectLady) re-renders the
+      // date chips so only her working days remain clickable.
+      selectLady(ladySlug);
 
       // Scroll the booking section into view so the user lands on Step 1.
       var bookingSection = document.querySelector('.booking-layout');
